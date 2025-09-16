@@ -17,6 +17,6 @@
     "eslint-plugin-unused-imports": "^4.0.0",
     "eslint-plugin-vue": "^10.4.0",
     "eslint-plugin-nuxt": "^4.0.0",
-    "vue-eslint-parser": "^9.4.0"
+    "vue-eslint-parser": "^10.2.0"
   }
 }
