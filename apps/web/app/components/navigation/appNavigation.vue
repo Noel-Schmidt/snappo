@@ -1,4 +1,3 @@
-<!-- components/ui/AppNavbar.vue -->
 <template>
   <nav class="sticky top-0 z-40 w-full border-b border-neutral-800 bg-neutral-950/95 backdrop-blur text-neutral-100">
     <div class="mx-auto flex h-14 max-w-7xl items-center gap-3 px-3 sm:px-4 md:px-6">
@@ -93,5 +92,5 @@ const items = [
   { label: 'Contact', href: '/contact' }
 ]
 
-const githubUrl = 'https://github.com/your-org/snappo'
+const githubUrl = 'https://github.com/noel-schmidt/snappo'
 </script>
