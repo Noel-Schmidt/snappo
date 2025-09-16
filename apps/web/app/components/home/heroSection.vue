@@ -2,27 +2,30 @@
 <template>
   <section class="relative isolate overflow-hidden bg-neutral-950 text-neutral-50">
     <div class="mx-auto flex max-w-5xl flex-col items-center px-6 py-40 text-center">
-      <div class="rounded-full border border-neutral-800 bg-neutral-900/60 px-3 py-1 text-sm shadow-[0_0_0_1px_rgba(255,255,255,0.02)_inset]">
+      <div
+        class="rounded-full border border-neutral-800 bg-neutral-900/60 px-3 py-1 text-sm shadow-[0_0_0_1px_rgba(255,255,255,0.02)_inset]"
+      >
         <span class="inline-flex items-center gap-2">
           <span class="inline-block h-2 w-2 rounded-full bg-pink-500"></span>
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-fuchsia-400 to-sky-400 font-medium">
+          <span
+            class="bg-gradient-to-r from-pink-400 via-fuchsia-400 to-sky-400 bg-clip-text font-medium text-transparent"
+          >
             {{ metric }}
           </span>
         </span>
       </div>
 
-      <h1 class="mt-6 text-5xl font-extrabold tracking-tight sm:text-6xl leading-[1.05]">
+      <h1 class="mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl">
         Tools that snap into place
       </h1>
 
       <p class="mt-4 max-w-2xl text-lg text-neutral-300">
-        Snappo is a developer toolbox for hashing, key generation, formatting, and everyday workflows. Fast, minimal, dark by default.
+        Snappo is a developer toolbox for hashing, key generation, formatting, and everyday
+        workflows. Fast, minimal, dark by default.
       </p>
 
       <div class="mt-8 flex items-center gap-3">
-        <Button variant="default" size="lg">
-          Open Snappo
-        </Button>
+        <Button variant="default" size="lg"> Open Snappo </Button>
 
         <Button variant="outline" size="lg">
           <a :href="githubUrl" target="_blank" rel="noopener">GitHub</a>
@@ -31,7 +34,9 @@
     </div>
 
     <div aria-hidden="true" class="pointer-events-none absolute inset-0">
-      <div class="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_-10%,rgba(99,102,241,0.10),transparent_60%)]"></div>
+      <div
+        class="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_-10%,rgba(99,102,241,0.10),transparent_60%)]"
+      ></div>
       <div class="absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]">
         <div class="mx-auto h-full max-w-6xl opacity-[0.06]">
           <div class="grid h-full grid-cols-12 gap-x-6">

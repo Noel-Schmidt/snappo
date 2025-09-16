@@ -1,32 +1,29 @@
 import tailwindcss from '@tailwindcss/vite'
-import tsconfigPaths from "vite-tsconfig-paths";
+import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineNuxtConfig({
-    compatibilityDate: '2025-07-15',
+  compatibilityDate: '2025-07-15',
 
-    devtools: { enabled: true },
+  devtools: { enabled: true },
 
-    app: {
-        head: {
-            htmlAttrs: {
-                class: 'dark'
-            }
-        }
+  app: {
+    head: {
+      htmlAttrs: {
+        class: 'dark',
+      },
     },
+  },
 
-    css: ['~/assets/css/tailwind.css'],
+  css: ['~/assets/css/tailwind.css'],
 
-    vite: {
-        plugins: [
-            tailwindcss(),
-            tsconfigPaths()
-        ],
-    },
+  vite: {
+    plugins: [tailwindcss(), tsconfigPaths()],
+  },
 
-    shadcn: {
-        prefix: '',
-        componentDir: './app/components/ui'
-    },
+  shadcn: {
+    prefix: '',
+    componentDir: './app/components/ui',
+  },
 
-    modules: ['shadcn-nuxt'],
+  modules: ['shadcn-nuxt'],
 })

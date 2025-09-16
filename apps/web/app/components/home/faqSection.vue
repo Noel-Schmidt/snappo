@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-neutral-950 text-neutral-50 py-24">
+  <section class="bg-neutral-950 py-24 text-neutral-50">
     <div class="mx-auto max-w-6xl px-6">
       <div class="grid gap-12 lg:grid-cols-3">
         <div class="lg:col-span-1">
@@ -8,17 +8,25 @@
         </div>
 
         <div class="lg:col-span-2">
-          <Accordion type="single" collapsible class="divide-y divide-neutral-900 rounded-xl ring-1 ring-neutral-800 bg-neutral-950">
+          <Accordion
+            type="single"
+            collapsible
+            class="divide-y divide-neutral-900 rounded-xl bg-neutral-950 ring-1 ring-neutral-800"
+          >
             <AccordionItem
-                v-for="q in faqs"
-                :key="q.q"
-                :value="q.q"
-                class="[&[data-state=open]]:bg-neutral-950/70 transition-colors"
+              v-for="q in faqs"
+              :key="q.q"
+              :value="q.q"
+              class="transition-colors [&[data-state=open]]:bg-neutral-950/70"
             >
-              <AccordionTrigger class="group w-full px-4 py-5 text-left  focus-visible:outline-none">
+              <AccordionTrigger class="group w-full px-4 py-5 text-left focus-visible:outline-none">
                 <div class="flex items-center gap-3">
-                  <div class="h-8 w-8 shrink-0 rounded-lg bg-neutral-900 ring-1 ring-neutral-800 grid place-items-center">
-                    <ChevronDown class="h-4 w-4 text-neutral-300 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                  <div
+                    class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-neutral-900 ring-1 ring-neutral-800"
+                  >
+                    <ChevronDown
+                      class="h-4 w-4 text-neutral-300 transition-transform duration-200 group-data-[state=open]:rotate-180"
+                    />
                   </div>
                   <span class="text-base font-medium tracking-tight text-neutral-100">
                     {{ q.q }}
@@ -40,7 +48,12 @@
 </template>
 
 <script setup lang="ts">
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { ChevronDown } from 'lucide-vue-next'
 
 type QA = { q: string; a: string[] }
@@ -48,23 +61,23 @@ type QA = { q: string; a: string[] }
 const faqs: QA[] = [
   {
     q: 'Is my data sent anywhere?',
-    a: ['No. Tools run client-side. No accounts, no tracking, no telemetry.']
+    a: ['No. Tools run client-side. No accounts, no tracking, no telemetry.'],
   },
   {
     q: 'Do I need to install anything?',
-    a: ['No. Open in the browser and use the tools immediately.']
+    a: ['No. Open in the browser and use the tools immediately.'],
   },
   {
     q: 'How is security handled?',
-    a: ['Sensitive operations use well-known libraries. Nothing leaves your device by default.']
+    a: ['Sensitive operations use well-known libraries. Nothing leaves your device by default.'],
   },
   {
     q: 'Dark mode?',
-    a: ['Yes. Dark-first UI across all components.']
+    a: ['Yes. Dark-first UI across all components.'],
   },
   {
     q: 'Can I contribute?',
-    a: ['Yes. Open an issue or PR. Keep changes focused and follow Conventional Commits.']
-  }
+    a: ['Yes. Open an issue or PR. Keep changes focused and follow Conventional Commits.'],
+  },
 ]
 </script>
