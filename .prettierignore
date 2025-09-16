@@ -1,0 +1,10 @@
+# Build-Ordner
+.nuxt
+.output
+.github
+dist
+node_modules
+
+# Sonstiges
+*.log
+*.md

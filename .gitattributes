@@ -1,0 +1,24 @@
+# Set default text handling
+* text=auto eol=lf
+
+# Treat TypeScript, JavaScript, JSON, YAML, etc. as text
+*.ts  text
+*.tsx text
+*.js  text
+*.jsx text
+*.json text
+*.yml text
+*.yaml text
+*.md text
+*.sql text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+
+# GitHub linguist overrides (optional)
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
