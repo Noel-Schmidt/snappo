@@ -1,7 +1,7 @@
 <!-- components/ui/HeroSection.vue -->
 <template>
   <section class="relative isolate overflow-hidden bg-neutral-950 text-neutral-50">
-    <div class="mx-auto flex max-w-5xl flex-col items-center px-6 py-40 text-center">
+    <div class="mx-auto flex max-w-5xl flex-col items-center px-6 py-52 text-center">
       <div
         class="rounded-full border border-neutral-800 bg-neutral-900/60 px-3 py-1 text-sm shadow-[0_0_0_1px_rgba(255,255,255,0.02)_inset]"
       >
@@ -45,6 +45,8 @@
         </div>
       </div>
     </div>
+
+    <div class="h-px w-full bg-gradient-to-r from-transparent via-neutral-800 to-transparent"></div>
   </section>
 </template>
 
