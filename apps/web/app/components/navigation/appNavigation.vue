@@ -117,19 +117,19 @@
 </template>
 
 <script setup lang="ts">
+import { Github, Menu, X } from 'lucide-vue-next'
 import { ref } from 'vue'
+
 import { useRoute } from '#imports'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Github, Menu, X } from 'lucide-vue-next'
 
 const route = useRoute()
 const open = ref(false)
 const query = ref('')
 
 const items = [
-  { label: 'Featured Tools', href: '/featured' },
-  { label: 'All Tools', href: '/tools' },
+  { label: 'Explore Tools', href: '/tools' },
   { label: 'Blog', href: '/blog' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },

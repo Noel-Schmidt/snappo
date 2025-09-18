@@ -14,6 +14,11 @@ export default defineNuxtConfig({
     },
   },
 
+  site: {
+    url: process.env.NUXT_SITE_URL || 'http://localhost:3000',
+    name: 'Snappo',
+  },
+
   css: ['~/assets/css/tailwind.css'],
 
   vite: {
@@ -25,5 +30,5 @@ export default defineNuxtConfig({
     componentDir: './app/components/ui',
   },
 
-  modules: ['shadcn-nuxt'],
+  modules: ['shadcn-nuxt', 'nuxt-og-image'],
 })

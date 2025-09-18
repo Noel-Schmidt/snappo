@@ -25,11 +25,12 @@
       </p>
 
       <div class="mt-8 flex items-center gap-3">
-        <Button variant="default" size="lg"> Open Snappo </Button>
-
-        <Button variant="outline" size="lg">
-          <a :href="githubUrl" target="_blank" rel="noopener">GitHub</a>
-        </Button>
+        <NuxtLink to="/tools">
+          <Button variant="default" size="lg"> Open Snappo </Button>
+        </NuxtLink>
+        <a :href="githubUrl" target="_blank" rel="noopener">
+          <Button variant="outline" size="lg"> GitHub </Button>
+        </a>
       </div>
     </div>
 
