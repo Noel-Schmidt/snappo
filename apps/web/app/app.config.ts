@@ -1,5 +1,3 @@
-import { defineAppConfig } from 'nuxt/app'
-
 export default defineAppConfig({
   siteName: 'Snappo',
   siteBaseUrl: 'https://snappo.me',

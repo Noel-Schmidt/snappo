@@ -5,7 +5,7 @@
     badge="All Tools"
   />
 
-  <catalog-view  />
+  <catalog-view />
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,4 @@
 import tailwindcss from '@tailwindcss/vite'
-import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -22,7 +21,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/tailwind.css'],
 
   vite: {
-    plugins: [tailwindcss(), tsconfigPaths()],
+    plugins: [tailwindcss()],
   },
 
   shadcn: {
