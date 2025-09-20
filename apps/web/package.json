@@ -15,10 +15,14 @@
     "clean": "rimraf .nuxt .output node_modules"
   },
   "dependencies": {
+    "@nuxt/content": "^3.7.1",
+    "@nuxtjs/robots": "5.5.5",
+    "@nuxtjs/sitemap": "7.4.7",
     "@tailwindcss/vite": "^4.1.13",
     "@unhead/vue": "^2.0.14",
     "@vueuse/core": "^13.9.0",
     "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.544.0",

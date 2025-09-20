@@ -132,9 +132,9 @@ const query = ref('')
 
 const items = [
   { label: 'Explore Tools', href: '/tools' },
-  { label: 'Blog', href: '/blog' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
+  { label: 'License', href: '/license' },
 ]
 
 const githubUrl = 'https://github.com/noel-schmidt/snappo'

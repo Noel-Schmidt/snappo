@@ -3,6 +3,11 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
 
+    nitro: {
+        preset: 'cloudflare-pages',
+        prerender: { routes: ['/sitemap-tools.xml'] }
+    },
+
     devtools: { enabled: true },
 
     app: {
@@ -24,6 +29,10 @@ export default defineNuxtConfig({
         name: 'Snappo',
     },
 
+    sitemap:{
+        sources: ['/sitemap-tools.xml']
+    },
+
     css: ['~/assets/css/tailwind.css'],
 
     vite: {
@@ -35,5 +44,5 @@ export default defineNuxtConfig({
         componentDir: './app/components/ui',
     },
 
-    modules: ['shadcn-nuxt', 'nuxt-og-image'],
+    modules: ['shadcn-nuxt', 'nuxt-og-image', '@nuxtjs/sitemap', '@nuxtjs/robots'],
 })
