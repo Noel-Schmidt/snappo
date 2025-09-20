@@ -6,21 +6,21 @@
           <div class="grid gap-2">
             <Label for="left">Left</Label>
             <textarea
-                id="left"
-                v-model="left"
-                rows="10"
-                class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
-                placeholder="Paste original text"
+              id="left"
+              v-model="left"
+              rows="10"
+              class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
+              placeholder="Paste original text"
             />
           </div>
           <div class="grid gap-2">
             <Label for="right">Right</Label>
             <textarea
-                id="right"
-                v-model="right"
-                rows="10"
-                class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
-                placeholder="Paste changed text"
+              id="right"
+              v-model="right"
+              rows="10"
+              class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
+              placeholder="Paste changed text"
             />
           </div>
         </div>
@@ -29,20 +29,20 @@
           <div class="grid gap-3">
             <Label>Options</Label>
             <div class="flex items-center justify-between"
-            ><span class="text-sm text-neutral-300">Ignore whitespace</span
-            ><Switch v-model:checked="opts.ignoreWs"
+              ><span class="text-sm text-neutral-300">Ignore whitespace</span
+              ><Switch v-model:checked="opts.ignoreWs"
             /></div>
             <div class="flex items-center justify-between"
-            ><span class="text-sm text-neutral-300">Trim line ends</span
-            ><Switch v-model:checked="opts.trim"
+              ><span class="text-sm text-neutral-300">Trim line ends</span
+              ><Switch v-model:checked="opts.trim"
             /></div>
             <div class="flex items-center justify-between"
-            ><span class="text-sm text-neutral-300">Ignore case</span
-            ><Switch v-model:checked="opts.ignoreCase"
+              ><span class="text-sm text-neutral-300">Ignore case</span
+              ><Switch v-model:checked="opts.ignoreCase"
             /></div>
             <div class="flex items-center justify-between"
-            ><span class="text-sm text-neutral-300">Word highlights</span
-            ><Switch v-model:checked="opts.wordLevel"
+              ><span class="text-sm text-neutral-300">Word highlights</span
+              ><Switch v-model:checked="opts.wordLevel"
             /></div>
           </div>
 
@@ -50,31 +50,31 @@
             <Label>View</Label>
             <div class="flex items-center gap-2">
               <Button
-                  :variant="mode === 'side' ? 'default' : 'outline'"
-                  size="sm"
-                  @click="mode = 'side'"
-              >Side-by-Side</Button
+                :variant="mode === 'side' ? 'default' : 'outline'"
+                size="sm"
+                @click="mode = 'side'"
+                >Side-by-Side</Button
               >
               <Button
-                  :variant="mode === 'unified' ? 'default' : 'outline'"
-                  size="sm"
-                  @click="mode = 'unified'"
-              >Unified</Button
+                :variant="mode === 'unified' ? 'default' : 'outline'"
+                size="sm"
+                @click="mode = 'unified'"
+                >Unified</Button
               >
             </div>
             <div class="flex items-center justify-between"
-            ><span class="text-sm text-neutral-300">Wrap long lines</span
-            ><Switch v-model:checked="wrap"
+              ><span class="text-sm text-neutral-300">Wrap long lines</span
+              ><Switch v-model:checked="wrap"
             /></div>
             <div class="flex items-center justify-between"
-            ><span class="text-sm text-neutral-300">Show line numbers</span
-            ><Switch v-model:checked="lineNumbers"
+              ><span class="text-sm text-neutral-300">Show line numbers</span
+              ><Switch v-model:checked="lineNumbers"
             /></div>
             <div class="flex flex-wrap gap-2">
               <Button :disabled="!left && !right" @click="run">Compare</Button>
               <Button variant="outline" :disabled="!left && !right" @click="clearAll">Clear</Button>
               <Button variant="outline" :disabled="!unified.length" @click="copyUnified"
-              >Copy unified</Button
+                >Copy unified</Button
               >
             </div>
           </div>
@@ -83,69 +83,69 @@
             <Label>Summary</Label>
             <div class="flex flex-wrap items-center gap-2 text-sm">
               <span
-                  class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
-              >+ {{ stats.added }} added</span
+                class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
+                >+ {{ stats.added }} added</span
               >
               <span
-                  class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
-              >− {{ stats.removed }} removed</span
+                class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
+                >− {{ stats.removed }} removed</span
               >
               <span
-                  class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
-              >= {{ stats.unchanged }} unchanged</span
+                class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
+                >= {{ stats.unchanged }} unchanged</span
               >
               <span
-                  class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
-              >{{ stats.time }} ms</span
+                class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
+                >{{ stats.time }} ms</span
               >
             </div>
           </div>
         </div>
 
         <div
-            class="h-px w-full bg-gradient-to-r from-transparent via-neutral-800 to-transparent"
+          class="h-px w-full bg-gradient-to-r from-transparent via-neutral-800 to-transparent"
         ></div>
 
         <div v-if="mode === 'side'" class="grid gap-3">
           <div class="overflow-auto rounded-md border border-neutral-800">
             <table class="w-full table-fixed border-collapse text-sm">
               <thead class="sticky top-0 bg-neutral-900/80 text-neutral-300">
-              <tr>
-                <th v-if="lineNumbers" class="w-12 px-2 py-2 text-right font-medium">#</th>
-                <th class="w-1/2 px-2 py-2 text-left font-medium">Left</th>
-                <th v-if="lineNumbers" class="w-12 px-2 py-2 text-right font-medium">#</th>
-                <th class="w-1/2 px-2 py-2 text-left font-medium">Right</th>
-              </tr>
+                <tr>
+                  <th v-if="lineNumbers" class="w-12 px-2 py-2 text-right font-medium">#</th>
+                  <th class="w-1/2 px-2 py-2 text-left font-medium">Left</th>
+                  <th v-if="lineNumbers" class="w-12 px-2 py-2 text-right font-medium">#</th>
+                  <th class="w-1/2 px-2 py-2 text-left font-medium">Right</th>
+                </tr>
               </thead>
               <tbody :class="wrap ? '' : 'whitespace-pre'">
-              <tr
+                <tr
                   v-for="(row, i) in sideRows"
                   :key="i"
                   class="border-t border-neutral-800 align-top"
-              >
-                <td
+                >
+                  <td
                     v-if="lineNumbers"
                     class="px-2 py-1 text-right tabular-nums text-neutral-500"
-                >{{ row.ln ?? '' }}</td
-                >
-                <td class="px-2 py-1" :class="cellClass(row.tl)" v-html="row.lHtml"></td>
-                <td
+                    >{{ row.ln ?? '' }}</td
+                  >
+                  <td class="px-2 py-1" :class="cellClass(row.tl)" v-html="row.lHtml"></td>
+                  <td
                     v-if="lineNumbers"
                     class="px-2 py-1 text-right tabular-nums text-neutral-500"
-                >{{ row.rn ?? '' }}</td
+                    >{{ row.rn ?? '' }}</td
+                  >
+                  <td class="px-2 py-1" :class="cellClass(row.tr)" v-html="row.rHtml"></td>
+                </tr>
+                <tr v-if="!sideRows.length"
+                  ><td :colspan="lineNumbers ? 4 : 2" class="px-3 py-6 text-center text-neutral-500"
+                    >No differences</td
+                  ></tr
                 >
-                <td class="px-2 py-1" :class="cellClass(row.tr)" v-html="row.rHtml"></td>
-              </tr>
-              <tr v-if="!sideRows.length"
-              ><td :colspan="lineNumbers ? 4 : 2" class="px-3 py-6 text-center text-neutral-500"
-              >No differences</td
-              ></tr
-              >
               </tbody>
             </table>
           </div>
           <p class="text-xs text-neutral-500"
-          >Green = added, Red = removed. Yellow marks changed words.</p
+            >Green = added, Red = removed. Yellow marks changed words.</p
           >
         </div>
 
@@ -172,10 +172,10 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 
 const left = ref(''),
-    right = ref('')
+  right = ref('')
 const mode = ref<'side' | 'unified'>('side')
 const wrap = ref(true),
-    lineNumbers = ref(true)
+  lineNumbers = ref(true)
 const opts = ref({ ignoreWs: true, trim: true, ignoreCase: false, wordLevel: true })
 
 type Op = {
@@ -192,9 +192,9 @@ function normalizeBlock(s: string) {
   let v = s.replace(/\r\n?/g, '\n')
   if (opts.value.trim)
     v = v
-        .split('\n')
-        .map((l) => l.replace(/\s+$/, ''))
-        .join('\n')
+      .split('\n')
+      .map((l) => l.replace(/\s+$/, ''))
+      .join('\n')
   return v
 }
 function keyOf(line: string) {
@@ -206,16 +206,16 @@ function keyOf(line: string) {
 
 function lcsLines(aKeys: string[], bKeys: string[], A: string[], B: string[]) {
   const n = aKeys.length,
-      m = bKeys.length
+    m = bKeys.length
   const dp: number[][] = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0))
   for (let i = n - 1; i >= 0; i--)
     for (let j = m - 1; j >= 0; j--)
       dp[i][j] = aKeys[i] === bKeys[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1])
   const out: Op[] = []
   let i = 0,
-      j = 0,
-      ai = 0,
-      bi = 0
+    j = 0,
+    ai = 0,
+    bi = 0
   while (i < n && j < m) {
     if (aKeys[i] === bKeys[j]) {
       out.push({ type: 'eq', a: A[i], b: B[j], ai: ai + 1, bi: bi + 1 })
@@ -251,11 +251,11 @@ function run() {
   const A = normalizeBlock(left.value).split('\n')
   const B = normalizeBlock(right.value).split('\n')
   const aKeys = A.map(keyOf),
-      bKeys = B.map(keyOf)
+    bKeys = B.map(keyOf)
   ops.value = lcsLines(aKeys, bKeys, A, B)
   let added = 0,
-      removed = 0,
-      unchanged = 0
+    removed = 0,
+    unchanged = 0
   for (const r of ops.value) r.type === 'add' ? added++ : r.type === 'del' ? removed++ : unchanged++
   const t1 = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now()
   stats.value = { added, removed, unchanged, time: Math.max(0, Math.round(t1 - t0)) }
@@ -263,8 +263,8 @@ function run() {
 
 function esc(s: string) {
   return s.replace(
-      /[&<>"']/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string
+    /[&<>"']/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string
   )
 }
 function tokenize(s: string) {
@@ -274,14 +274,14 @@ function tokenize(s: string) {
 type TokOp = { t: 'eq' | 'add' | 'del'; v: string }
 function diffTokens(a: string[], b: string[]) {
   const n = a.length,
-      m = b.length
+    m = b.length
   const dp: number[][] = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0))
   for (let i = n - 1; i >= 0; i--)
     for (let j = m - 1; j >= 0; j--)
       dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1])
   const out: TokOp[] = []
   let i = 0,
-      j = 0
+    j = 0
   while (i < n && j < m) {
     if (a[i] === b[j]) {
       out.push({ t: 'eq', v: a[i] })
@@ -302,23 +302,23 @@ function renderLeft(a: string, b: string) {
   if (!opts.value.wordLevel) return esc(a)
   const ops = diffTokens(tokenize(a), tokenize(b))
   return ops
-      .map((o) => {
-        if (o.t === 'eq') return esc(o.v)
-        if (o.t === 'del') return `<span class="bg-rose-500/30 text-rose-50">${esc(o.v)}</span>`
-        return ''
-      })
-      .join('')
+    .map((o) => {
+      if (o.t === 'eq') return esc(o.v)
+      if (o.t === 'del') return `<span class="bg-rose-500/30 text-rose-50">${esc(o.v)}</span>`
+      return ''
+    })
+    .join('')
 }
 function renderRight(a: string, b: string) {
   if (!opts.value.wordLevel) return esc(b)
   const ops = diffTokens(tokenize(a), tokenize(b))
   return ops
-      .map((o) => {
-        if (o.t === 'eq') return esc(o.v)
-        if (o.t === 'add') return `<span class="bg-emerald-500/30 text-emerald-50">${esc(o.v)}</span>`
-        return ''
-      })
-      .join('')
+    .map((o) => {
+      if (o.t === 'eq') return esc(o.v)
+      if (o.t === 'add') return `<span class="bg-emerald-500/30 text-emerald-50">${esc(o.v)}</span>`
+      return ''
+    })
+    .join('')
 }
 
 const sideRows = computed(() => {
@@ -416,10 +416,10 @@ function clearAll() {
 }
 function copyUnified() {
   const text = unified.value
-      .map(
-          (r) => (r.t === 'add' ? '+ ' : r.t === 'del' ? '- ' : '  ') + r.html.replace(/<[^>]+>/g, '')
-      )
-      .join('\n')
+    .map(
+      (r) => (r.t === 'add' ? '+ ' : r.t === 'del' ? '- ' : '  ') + r.html.replace(/<[^>]+>/g, '')
+    )
+    .join('\n')
   navigator.clipboard.writeText(text).catch(() => {})
 }
 

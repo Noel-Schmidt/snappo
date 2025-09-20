@@ -1,16 +1,16 @@
 <template>
   <page-header
-      title="License"
-      subtitle="Review Snappo’s licensing terms and conditions for using our developer tools"
-      badge="About"
+    title="License"
+    subtitle="Review Snappo’s licensing terms and conditions for using our developer tools"
+    badge="About"
   />
 
-  <section class="bg-neutral-950 text-neutral-50 py-24">
+  <section class="bg-neutral-950 py-24 text-neutral-50">
     <tool-layout>
       <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-8">
-        <h2 class="text-2xl font-bold tracking-tight mb-6">License</h2>
+        <h2 class="mb-6 text-2xl font-bold tracking-tight">License</h2>
         <div class="prose prose-invert max-w-none text-sm leading-relaxed">
-<pre class="whitespace-pre-wrap text-neutral-300">
+          <pre class="whitespace-pre-wrap text-neutral-300">
 MIT License
 
 Copyright (c) 2025 Noel Schmidt
@@ -32,23 +32,22 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-</pre>
+</pre
+          >
         </div>
       </div>
     </tool-layout>
   </section>
-
-
 </template>
 
 <script setup lang="ts">
-import PageHeader from "~/components/core/pageHeader.vue";
+import PageHeader from '~/components/core/pageHeader.vue'
 
 const title = 'License – Terms and Conditions'
 const fullTitle = title
 const url = 'https://snappo.dev/license'
 const description =
-    'Read the Snappo license terms and conditions. Understand how you can use our free developer tools, their limitations, and distribution rights.'
+  'Read the Snappo license terms and conditions. Understand how you can use our free developer tools, their limitations, and distribution rights.'
 
 useSeoMeta({
   title: fullTitle,

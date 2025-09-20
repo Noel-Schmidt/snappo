@@ -15,6 +15,7 @@
     "clean": "rimraf .nuxt .output node_modules"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
     "@nuxt/content": "^3.7.1",
     "@nuxtjs/robots": "5.5.5",
     "@nuxtjs/sitemap": "7.4.7",
@@ -37,7 +38,8 @@
     "unstorage": "^1.17.1",
     "vite-tsconfig-paths": "^5.1.4",
     "vue": "^3.5.21",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "vue-sonner": "^2.0.8"
   },
   "devDependencies": {
     "@snappo/eslint-config": "workspace:*",

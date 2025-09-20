@@ -75,5 +75,17 @@ export default defineAppConfig({
       status: 'beta',
       accent: 'rgba(59,130,246,0.35)',
     },
+
+    {
+      slug: 'palette-generator',
+      title: 'Palette Generator',
+      badge: 'Design',
+      description:
+        'Generate color palettes from a base color. Explore harmonies, shades, tints, and export palettes for your projects — try it now with Snappo.',
+      component: 'paletteGeneratorTool.vue',
+      tags: ['palette', 'colors', 'design', 'generator'],
+      status: 'beta',
+      accent: 'rgba(236,72,153,0.35)',
+    },
   ],
 })

@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import '@fontsource-variable/inter';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -133,6 +134,7 @@
 
 @layer base {
   * {
+    font-family: 'InterVariable', system-ui, sans-serif;
     @apply border-border outline-ring/50;
   }
   body {

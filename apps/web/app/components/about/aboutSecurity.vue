@@ -59,7 +59,9 @@
             </ul>
             <div class="mt-6 flex gap-3">
               <Button as-child>
-                <NuxtLink to="https://github.com/Noel-Schmidt/snappo/security/policy">Security Policy</NuxtLink>
+                <NuxtLink to="https://github.com/Noel-Schmidt/snappo/security/policy"
+                  >Security Policy</NuxtLink
+                >
               </Button>
             </div>
           </div>

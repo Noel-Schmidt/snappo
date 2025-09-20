@@ -1,48 +1,48 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
-    compatibilityDate: '2025-07-15',
+  compatibilityDate: '2025-07-15',
 
-    nitro: {
-        preset: 'cloudflare-pages',
-        prerender: { routes: ['/sitemap-tools.xml'] }
+  nitro: {
+    preset: 'cloudflare-pages',
+    prerender: { routes: ['/sitemap-tools.xml'] },
+  },
+
+  devtools: { enabled: true },
+
+  app: {
+    head: {
+      htmlAttrs: {
+        lang: 'en',
+        class: 'dark',
+      },
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      ],
     },
+  },
 
-    devtools: { enabled: true },
+  site: {
+    url: process.env.NUXT_SITE_URL || 'http://localhost:3000',
+    name: 'Snappo',
+  },
 
-    app: {
-        head: {
-            htmlAttrs: {
-                lang: 'en',
-                class: 'dark',
-            },
-            link: [
-                { rel: 'icon', type: 'image/png', href: '/favicon.png' },
-                { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
-                { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
-            ],
-        },
-    },
+  sitemap: {
+    sources: ['/sitemap-tools.xml'],
+  },
 
-    site: {
-        url: process.env.NUXT_SITE_URL || 'http://localhost:3000',
-        name: 'Snappo',
-    },
+  css: ['~/assets/css/tailwind.css'],
 
-    sitemap:{
-        sources: ['/sitemap-tools.xml']
-    },
+  vite: {
+    plugins: [tailwindcss()],
+  },
 
-    css: ['~/assets/css/tailwind.css'],
+  shadcn: {
+    prefix: '',
+    componentDir: './app/components/ui',
+  },
 
-    vite: {
-        plugins: [tailwindcss()],
-    },
-
-    shadcn: {
-        prefix: '',
-        componentDir: './app/components/ui',
-    },
-
-    modules: ['shadcn-nuxt', 'nuxt-og-image', '@nuxtjs/sitemap', '@nuxtjs/robots'],
+  modules: ['shadcn-nuxt', 'nuxt-og-image', '@nuxtjs/sitemap', '@nuxtjs/robots'],
 })
