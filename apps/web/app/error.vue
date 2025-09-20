@@ -1,16 +1,16 @@
 <!-- apps/web/app/error.vue -->
 <script setup lang="ts">
 import type { NuxtError } from '#app'
+import AppFooter from '~/components/footer/appFooter.vue'
+import AppNavigation from '~/components/navigation/appNavigation.vue'
 import { Button } from '~/components/ui/button'
-import AppFooter from "~/components/footer/appFooter.vue";
-import AppNavigation from "~/components/navigation/appNavigation.vue";
 
 const props = defineProps<{ error: NuxtError }>()
 const handleError = () => clearError({ redirect: '/' })
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
+  <div class="flex min-h-screen flex-col bg-neutral-950 text-neutral-50">
     <AppNavigation />
 
     <main class="flex-1">
@@ -18,9 +18,11 @@ const handleError = () => clearError({ redirect: '/' })
         <div class="mx-auto max-w-6xl py-24">
           <div class="mx-auto max-w-xl">
             <div
-                class="rounded-2xl border border-neutral-800 bg-neutral-900/40 p-10 text-center shadow-xl backdrop-blur"
+              class="rounded-2xl border border-neutral-800 bg-neutral-900/40 p-10 text-center shadow-xl backdrop-blur"
             >
-              <div class="mx-auto mb-6 h-16 w-16 rounded-xl border border-neutral-800 bg-neutral-950 grid place-items-center">
+              <div
+                class="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-xl border border-neutral-800 bg-neutral-950"
+              >
                 <span class="text-2xl font-semibold tabular-nums">
                   {{ props.error.statusCode || 'Error' }}
                 </span>
@@ -29,7 +31,7 @@ const handleError = () => clearError({ redirect: '/' })
               <h1 class="text-2xl font-semibold tracking-tight">
                 {{ props.error.statusMessage || 'Something went wrong' }}
               </h1>
-              <p class="mt-2 text-sm text-neutral-400 break-words">
+              <p class="mt-2 break-words text-sm text-neutral-400">
                 {{ props.error.message || 'An unexpected error occurred.' }}
               </p>
 

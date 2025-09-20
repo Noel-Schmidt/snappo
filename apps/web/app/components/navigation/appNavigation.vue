@@ -22,11 +22,7 @@
 
       <div class="ml-auto flex items-center gap-2">
         <div class="hidden md:block">
-          <Input
-            v-model="query"
-            placeholder="Search"
-            class="h-9 w-48 bg-neutral-800/70 text-neutral-100 placeholder:text-neutral-400 focus-visible:ring-neutral-500"
-          />
+          <app-navigation-search />
         </div>
         <a
           href="https://github.com/Noel-Schmidt/snappo/issues"
@@ -129,6 +125,7 @@ import { ref } from 'vue'
 import { useRoute } from '#imports'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import AppNavigationSearch from '~/components/navigation/appNavigationSearch.vue'
 
 const route = useRoute()
 const open = ref(false)

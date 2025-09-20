@@ -75,16 +75,18 @@
                   <Label>Image colors</Label>
                   <div class="flex flex-wrap gap-2">
                     <button
-                        v-for="(c, i) in imageColors"
-                        :key="i"
-                        class="group relative h-10 w-10 overflow-hidden rounded-md border border-neutral-800"
-                        :style="{ background: rgbHex(c) }"
-                        :title="rgbHex(c)"
-                        @click="onPickFromImage(c)"
+                      v-for="(c, i) in imageColors"
+                      :key="i"
+                      class="group relative h-10 w-10 overflow-hidden rounded-md border border-neutral-800"
+                      :style="{ background: rgbHex(c) }"
+                      :title="rgbHex(c)"
+                      @click="onPickFromImage(c)"
                     >
-  <span class="pointer-events-none absolute bottom-0 left-0 right-0 bg-black/40 p-0.5 text-[10px] opacity-0 transition-opacity group-hover:opacity-100">
-    {{ rgbHex(c) }}
-  </span>
+                      <span
+                        class="pointer-events-none absolute bottom-0 left-0 right-0 bg-black/40 p-0.5 text-[10px] opacity-0 transition-opacity group-hover:opacity-100"
+                      >
+                        {{ rgbHex(c) }}
+                      </span>
                     </button>
                   </div>
                 </div>
