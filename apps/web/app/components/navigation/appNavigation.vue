@@ -28,11 +28,13 @@
             class="h-9 w-48 bg-neutral-800/70 text-neutral-100 placeholder:text-neutral-400 focus-visible:ring-neutral-500"
           />
         </div>
-        <Button
-          variant="outline"
-          class="hidden h-9 border-neutral-700 text-neutral-100 hover:bg-neutral-800 md:inline-flex"
+        <a href="https://github.com/Noel-Schmidt/snappo/issues" target="_blank" rel="noopener noreferrer">
+          <Button
+              variant="outline"
+              class="hidden h-9 cursor-pointer border-neutral-700 text-neutral-100 hover:bg-neutral-800 md:inline-flex"
           >Feedback</Button
-        >
+          >
+        </a>
         <Button
           variant="secondary"
           class="h-9 bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
