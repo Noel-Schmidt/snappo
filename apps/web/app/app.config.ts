@@ -87,5 +87,17 @@ export default defineAppConfig({
       status: 'beta',
       accent: 'rgba(236,72,153,0.35)',
     },
+
+    {
+      slug: 'minifier',
+      title: 'Minifier',
+      badge: 'Code',
+      description:
+        'Minify JavaScript, CSS, or HTML to reduce file size and improve load times. Copy optimized code instantly — try it now with Snappo.',
+      component: 'minifierTool.vue',
+      tags: ['minify', 'javascript', 'css', 'html', 'optimize'],
+      status: 'beta',
+      accent: 'rgba(250,204,21,0.35)',
+    },
   ],
 })
