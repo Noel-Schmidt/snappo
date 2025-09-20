@@ -31,7 +31,7 @@ import { rgbHex } from '~/lib/color'
 
 const props = defineProps<{
   label: string
-  colors: RGB[] | { value?: RGB[] } | undefined
+  colors: RGB[] | { value?: RGB[] }
 }>()
 
 const items = computed<RGB[]>(() => {
