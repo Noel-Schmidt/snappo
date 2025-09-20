@@ -1,5 +1,7 @@
 <template>
   <tool-layout>
+    <h2 class="text-2xl mb-4 font-bold">Explore all Tools</h2>
+
     <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-end">
       <div class="flex w-full items-center gap-3">
         <div class="relative w-full">

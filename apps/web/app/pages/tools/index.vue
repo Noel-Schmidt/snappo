@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import PageHeader from '~/components/core/pageHeader.vue'
-import CatalogView from '~/components/tools/catalogView.vue'
+import CatalogView from '~/components/tool/catalogView.vue'
 
 const title = 'Explore Tools'
 const site = 'Snappo'
