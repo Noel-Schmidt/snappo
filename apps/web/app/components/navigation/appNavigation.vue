@@ -4,7 +4,7 @@
   >
     <div class="mx-auto flex h-14 max-w-7xl items-center gap-3 px-3 sm:px-4 md:px-6">
       <NuxtLink to="/" class="flex items-center gap-2">
-        <img class="w-10" src="/images/snappo.svg" />
+        <img alt="snappo" class="w-10" src="/images/snappo.svg" />
         <span class="font-semibold tracking-tight">Snappo</span>
       </NuxtLink>
 
