@@ -48,9 +48,9 @@
             </p>
             <p class="mt-2 text-neutral-100">
               <a
-                href="mailto:me@noel-schmidt.de"
+                href="mailto:hello@snappo.me"
                 class="underline decoration-neutral-600 underline-offset-4 hover:text-white"
-                >me@noel-schmidt.de</a
+                >hello@snappo.me</a
               >
             </p>
             <ul class="mt-5 space-y-2 text-sm text-neutral-300">
@@ -59,7 +59,7 @@
             </ul>
             <div class="mt-6 flex gap-3">
               <Button as-child>
-                <NuxtLink to="/security">Security Policy</NuxtLink>
+                <NuxtLink to="https://github.com/Noel-Schmidt/snappo/security/policy">Security Policy</NuxtLink>
               </Button>
             </div>
           </div>
