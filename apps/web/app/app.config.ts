@@ -99,5 +99,16 @@ export default defineAppConfig({
       status: 'beta',
       accent: 'rgba(250,204,21,0.35)',
     },
+    {
+      slug: 'password-generator',
+      title: 'Password Generator',
+      badge: 'Security',
+      description:
+        'Generate strong, customizable passwords with adjustable length, character sets, and options for symbols and numbers — try it now with Snappo.',
+      component: 'passwordGeneratorTool.vue',
+      tags: ['password', 'security', 'generator', 'random'],
+      status: 'stable',
+      accent: 'rgba(239,68,68,0.35)',
+    },
   ],
 })
