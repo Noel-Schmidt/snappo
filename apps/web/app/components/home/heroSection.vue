@@ -1,7 +1,7 @@
 <!-- components/ui/HeroSection.vue -->
 <template>
   <section class="relative isolate overflow-hidden bg-neutral-950 text-neutral-50">
-    <div class="mx-auto flex max-w-5xl flex-col items-center px-6 py-52 text-center">
+    <div class="mx-auto flex max-w-5xl flex-col items-center px-6 py-24 text-center md:py-52">
       <div
         class="rounded-full border border-neutral-800 bg-neutral-900/60 px-3 py-1 text-sm shadow-[0_0_0_1px_rgba(255,255,255,0.02)_inset]"
       >
@@ -25,11 +25,12 @@
       </p>
 
       <div class="mt-8 flex items-center gap-3">
-        <Button variant="default" size="lg"> Open Snappo </Button>
-
-        <Button variant="outline" size="lg">
-          <a :href="githubUrl" target="_blank" rel="noopener">GitHub</a>
-        </Button>
+        <NuxtLink to="/tools">
+          <Button variant="default" size="lg"> Open Snappo </Button>
+        </NuxtLink>
+        <a :href="githubUrl" target="_blank" rel="noopener">
+          <Button variant="outline" size="lg"> GitHub </Button>
+        </a>
       </div>
     </div>
 

@@ -28,7 +28,9 @@
               <NuxtLink to="/about#story">Read Story</NuxtLink>
             </Button>
             <Button variant="outline" as-child>
-              <a href="https://github.com/your-org/snappo" target="_blank" rel="noopener">GitHub</a>
+              <a href="https://github.com/noel-schmidt/snappo" target="_blank" rel="noopener"
+                >GitHub</a
+              >
             </Button>
           </div>
         </div>

@@ -12,7 +12,7 @@
 
         <nav class="flex justify-center gap-8 text-sm">
           <NuxtLink to="/tools" class="transition-colors hover:text-neutral-100">Tools</NuxtLink>
-          <NuxtLink to="/blog" class="transition-colors hover:text-neutral-100">Blog</NuxtLink>
+          <NuxtLink to="/about" class="transition-colors hover:text-neutral-100">About</NuxtLink>
           <a
             href="https://github.com/noel-schmidt/snappo"
             target="_blank"

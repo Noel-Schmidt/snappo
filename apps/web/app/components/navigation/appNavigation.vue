@@ -4,7 +4,7 @@
   >
     <div class="mx-auto flex h-14 max-w-7xl items-center gap-3 px-3 sm:px-4 md:px-6">
       <NuxtLink to="/" class="flex items-center gap-2">
-        <img class="w-10" src="/images/snappo.svg" />
+        <img alt="snappo" class="w-10" src="/images/snappo.svg" />
         <span class="font-semibold tracking-tight">Snappo</span>
       </NuxtLink>
 
@@ -22,17 +22,19 @@
 
       <div class="ml-auto flex items-center gap-2">
         <div class="hidden md:block">
-          <Input
-            v-model="query"
-            placeholder="Search"
-            class="h-9 w-48 bg-neutral-800/70 text-neutral-100 placeholder:text-neutral-400 focus-visible:ring-neutral-500"
-          />
+          <app-navigation-search />
         </div>
-        <Button
-          variant="outline"
-          class="hidden h-9 border-neutral-700 text-neutral-100 hover:bg-neutral-800 md:inline-flex"
-          >Feedback</Button
+        <a
+          href="https://github.com/Noel-Schmidt/snappo/issues"
+          target="_blank"
+          rel="noopener noreferrer"
         >
+          <Button
+            variant="outline"
+            class="hidden h-9 cursor-pointer border-neutral-700 text-neutral-100 hover:bg-neutral-800 md:inline-flex"
+            >Feedback</Button
+          >
+        </a>
         <Button
           variant="secondary"
           class="h-9 bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
@@ -117,22 +119,23 @@
 </template>
 
 <script setup lang="ts">
+import { Github, Menu, X } from 'lucide-vue-next'
 import { ref } from 'vue'
+
 import { useRoute } from '#imports'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Github, Menu, X } from 'lucide-vue-next'
+import AppNavigationSearch from '~/components/navigation/appNavigationSearch.vue'
 
 const route = useRoute()
 const open = ref(false)
 const query = ref('')
 
 const items = [
-  { label: 'Featured Tools', href: '/featured' },
-  { label: 'All Tools', href: '/tools' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Explore Tools', href: '/tools' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
+  { label: 'License', href: '/license' },
 ]
 
 const githubUrl = 'https://github.com/noel-schmidt/snappo'

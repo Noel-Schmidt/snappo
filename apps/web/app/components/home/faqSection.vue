@@ -48,13 +48,14 @@
 </template>
 
 <script setup lang="ts">
+import { ChevronDown } from 'lucide-vue-next'
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { ChevronDown } from 'lucide-vue-next'
 
 type QA = { q: string; a: string[] }
 
