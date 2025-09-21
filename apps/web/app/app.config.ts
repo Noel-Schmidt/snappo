@@ -110,5 +110,16 @@ export default defineAppConfig({
       status: 'stable',
       accent: 'rgba(239,68,68,0.35)',
     },
+    {
+      slug: 'cron-tool',
+      title: 'Cron Tool',
+      badge: 'Code',
+      description:
+        'Generate and parse cron expressions with presets, human-readable output, and next run previews — try it now with Snappo.',
+      component: 'cronTool.vue',
+      tags: ['cron', 'scheduler', 'time', 'generator', 'parser'],
+      status: 'beta',
+      accent: 'rgba(168,85,247,0.35)',
+    },
   ],
 })
