@@ -1,4 +1,3 @@
-<!-- apps/web/app/components/tools/cronTool.vue -->
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
 import { toast } from 'vue-sonner'
@@ -19,7 +18,6 @@ import { Textarea } from '@/components/ui/textarea'
 type Mode = 'generator' | 'parser'
 const mode = ref<Mode>('generator')
 
-/* Generator state */
 const gen = reactive({
   minute: '*',
   hour: '*',
@@ -29,10 +27,8 @@ const gen = reactive({
 })
 const cronOut = computed(() => `${gen.minute} ${gen.hour} ${gen.dom} ${gen.month} ${gen.dow}`)
 
-/* Parser state */
 const cronIn = ref<string>('* * * * *')
 
-/* Cron parsing logic */
 type Field = 'minute' | 'hour' | 'dom' | 'month' | 'dow'
 type Spec = {
   any: boolean
@@ -172,7 +168,6 @@ function nextRuns(expr: string, count = 5, start?: Date): Date[] {
   return out
 }
 
-/* Human readable */
 function describeField(spec: Spec, field: Field): string {
   const namesMonth = [
     '',
@@ -234,7 +229,6 @@ function describeCron(expr: string): string {
   return `Runs at ${hour} and ${min}, ${dayPart}, in ${mon}.`
 }
 
-/* Pure computed validation state */
 const currentExpr = computed(() => (mode.value === 'generator' ? cronOut.value : cronIn.value))
 type ParsedState = { parsed: ParsedCron | null; error: string }
 const parsedState = computed<ParsedState>(() => {
@@ -269,7 +263,6 @@ async function copyCron() {
   } catch {}
 }
 
-/* Presets */
 type Preset = { label: string; expr: string }
 const presets: Preset[] = [
   { label: 'Every minute', expr: '* * * * *' },
