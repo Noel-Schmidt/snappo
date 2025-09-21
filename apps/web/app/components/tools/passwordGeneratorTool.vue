@@ -1,13 +1,12 @@
 <!-- apps/web/app/components/tools/passwordGeneratorTool.vue -->
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
-import { toast } from 'vue-sonner'
-
+import { reactive, ref, computed, watch, onMounted } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
+import { Separator } from '@/components/ui/separator'
+import { toast } from 'vue-sonner'
 
 type Opts = {
   length: number
@@ -19,7 +18,7 @@ type Opts = {
   requireEach: boolean
 }
 
-const opts = ref<Opts>({
+const opts = reactive<Opts>({
   length: 16,
   lower: true,
   upper: true,
@@ -29,35 +28,13 @@ const opts = ref<Opts>({
   requireEach: true,
 })
 
-const password = ref<string>('')
+const password = ref('')
 
+/* pools */
 const pools = computed(() => {
   const ambiguous = new Set([
-    '0',
-    'O',
-    'o',
-    'l',
-    '1',
-    'I',
-    '|',
-    '`',
-    "'",
-    '"',
-    '~',
-    ',',
-    ';',
-    '.',
-    ':',
-    '{',
-    '}',
-    '[',
-    ']',
-    '(',
-    ')',
-    '/',
-    '\\',
-    '<',
-    '>',
+    '0','O','o','l','1','I','|','`',"'",'"','~',',',';','.',':',
+    '{','}','[',']','(',')','/','\\','<','>'
   ])
   const base = {
     lower: 'abcdefghijklmnopqrstuvwxyz'.split(''),
@@ -65,46 +42,42 @@ const pools = computed(() => {
     digits: '0123456789'.split(''),
     symbols: '!@#$%^&*+-_=?:'.split(''),
   }
-  const out = {
-    lower: base.lower,
-    upper: base.upper,
-    digits: base.digits,
-    symbols: base.symbols,
+  const filter = (arr: string[]) => opts.noAmbiguous ? arr.filter(c => !ambiguous.has(c)) : arr
+  return {
+    lower: filter(base.lower),
+    upper: filter(base.upper),
+    digits: filter(base.digits),
+    symbols: filter(base.symbols),
   }
-  if (opts.value.noAmbiguous) {
-    for (const k of Object.keys(out) as Array<keyof typeof out>) {
-      out[k] = out[k].filter((c) => !ambiguous.has(c))
-    }
-  }
-  return out
 })
 
-const activePools = computed(() => {
-  const list: string[][] = []
-  if (opts.value.lower) list.push(pools.value.lower)
-  if (opts.value.upper) list.push(pools.value.upper)
-  if (opts.value.digits) list.push(pools.value.digits)
-  if (opts.value.symbols) list.push(pools.value.symbols)
-  return list
+const activePools = computed<string[][]>(() => {
+  const res: string[][] = []
+  if (opts.lower)   res.push(pools.value.lower)
+  if (opts.upper)   res.push(pools.value.upper)
+  if (opts.digits)  res.push(pools.value.digits)
+  if (opts.symbols) res.push(pools.value.symbols)
+  return res
 })
 
 const poolSize = computed(() => activePools.value.reduce((n, p) => n + p.length, 0))
 
+/* strength */
 const entropyBits = computed(() => {
-  const L = Math.max(0, opts.value.length | 0)
+  const L = Math.max(0, opts.length | 0)
   const S = Math.max(1, poolSize.value | 0)
   return +(L * Math.log2(S)).toFixed(2)
 })
-
 const strength = computed(() => {
   const e = entropyBits.value
   if (e >= 100) return { label: 'excellent', percent: 100 }
-  if (e >= 80) return { label: 'very strong', percent: 85 }
-  if (e >= 60) return { label: 'strong', percent: 70 }
-  if (e >= 40) return { label: 'medium', percent: 50 }
+  if (e >= 80)  return { label: 'very strong', percent: 85 }
+  if (e >= 60)  return { label: 'strong', percent: 70 }
+  if (e >= 40)  return { label: 'medium', percent: 50 }
   return { label: 'weak', percent: 25 }
 })
 
+/* rng helpers */
 function randIndices(count: number, maxExclusive: number): Uint32Array {
   const out = new Uint32Array(count)
   crypto.getRandomValues(out)
@@ -112,19 +85,17 @@ function randIndices(count: number, maxExclusive: number): Uint32Array {
   return out
 }
 
+/* generate */
 function generate(): void {
-  const length = Math.min(128, Math.max(4, opts.value.length | 0))
+  const length = Math.min(128, Math.max(4, opts.length | 0))
   const poolsArr = activePools.value
   const totalPool = poolsArr.flat()
-  if (totalPool.length === 0) {
-    password.value = ''
-    return
-  }
+  if (totalPool.length === 0) { password.value = ''; return }
 
-  const reqEach = opts.value.requireEach && poolsArr.length > 1
+  const mustCoverSets = opts.requireEach && poolsArr.length > 1
   const chars: string[] = []
 
-  if (reqEach) {
+  if (mustCoverSets) {
     for (const p of poolsArr) {
       const idx = randIndices(1, p.length)[0]
       chars.push(p[idx])
@@ -137,12 +108,9 @@ function generate(): void {
     for (let i = 0; i < rnd.length; i++) chars.push(totalPool[rnd[i]])
   }
 
-  // secure shuffle (Fisher–Yates with crypto)
   for (let i = chars.length - 1; i > 0; i--) {
     const j = randIndices(1, i + 1)[0]
-    const t = chars[i]
-    chars[i] = chars[j]
-    chars[j] = t
+    const t = chars[i]; chars[i] = chars[j]; chars[j] = t
   }
 
   password.value = chars.join('')
@@ -150,47 +118,40 @@ function generate(): void {
 
 async function copyPw(): Promise<void> {
   if (!password.value) return
-  try {
-    await navigator.clipboard.writeText(password.value)
-  } catch {}
+  try { await navigator.clipboard.writeText(password.value) } catch {}
   toast('Copied password')
 }
 
-watch(() => ({ ...opts.value }), generate, { deep: true })
+/* react to all option changes */
+watch(opts, generate, { deep: true })
 onMounted(generate)
+
+/* Switch bridge like your example: use :model-value and @update:model-value */
+function set<K extends keyof Opts>(key: K, val: unknown) {
+  // Switch sends boolean
+  opts[key] = Boolean(val) as any
+}
 </script>
 
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
+  <section class="bg-neutral-950 text-neutral-50 py-24">
     <div class="mx-auto max-w-6xl px-6">
       <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
         <div class="grid gap-6 md:grid-cols-12">
+          <!-- Controls -->
           <div class="md:col-span-4">
             <div class="grid gap-5">
               <div class="grid gap-2">
-                <Label for="length">Length</Label>
+                <Label for="length">Length <span class="text-neutral-400">({{ opts.length }})</span></Label>
                 <div class="flex items-center gap-3">
                   <input
-                    id="length"
-                    type="range"
-                    min="4"
-                    max="128"
-                    step="1"
-                    :value="opts.length"
-                    class="w-full accent-neutral-300"
-                    @input="opts.length = Number(($event.target as HTMLInputElement).value)"
+                      id="length"
+                      type="range"
+                      min="4" max="128" step="1"
+                      v-model.number="opts.length"
+                      class="w-full accent-neutral-300"
                   />
-                  <Input
-                    v-model.number="opts.length"
-                    type="number"
-                    class="w-20"
-                    @input="
-                      opts.length = Math.min(
-                        128,
-                        Math.max(4, Number(($event.target as HTMLInputElement).value || 0))
-                      )
-                    "
-                  />
+                  <Input type="number" v-model.number="opts.length" class="w-20" />
                 </div>
               </div>
 
@@ -199,19 +160,19 @@ onMounted(generate)
                 <div class="grid gap-3">
                   <div class="flex items-center justify-between">
                     <span class="text-sm text-neutral-300">Lowercase a–z</span>
-                    <Switch v-model:checked="opts.lower" />
+                    <Switch :model-value="opts.lower" @update:model-value="v => set('lower', v)" />
                   </div>
                   <div class="flex items-center justify-between">
                     <span class="text-sm text-neutral-300">Uppercase A–Z</span>
-                    <Switch v-model:checked="opts.upper" />
+                    <Switch :model-value="opts.upper" @update:model-value="v => set('upper', v)" />
                   </div>
                   <div class="flex items-center justify-between">
                     <span class="text-sm text-neutral-300">Digits 0–9</span>
-                    <Switch v-model:checked="opts.digits" />
+                    <Switch :model-value="opts.digits" @update:model-value="v => set('digits', v)" />
                   </div>
                   <div class="flex items-center justify-between">
                     <span class="text-sm text-neutral-300">Symbols !@#$…</span>
-                    <Switch v-model:checked="opts.symbols" />
+                    <Switch :model-value="opts.symbols" @update:model-value="v => set('symbols', v)" />
                   </div>
                 </div>
               </div>
@@ -221,30 +182,26 @@ onMounted(generate)
                 <div class="grid gap-3">
                   <div class="flex items-center justify-between">
                     <span class="text-sm text-neutral-300">Exclude ambiguous</span>
-                    <Switch v-model:checked="opts.noAmbiguous" />
+                    <Switch :model-value="opts.noAmbiguous" @update:model-value="v => set('noAmbiguous', v)" />
                   </div>
                   <div class="flex items-center justify-between">
                     <span class="text-sm text-neutral-300">Require each selected set</span>
-                    <Switch v-model:checked="opts.requireEach" />
+                    <Switch :model-value="opts.requireEach" @update:model-value="v => set('requireEach', v)" />
                   </div>
                 </div>
               </div>
 
               <div class="grid gap-2">
                 <Label>Strength</Label>
-                <div class="h-2 w-full overflow-hidden rounded bg-neutral-800">
+                <div class="h-2 w-full rounded bg-neutral-800 overflow-hidden">
                   <div
-                    class="h-full"
-                    :class="[
-                      strength.percent >= 80
-                        ? 'bg-green-500'
-                        : strength.percent >= 60
-                          ? 'bg-emerald-500'
-                          : strength.percent >= 40
-                            ? 'bg-yellow-500'
-                            : 'bg-red-500',
+                      class="h-full"
+                      :class="[
+                      strength.percent >= 80 ? 'bg-green-500' :
+                      strength.percent >= 60 ? 'bg-emerald-500' :
+                      strength.percent >= 40 ? 'bg-yellow-500' : 'bg-red-500'
                     ]"
-                    :style="{ width: strength.percent + '%' }"
+                      :style="{ width: strength.percent + '%' }"
                   />
                 </div>
                 <p class="text-xs text-neutral-400">
@@ -253,12 +210,13 @@ onMounted(generate)
               </div>
 
               <div class="flex gap-2 pt-2">
-                <Button :disabled="poolSize === 0" @click="generate">Generate</Button>
-                <Button variant="outline" :disabled="!password" @click="copyPw">Copy</Button>
+                <Button @click="generate" :disabled="poolSize === 0">Generate</Button>
+                <Button variant="outline" @click="copyPw" :disabled="!password">Copy</Button>
               </div>
             </div>
           </div>
 
+          <!-- Output -->
           <div class="md:col-span-8">
             <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
               <div class="grid gap-4">
@@ -275,16 +233,18 @@ onMounted(generate)
                 <div class="grid gap-2">
                   <Label>Character pool</Label>
                   <p class="text-xs text-neutral-400">Active characters: {{ poolSize }}</p>
-                  <div class="space-y-1 text-xs text-neutral-400">
+                  <div class="text-xs text-neutral-400 space-y-1">
                     <div v-if="opts.lower">a–z: {{ pools.lower.join('') }}</div>
                     <div v-if="opts.upper">A–Z: {{ pools.upper.join('') }}</div>
                     <div v-if="opts.digits">0–9: {{ pools.digits.join('') }}</div>
                     <div v-if="opts.symbols">Symbols: {{ pools.symbols.join('') }}</div>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
