@@ -132,5 +132,16 @@ export default defineAppConfig({
       status: 'stable',
       accent: 'rgba(14,165,233,0.35)',
     },
+    {
+      slug: 'border-radius-generator',
+      title: 'Border Radius Generator',
+      badge: 'Design',
+      description:
+        'Visually adjust and preview border-radius values. Copy CSS snippets for consistent rounded corners in your designs — try it now with Snappo.',
+      component: 'borderRadiusTool.vue',
+      tags: ['border', 'radius', 'css', 'design', 'generator'],
+      status: 'beta',
+      accent: 'rgba(34,211,238,0.35)',
+    },
   ],
 })
