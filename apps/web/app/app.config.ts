@@ -99,5 +99,60 @@ export default defineAppConfig({
       status: 'beta',
       accent: 'rgba(250,204,21,0.35)',
     },
+    {
+      slug: 'password-generator',
+      title: 'Password Generator',
+      badge: 'Security',
+      description:
+        'Generate strong, customizable passwords with adjustable length, character sets, and options for symbols and numbers — try it now with Snappo.',
+      component: 'passwordGeneratorTool.vue',
+      tags: ['password', 'security', 'generator', 'random'],
+      status: 'stable',
+      accent: 'rgba(239,68,68,0.35)',
+    },
+    {
+      slug: 'cron-tool',
+      title: 'Cron Tool',
+      badge: 'Code',
+      description:
+        'Generate and parse cron expressions with presets, human-readable output, and next run previews — try it now with Snappo.',
+      component: 'cronTool.vue',
+      tags: ['cron', 'scheduler', 'time', 'generator', 'parser'],
+      status: 'beta',
+      accent: 'rgba(168,85,247,0.35)',
+    },
+    {
+      slug: 'uuid-tool',
+      title: 'UUID Tool',
+      badge: 'Code',
+      description:
+        'Generate UUIDs of different versions (v1, v4, v5). Create single or bulk identifiers and copy them instantly — try it now with Snappo.',
+      component: 'uuidTool.vue',
+      tags: ['uuid', 'generator', 'id', 'random'],
+      status: 'stable',
+      accent: 'rgba(14,165,233,0.35)',
+    },
+    {
+      slug: 'border-radius-generator',
+      title: 'Border Radius Generator',
+      badge: 'Design',
+      description:
+        'Visually adjust and preview border-radius values. Copy CSS snippets for consistent rounded corners in your designs — try it now with Snappo.',
+      component: 'borderRadiusTool.vue',
+      tags: ['border', 'radius', 'css', 'design', 'generator'],
+      status: 'beta',
+      accent: 'rgba(34,211,238,0.35)',
+    },
+    {
+      slug: 'json-tool',
+      title: 'JSON Tool',
+      badge: 'Code',
+      description:
+        'Format, validate, and minify JSON. Highlight errors, beautify structure, and copy clean JSON instantly — try it now with Snappo.',
+      component: 'jsonTool.vue',
+      tags: ['json', 'formatter', 'validator', 'minify'],
+      status: 'beta',
+      accent: 'rgba(251,146,60,0.35)',
+    },
   ],
 })
