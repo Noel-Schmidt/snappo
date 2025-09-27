@@ -154,5 +154,16 @@ export default defineAppConfig({
       status: 'beta',
       accent: 'rgba(251,146,60,0.35)',
     },
+    {
+      slug: 'color-contrast-checker',
+      title: 'Color Contrast Checker',
+      badge: 'Design',
+      description:
+        'Check color contrast ratios for WCAG accessibility compliance. Test AA and AAA levels and ensure your designs are readable — try it now with Snappo.',
+      component: 'colorContrastCheckerTool.vue',
+      tags: ['color', 'contrast', 'accessibility', 'design'],
+      status: 'stable',
+      accent: 'rgba(132,204,22,0.35)',
+    },
   ],
 })
