@@ -10,7 +10,7 @@
     "node.js"
   ],
   "devDependencies": {
-    "eslint": "^8.57.0 || ^9.0.0",
+    "eslint": "^9.36.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^7.0.0 || ^8.0.0",
     "eslint-plugin-import": "^2.29.0",
