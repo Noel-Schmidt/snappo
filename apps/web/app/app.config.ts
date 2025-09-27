@@ -165,5 +165,15 @@ export default defineAppConfig({
       status: 'stable',
       accent: 'rgba(132,204,22,0.35)',
     },
+      {
+          slug: 'box-shadow-generator',
+          title: 'Box Shadow Generator',
+          badge: 'Design',
+          description: 'Create and preview CSS box-shadow effects visually. Adjust blur, spread, and color values, then copy WCAG-friendly CSS snippets — try it now with Snappo.',
+          component: 'boxShadowGeneratorTool.vue',
+          tags: ['box-shadow', 'css', 'design', 'generator'],
+          status: 'beta',
+          accent: 'rgba(250,204,21,0.35)'
+      }
   ],
 })
