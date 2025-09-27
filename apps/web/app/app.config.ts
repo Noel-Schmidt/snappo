@@ -143,5 +143,16 @@ export default defineAppConfig({
       status: 'beta',
       accent: 'rgba(34,211,238,0.35)',
     },
+    {
+      slug: 'json-tool',
+      title: 'JSON Tool',
+      badge: 'Code',
+      description:
+        'Format, validate, and minify JSON. Highlight errors, beautify structure, and copy clean JSON instantly — try it now with Snappo.',
+      component: 'jsonTool.vue',
+      tags: ['json', 'formatter', 'validator', 'minify'],
+      status: 'beta',
+      accent: 'rgba(251,146,60,0.35)',
+    },
   ],
 })
