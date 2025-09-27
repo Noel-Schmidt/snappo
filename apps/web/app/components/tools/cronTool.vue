@@ -197,9 +197,9 @@ function describeField(spec: Spec, field: Field): string {
   if (spec.items.length) parts.push(spec.items.map(label).join(', '))
   if (spec.ranges.length) {
     parts.push(
-      spec.ranges
-        .map(([a, b]) => `${label(a)}–${label(b)}${spec.steps ? ` step ${spec.steps}` : ''}`)
-        .join(', ')
+        spec.ranges
+            .map(([a, b]) => `${label(a)}–${label(b)}${spec.steps ? ` step ${spec.steps}` : ''}`)
+            .join(', ')
     )
   }
   if (parts.length === 0) {
@@ -219,13 +219,13 @@ function describeCron(expr: string): string {
   const domText = describeField(c.dom, 'dom')
   const dowText = describeField(c.dow, 'dow')
   const dayPart =
-    domAny && dowAny
-      ? 'every day'
-      : domAny
-        ? `on ${dowText}`
-        : dowAny
-          ? `on day ${domText}`
-          : `on ${dowText} or day ${domText}`
+      domAny && dowAny
+          ? 'every day'
+          : domAny
+              ? `on ${dowText}`
+              : dowAny
+                  ? `on day ${domText}`
+                  : `on ${dowText} or day ${domText}`
   return `Runs at ${hour} and ${min}, ${dayPart}, in ${mon}.`
 }
 
@@ -306,11 +306,11 @@ function applyPreset(p: Preset) {
         <div class="flex flex-wrap gap-2">
           <Label class="mr-2">Presets</Label>
           <Button
-            v-for="p in presets"
-            :key="p.expr"
-            variant="outline"
-            class="h-8 px-3"
-            @click="applyPreset(p)"
+              v-for="p in presets"
+              :key="p.expr"
+              variant="outline"
+              class="h-8 px-3"
+              @click="applyPreset(p)"
           >
             {{ p.label }}
           </Button>
@@ -376,23 +376,23 @@ function applyPreset(p: Preset) {
             <Label>Fields</Label>
             <div v-if="!errorMsg" class="space-y-1 text-sm text-neutral-300">
               <div
-                ><span class="text-neutral-500">minute:</span>
+              ><span class="text-neutral-500">minute:</span>
                 {{ describeField(parsedState.parsed!.minute, 'minute') }}</div
               >
               <div
-                ><span class="text-neutral-500">hour:</span>
+              ><span class="text-neutral-500">hour:</span>
                 {{ describeField(parsedState.parsed!.hour, 'hour') }}</div
               >
               <div
-                ><span class="text-neutral-500">day of month:</span>
+              ><span class="text-neutral-500">day of month:</span>
                 {{ describeField(parsedState.parsed!.dom, 'dom') }}</div
               >
               <div
-                ><span class="text-neutral-500">month:</span>
+              ><span class="text-neutral-500">month:</span>
                 {{ describeField(parsedState.parsed!.month, 'month') }}</div
               >
               <div
-                ><span class="text-neutral-500">day of week:</span>
+              ><span class="text-neutral-500">day of week:</span>
                 {{ describeField(parsedState.parsed!.dow, 'dow') }}</div
               >
             </div>

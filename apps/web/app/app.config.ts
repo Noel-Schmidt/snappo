@@ -121,5 +121,16 @@ export default defineAppConfig({
       status: 'beta',
       accent: 'rgba(168,85,247,0.35)',
     },
+    {
+      slug: 'uuid-tool',
+      title: 'UUID Tool',
+      badge: 'Code',
+      description:
+        'Generate UUIDs of different versions (v1, v4, v5). Create single or bulk identifiers and copy them instantly — try it now with Snappo.',
+      component: 'uuidTool.vue',
+      tags: ['uuid', 'generator', 'id', 'random'],
+      status: 'stable',
+      accent: 'rgba(14,165,233,0.35)',
+    },
   ],
 })
