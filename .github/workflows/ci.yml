@@ -23,7 +23,7 @@ jobs:
       - run: pnpm build
 
       - name: Generate SBOM (CycloneDX JSON)
-        run: pnpm dlx -y @cyclonedx/cdxgen -t npm -o sbom.cdx.json .
+        run: pnpm dlx @cyclonedx/cdxgen -t npm -o sbom.cdx.json .
 
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v4
