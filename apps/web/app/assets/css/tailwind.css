@@ -141,3 +141,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+* {
+    --sb-track-color: transparent;
+    --sb-thumb-color: rgba(37, 150, 190);
+    --sb-size: 2px;
+}
+
+*::-webkit-scrollbar {
+    width: var(--sb-size);
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 3px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+    * {
+        scrollbar-color: var(--sb-thumb-color)
+        var(--sb-track-color);
+    }
+}

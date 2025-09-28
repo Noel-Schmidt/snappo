@@ -154,5 +154,26 @@ export default defineAppConfig({
       status: 'beta',
       accent: 'rgba(251,146,60,0.35)',
     },
+    {
+      slug: 'color-contrast-checker',
+      title: 'Color Contrast Checker',
+      badge: 'Design',
+      description:
+        'Check color contrast ratios for WCAG accessibility compliance. Test AA and AAA levels and ensure your designs are readable — try it now with Snappo.',
+      component: 'colorContrastCheckerTool.vue',
+      tags: ['color', 'contrast', 'accessibility', 'design'],
+      status: 'stable',
+      accent: 'rgba(132,204,22,0.35)',
+    },
+      {
+          slug: 'box-shadow-generator',
+          title: 'Box Shadow Generator',
+          badge: 'Design',
+          description: 'Create and preview CSS box-shadow effects visually. Adjust blur, spread, and color values, then copy WCAG-friendly CSS snippets — try it now with Snappo.',
+          component: 'boxShadowGeneratorTool.vue',
+          tags: ['box-shadow', 'css', 'design', 'generator'],
+          status: 'beta',
+          accent: 'rgba(250,204,21,0.35)'
+      }
   ],
 })

@@ -2,16 +2,46 @@ name: ci
 permissions:
   contents: read
 on: [push, pull_request]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v4
         with: { version: 10.12.4 }
+
       - uses: actions/setup-node@v4
-        with: { node-version: 22 }
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build
+
+      - name: Generate SBOM (CycloneDX JSON)
+        run: pnpm dlx @cyclonedx/cdxgen -t npm -o sbom.cdx.json .
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: |
+            sbom.cdx.json
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: sbom
+          path: .
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            sbom.cdx.json
