@@ -5,6 +5,28 @@ export default defineAppConfig({
 
   tools: [
     {
+      slug: 'jwt-decoder',
+      title: 'JWT Decoder',
+      badge: 'Security',
+      description:
+        'Decode JSON Web Token headers and payloads, inspect expiration, and verify HS256, RS256, or ES256 signatures.',
+      component: 'jwtDecoderTool.vue',
+      tags: ['jwt', 'json web token', 'decode', 'signature', 'security', 'authentication'],
+      status: 'beta',
+      accent: 'rgba(239,68,68,0.35)',
+    },
+    {
+      slug: 'favicon-generator',
+      title: 'Favicon Generator',
+      badge: 'Design',
+      description:
+        'Create favicon, Apple, Android, and PWA icon files from an image, with ready-to-paste HTML and manifest snippets.',
+      component: 'faviconGeneratorTool.vue',
+      tags: ['favicon', 'icon', 'pwa', 'manifest', 'generator'],
+      status: 'beta',
+      accent: 'rgba(20,184,166,0.35)',
+    },
+    {
       slug: 'bcrypt-generator',
       title: 'Bcrypt Generator',
       subtitle:

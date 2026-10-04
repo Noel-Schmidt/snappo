@@ -113,6 +113,7 @@ import {
   FileText,
   Hash,
   Key,
+  LockKeyhole,
   Link,
   Palette,
   Regex,
@@ -149,6 +150,7 @@ const icons: Record<string, Component> = {
   'csv-to-json': Braces,
   'markdown-table-generator': FileText,
   'hmac-generator': Key,
+  'jwt-decoder': LockKeyhole,
 }
 
 const appConfig = useAppConfig() as { tools?: ToolMeta[] }
