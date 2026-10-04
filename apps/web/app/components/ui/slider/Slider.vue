@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
+
 import { cn } from '@/lib/utils'
 
 const props = withDefaults(
@@ -13,7 +14,7 @@ const props = withDefaults(
     ariaLabel: string
     class?: HTMLAttributes['class']
   }>(),
-  { min: 0, max: 100, step: 1 }
+  { min: 0, max: 100, step: 1, modelValue: undefined, class: undefined }
 )
 
 const emit = defineEmits<{ 'update:modelValue': [value: number] }>()
@@ -51,20 +52,20 @@ function updateValue(event: Event) {
     :aria-label="ariaLabel"
     :style="{
       background: fill,
-      backgroundSize: '100% 0.5rem',
+      backgroundSize: '100% 0.25rem',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
     }"
     :class="
       cn(
         'block h-8 w-full cursor-pointer appearance-none rounded-full bg-transparent py-3 outline-none disabled:cursor-not-allowed disabled:opacity-50',
-        'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2',
-        '[&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-full',
-        '[&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-transparent',
-        '[&::-webkit-slider-thumb]:-mt-2 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6',
+        'focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-offset-background focus-visible:ring-offset-2',
+        '[&::-webkit-slider-runnable-track]:h-1 [&::-webkit-slider-runnable-track]:rounded-full',
+        '[&::-moz-range-track]:h-1 [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-transparent',
+        '[&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4',
         '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2',
         '[&::-webkit-slider-thumb]:border-primary [&::-webkit-slider-thumb]:bg-background [&::-webkit-slider-thumb]:shadow-sm',
-        '[&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-full',
+        '[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full',
         '[&::-moz-range-thumb]:border-primary [&::-moz-range-thumb]:bg-background [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:shadow-sm',
         props.class
       )
