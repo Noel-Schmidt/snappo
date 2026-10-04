@@ -1,6 +1,6 @@
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
+  <section class="bg-background text-foreground py-12 sm:py-16">
+    <div class="mx-auto max-w-7xl px-6">
       <slot />
     </div>
   </section>

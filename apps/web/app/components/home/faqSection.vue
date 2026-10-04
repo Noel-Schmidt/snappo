@@ -1,55 +1,43 @@
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="grid gap-12 lg:grid-cols-3">
-        <div class="lg:col-span-1">
-          <h2 class="text-4xl font-extrabold tracking-tight">Questions, answered</h2>
-          <p class="mt-4 text-neutral-300">Privacy-first. No installs. Dark by default.</p>
-        </div>
-
-        <div class="lg:col-span-2">
-          <Accordion
-            type="single"
-            collapsible
-            class="divide-y divide-neutral-900 rounded-xl bg-neutral-950 ring-1 ring-neutral-800"
-          >
-            <AccordionItem
-              v-for="q in faqs"
-              :key="q.q"
-              :value="q.q"
-              class="transition-colors [&[data-state=open]]:bg-neutral-950/70"
-            >
-              <AccordionTrigger class="group w-full px-4 py-5 text-left focus-visible:outline-none">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-neutral-900 ring-1 ring-neutral-800"
-                  >
-                    <ChevronDown
-                      class="h-4 w-4 text-neutral-300 transition-transform duration-200 group-data-[state=open]:rotate-180"
-                    />
-                  </div>
-                  <span class="text-base font-medium tracking-tight text-neutral-100">
-                    {{ q.q }}
-                  </span>
-                </div>
-              </AccordionTrigger>
-
-              <AccordionContent class="px-4 pb-6">
-                <div class="ml-11 space-y-3 text-neutral-300">
-                  <p v-for="(p, i) in q.a" :key="i">{{ p }}</p>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
+  <section class="bg-background text-foreground py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="mb-8 max-w-2xl">
+        <h2 class="text-foreground text-3xl font-semibold tracking-tight sm:text-4xl">
+          Questions about Snappo
+        </h2>
+        <p class="text-muted-foreground mt-3 leading-7">
+          Input privacy, using the tools, and contributing to the project.
+        </p>
       </div>
+
+      <Accordion type="single" collapsible class="grid gap-3">
+        <AccordionItem
+          v-for="item in faqs"
+          :key="item.q"
+          :value="item.q"
+          class="border-border bg-card data-[state=open]:bg-muted/50 rounded-xl border px-4 transition-colors sm:px-5"
+        >
+          <AccordionTrigger
+            class="text-foreground focus-visible:outline-ring group flex w-full items-center justify-between gap-5 py-5 text-left text-base font-medium hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            <span>{{ item.q }}</span>
+          </AccordionTrigger>
+          <AccordionContent class="text-muted-foreground pb-5 pr-8 text-sm leading-7">
+            <p v-for="(paragraph, index) in item.a" :key="index">{{ paragraph }}</p>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+      <NuxtLink
+        to="/faq"
+        class="text-foreground focus-visible:outline-ring mt-6 inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2"
+      >
+        Read the full Snappo FAQ
+      </NuxtLink>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ChevronDown } from 'lucide-vue-next'
-
 import {
   Accordion,
   AccordionContent,
@@ -58,27 +46,40 @@ import {
 } from '@/components/ui/accordion'
 
 type QA = { q: string; a: string[] }
-
 const faqs: QA[] = [
   {
-    q: 'Is my data sent anywhere?',
-    a: ['No. Tools run client-side. No accounts, no tracking, no telemetry.'],
+    q: 'Where does my input go?',
+    a: [
+      'Most tools process input in your browser. Check the individual tool before entering sensitive data.',
+    ],
   },
   {
-    q: 'Do I need to install anything?',
-    a: ['No. Open in the browser and use the tools immediately.'],
+    q: 'Do I need an account or an install?',
+    a: ['No account or installation is needed. Open a tool and use it.'],
   },
   {
-    q: 'How is security handled?',
-    a: ['Sensitive operations use well-known libraries. Nothing leaves your device by default.'],
+    q: 'Which tools are available?',
+    a: [
+      'Snappo includes a JSON formatter, regex tester, cron expression builder, password and bcrypt generators, and a color picker. More utilities are listed on the tools page.',
+    ],
   },
   {
-    q: 'Dark mode?',
-    a: ['Yes. Dark-first UI across all components.'],
+    q: 'How can I format or validate JSON online?',
+    a: [
+      'Open the JSON tool, paste your data, and choose whether to format, validate, or minify it. The tool page includes the available options.',
+    ],
   },
   {
-    q: 'Can I contribute?',
-    a: ['Yes. Open an issue or PR. Keep changes focused and follow Conventional Commits.'],
+    q: 'Can I generate a password with Snappo?',
+    a: [
+      'Yes. The password generator lets you choose a length and character sets, then generates a password in the tool.',
+    ],
+  },
+  {
+    q: 'How can I contribute?',
+    a: [
+      'Open an issue to report a bug or suggest a tool. GitHub has the source code and contribution guide.',
+    ],
   },
 ]
 </script>

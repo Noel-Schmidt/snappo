@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { XIcon } from '@lucide/vue'
 import { reactiveOmit } from '@vueuse/core'
-import { X } from 'lucide-vue-next'
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 import {
   DialogClose,
@@ -12,6 +12,10 @@ import {
 import type { HTMLAttributes } from 'vue'
 
 import { cn } from '@/lib/utils'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 const props = defineProps<DialogContentProps & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<DialogContentEmits>()
@@ -33,7 +37,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
             props.class
           )
         "
-        v-bind="forwarded"
+        v-bind="{ ...$attrs, ...forwarded }"
         @pointer-down-outside="
           (event) => {
             const originalEvent = event.detail.originalEvent
@@ -52,7 +56,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         <DialogClose
           class="hover:bg-secondary absolute right-4 top-4 rounded-md p-0.5 transition-colors"
         >
-          <X class="h-4 w-4" />
+          <XIcon class="h-4 w-4" />
           <span class="sr-only">Close</span>
         </DialogClose>
       </DialogContent>

@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 
 defineOptions({ name: 'JsonNode' })
 
-type JsonPrimitive = string | number | boolean | null
-type JsonValue = JsonPrimitive | JsonValue[] | { [k: string]: JsonValue }
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue }
 
 const props = defineProps<{
   k?: string | number
@@ -15,119 +14,121 @@ const props = defineProps<{
 
 const emit = defineEmits<{ (e: 'copy'): void }>()
 
-function typeOf(v: JsonValue): 'object' | 'array' | 'string' | 'number' | 'boolean' | 'null' {
-  if (v === null) return 'null'
-  if (Array.isArray(v)) return 'array'
-  const t = typeof v
-  if (t === 'string' || t === 'number' || t === 'boolean') return t
-  return 'object'
-}
-function displayValue(v: JsonValue): string {
-  const t = typeOf(v)
-  if (t === 'string') return JSON.stringify(v as string)
-  if (t === 'null') return 'null'
-  return String(v as any)
-}
-const t = computed(() => typeOf(props.v))
-const isBranch = computed(() => t.value === 'object' || t.value === 'array')
-const size = computed(() =>
-  t.value === 'array'
-    ? (props.v as JsonValue[]).length
-    : Object.keys((props.v as Record<string, JsonValue>) || {}).length
+const kind = computed(() => {
+  if (props.v === null) return 'null'
+  if (Array.isArray(props.v)) return 'array'
+  return typeof props.v === 'object' ? 'object' : typeof props.v
+})
+const isBranch = computed(() => kind.value === 'object' || kind.value === 'array')
+const entries = computed(() =>
+  kind.value === 'array'
+    ? (props.v as JsonValue[]).map((value, index) => [index, value] as const)
+    : kind.value === 'object'
+      ? Object.entries(props.v as Record<string, JsonValue>)
+      : []
 )
-const open = ref<boolean>(props.rootOpen ?? true)
+const open = ref(props.rootOpen ?? true)
+const preview = computed(() =>
+  kind.value === 'array' ? `[${entries.value.length}]` : `{${entries.value.length}}`
+)
 
-function childPath(childKey: string | number) {
-  return props.path ? `${props.path}.${String(childKey)}` : String(childKey)
+function childPath(key: string | number): string {
+  if (typeof key === 'number') return `${props.path ?? '$'}[${key}]`
+  const path = props.path ?? '$'
+  return /^[A-Za-z_$][\w$]*$/.test(key) ? `${path}.${key}` : `${path}[${JSON.stringify(key)}]`
 }
-async function copyVal() {
+
+async function copyValue(): Promise<void> {
   try {
-    await navigator.clipboard.writeText(displayValue(props.v))
+    await navigator.clipboard.writeText(JSON.stringify(props.v))
     emit('copy')
-  } catch {}
+  } catch {
+    // Clipboard access may be unavailable outside a secure browser context.
+  }
 }
-async function copyPath() {
-  const p = props.path ?? (props.k !== undefined ? String(props.k) : '')
-  if (!p) return
+
+async function copyPath(): Promise<void> {
+  const value = props.path ?? (props.k !== undefined ? childPath(props.k) : '$')
   try {
-    await navigator.clipboard.writeText(p)
+    await navigator.clipboard.writeText(value)
     emit('copy')
-  } catch {}
+  } catch {
+    // Clipboard access may be unavailable outside a secure browser context.
+  }
 }
 </script>
 
 <template>
-  <div class="pl-3">
-    <div class="flex items-center gap-2">
+  <div class="min-w-0">
+    <div
+      class="hover:bg-muted/70 focus-within:bg-muted/70 group flex min-h-9 min-w-0 items-center gap-2 rounded-md px-2"
+    >
       <button
         v-if="isBranch"
-        class="rounded border border-neutral-700 bg-neutral-800 px-1 py-0.5 text-xs"
+        type="button"
+        class="border-border bg-background text-muted-foreground hover:text-foreground focus-visible:ring-ring flex size-5 shrink-0 items-center justify-center rounded border font-mono text-xs focus-visible:outline-none focus-visible:ring-2"
+        :aria-label="`${open ? 'Collapse' : 'Expand'} ${k ?? 'root'}`"
+        :aria-expanded="open"
         @click="open = !open"
       >
         {{ open ? '−' : '+' }}
       </button>
-      <span v-else class="w-4" />
-      <span v-if="k !== undefined" class="text-neutral-400">{{ String(k) }}:</span>
-      <span v-else class="text-neutral-400">{{ t }}</span>
+      <span v-else class="size-5 shrink-0" aria-hidden="true" />
 
-      <span v-if="isBranch" class="text-neutral-300">
-        {{ t === 'array' ? `Array(${size})` : `Object(${size})` }}
+      <span v-if="k !== undefined" class="text-foreground shrink-0">{{ String(k) }}</span>
+      <span v-else class="text-muted-foreground shrink-0">root</span>
+      <span class="text-muted-foreground shrink-0">:</span>
+
+      <span v-if="isBranch" class="text-muted-foreground min-w-0 truncate">
+        {{ kind }} <span class="font-mono">{{ preview }}</span>
       </span>
       <code
         v-else
-        class="break-all font-mono text-sm"
+        class="min-w-0 break-all font-mono"
         :class="{
-          'text-emerald-300': t === 'string',
-          'text-amber-300': t === 'number',
-          'text-sky-300': t === 'boolean',
-          'text-neutral-300': t === 'null',
+          'text-emerald-700 dark:text-emerald-300': kind === 'string',
+          'text-amber-700 dark:text-amber-300': kind === 'number',
+          'text-sky-700 dark:text-sky-300': kind === 'boolean',
+          'text-muted-foreground': kind === 'null',
         }"
-        >{{ displayValue(v) }}</code
+        >{{ JSON.stringify(v) }}</code
       >
 
-      <div class="ml-auto flex gap-1">
+      <div
+        class="ml-auto flex shrink-0 gap-1 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
+      >
         <button
-          class="rounded border border-neutral-700 px-1.5 py-0.5 text-[10px] hover:bg-neutral-800"
-          @click="copyVal"
-          >copy</button
+          type="button"
+          class="text-muted-foreground hover:text-foreground focus-visible:ring-ring rounded px-1 text-xs focus-visible:outline-none focus-visible:ring-2"
+          :aria-label="`Copy ${k ?? 'root'} value`"
+          @click="copyValue"
         >
+          Copy
+        </button>
         <button
           v-if="k !== undefined || path"
-          class="rounded border border-neutral-700 px-1.5 py-0.5 text-[10px] hover:bg-neutral-800"
+          type="button"
+          class="text-muted-foreground hover:text-foreground focus-visible:ring-ring rounded px-1 text-xs focus-visible:outline-none focus-visible:ring-2"
+          :aria-label="`Copy ${k ?? ''} path`"
           @click="copyPath"
-          >path</button
         >
+          Path
+        </button>
       </div>
     </div>
 
-    <div v-if="isBranch && open" class="mt-1 border-l border-neutral-800">
-      <template v-if="t === 'array'">
+    <div v-if="isBranch && open" class="border-border ml-[18px] border-l pl-3">
+      <template v-if="entries.length">
         <JsonNode
-          v-for="(cv, idx) in v as JsonValue[]"
-          :key="idx"
-          :k="idx"
-          :v="cv"
-          :path="childPath(idx)"
+          v-for="entry in entries"
+          :key="childPath(entry[0])"
+          :k="entry[0]"
+          :v="entry[1]"
+          :path="childPath(entry[0])"
           @copy="$emit('copy')"
         />
       </template>
-      <template v-else>
-        <JsonNode
-          v-for="ck in Object.keys(v as Record<string, JsonValue>)"
-          :key="ck"
-          :k="ck"
-          :v="(v as Record<string, JsonValue>)[ck]"
-          :path="childPath(ck)"
-          @copy="$emit('copy')"
-        />
-      </template>
+      <p v-else class="text-muted-foreground px-2 py-1 text-xs"> Empty {{ kind }} </p>
     </div>
   </div>
 </template>
-
-<style scoped>
-code {
-  word-break: break-all;
-  white-space: pre-wrap;
-}
-</style>

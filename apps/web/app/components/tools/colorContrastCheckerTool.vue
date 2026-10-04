@@ -199,159 +199,193 @@ async function copySummary() {
 </script>
 
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
-        <div class="grid gap-6 md:grid-cols-12">
-          <div class="grid gap-5 md:col-span-5">
-            <div class="grid gap-2">
-              <Label>Foreground</Label>
-              <div class="flex items-center gap-3">
-                <input
-                  v-model="fgPicker"
-                  type="color"
-                  class="h-9 w-9 rounded border border-neutral-700 bg-transparent p-0"
-                />
-                <Input
-                  v-model="fgInput"
-                  placeholder="#ffffff or rgb(255,255,255) or hsl(0,0%,100%)"
-                />
-              </div>
-            </div>
-
-            <div class="grid gap-2">
-              <Label>Background</Label>
-              <div class="flex items-center gap-3">
-                <input
-                  v-model="bgPicker"
-                  type="color"
-                  class="h-9 w-9 rounded border border-neutral-700 bg-transparent p-0"
-                />
-                <Input v-model="bgInput" placeholder="#000000 or rgb(0,0,0) or hsl(0,0%,0%)" />
-              </div>
-            </div>
-
-            <div v-if="errorMsg" class="text-sm text-red-400">{{ errorMsg }}</div>
-
-            <Separator class="bg-neutral-800" />
-
-            <div class="grid gap-2">
-              <Label>Results</Label>
-              <div v-if="ratio !== null" class="grid gap-3">
-                <div class="text-lg font-medium">
-                  Contrast ratio:
-                  <span
-                    :class="
-                      ratio >= 7
-                        ? 'text-emerald-400'
-                        : ratio >= 4.5
-                          ? 'text-yellow-300'
-                          : 'text-red-400'
-                    "
-                    >{{ ratio }}</span
-                  >:1
-                </div>
-                <div class="grid grid-cols-2 gap-2 text-sm">
-                  <div class="rounded border border-neutral-800 p-3">
-                    <div class="mb-1 text-neutral-400">WCAG 2.1 AA</div>
-                    <div
-                      >Normal text:
-                      <span :class="passes.AA_normal ? 'text-emerald-400' : 'text-red-400'">{{
-                        passes.AA_normal ? 'PASS' : 'FAIL'
-                      }}</span></div
-                    >
-                    <div
-                      >Large text:
-                      <span :class="passes.AA_large ? 'text-emerald-400' : 'text-red-400'">{{
-                        passes.AA_large ? 'PASS' : 'FAIL'
-                      }}</span></div
-                    >
-                  </div>
-                  <div class="rounded border border-neutral-800 p-3">
-                    <div class="mb-1 text-neutral-400">WCAG 2.1 AAA</div>
-                    <div
-                      >Normal text:
-                      <span :class="passes.AAA_normal ? 'text-emerald-400' : 'text-red-400'">{{
-                        passes.AAA_normal ? 'PASS' : 'FAIL'
-                      }}</span></div
-                    >
-                    <div
-                      >Large text:
-                      <span :class="passes.AAA_large ? 'text-emerald-400' : 'text-red-400'">{{
-                        passes.AAA_large ? 'PASS' : 'FAIL'
-                      }}</span></div
-                    >
-                  </div>
-                </div>
-                <div class="flex gap-2">
-                  <Button :disabled="!summary" @click="copySummary">Copy summary</Button>
-                </div>
-              </div>
-              <div v-else class="text-sm text-neutral-400">Enter valid colors to see results.</div>
+  <ToolLayout>
+    <div class="space-y-6">
+      <div class="grid lg:grid-cols-[minmax(17rem,0.8fr)_minmax(0,1.2fr)]">
+        <div class="grid content-start gap-5">
+          <div class="grid gap-2">
+            <Label>Foreground</Label>
+            <div class="flex items-center gap-3">
+              <input
+                v-model="fgPicker"
+                type="color"
+                class="border-input h-9 w-9 rounded border bg-transparent p-0"
+              />
+              <Input
+                v-model="fgInput"
+                placeholder="#ffffff or rgb(255,255,255) or hsl(0,0%,100%)"
+                class="h-11"
+              />
             </div>
           </div>
 
-          <div class="grid gap-4 md:col-span-7">
-            <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-4">
-              <Label class="mb-2 block">Preview</Label>
-              <div class="grid gap-4">
-                <div
-                  class="rounded border border-neutral-800 p-5"
-                  :style="{
-                    backgroundColor:
-                      bg?.r !== undefined ? `rgb(${bg!.r},${bg!.g},${bg!.b})` : '#000',
-                  }"
+          <div class="grid gap-2">
+            <Label>Background</Label>
+            <div class="flex items-center gap-3">
+              <input
+                v-model="bgPicker"
+                type="color"
+                class="border-input h-9 w-9 rounded border bg-transparent p-0"
+              />
+              <Input
+                v-model="bgInput"
+                placeholder="#000000 or rgb(0,0,0) or hsl(0,0%,0%)"
+                class="h-11"
+              />
+            </div>
+          </div>
+
+          <div v-if="errorMsg" class="text-sm text-red-700 dark:text-red-400">{{ errorMsg }}</div>
+
+          <Separator class="bg-muted" />
+
+          <div class="grid gap-2">
+            <Label>Results</Label>
+            <div v-if="ratio !== null" class="grid gap-3">
+              <div class="text-lg font-medium">
+                Contrast ratio:
+                <span
+                  :class="
+                    ratio >= 7
+                      ? 'text-emerald-700 dark:text-emerald-400'
+                      : ratio >= 4.5
+                        ? 'text-amber-700 dark:text-amber-300'
+                        : 'text-red-700 dark:text-red-400'
+                  "
+                  >{{ ratio }}</span
+                >:1
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                <div class="border-border rounded border p-3">
+                  <div class="text-muted-foreground mb-1">WCAG 2.1 AA</div>
+                  <div
+                    >Normal text:
+                    <span
+                      :class="
+                        passes.AA_normal
+                          ? 'text-emerald-700 dark:text-emerald-400'
+                          : 'text-red-700 dark:text-red-400'
+                      "
+                      >{{ passes.AA_normal ? 'PASS' : 'FAIL' }}</span
+                    ></div
+                  >
+                  <div
+                    >Large text:
+                    <span
+                      :class="
+                        passes.AA_large
+                          ? 'text-emerald-700 dark:text-emerald-400'
+                          : 'text-red-700 dark:text-red-400'
+                      "
+                      >{{ passes.AA_large ? 'PASS' : 'FAIL' }}</span
+                    ></div
+                  >
+                </div>
+                <div class="border-border rounded border p-3">
+                  <div class="text-muted-foreground mb-1">WCAG 2.1 AAA</div>
+                  <div
+                    >Normal text:
+                    <span
+                      :class="
+                        passes.AAA_normal
+                          ? 'text-emerald-700 dark:text-emerald-400'
+                          : 'text-red-700 dark:text-red-400'
+                      "
+                      >{{ passes.AAA_normal ? 'PASS' : 'FAIL' }}</span
+                    ></div
+                  >
+                  <div
+                    >Large text:
+                    <span
+                      :class="
+                        passes.AAA_large
+                          ? 'text-emerald-700 dark:text-emerald-400'
+                          : 'text-red-700 dark:text-red-400'
+                      "
+                      >{{ passes.AAA_large ? 'PASS' : 'FAIL' }}</span
+                    ></div
+                  >
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <Button :disabled="!summary" class="h-11 px-5" @click="copySummary"
+                  >Copy summary</Button
                 >
-                  <div class="grid gap-2">
-                    <p
-                      class="font-sans"
-                      :style="{
-                        color: fg?.r !== undefined ? `rgb(${fg!.r},${fg!.g},${fg!.b})` : '#fff',
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                      }"
-                    >
-                      Normal text preview — 16px regular
-                    </p>
-                    <p
-                      class="font-sans font-semibold"
-                      :style="{
-                        color: fg?.r !== undefined ? `rgb(${fg!.r},${fg!.g},${fg!.b})` : '#fff',
-                        fontSize: '19px',
-                        lineHeight: '28px',
-                      }"
-                    >
-                      Large text preview — 19px semibold
-                    </p>
-                    <p
-                      class="font-sans"
-                      :style="{
-                        color: fg?.r !== undefined ? `rgb(${fg!.r},${fg!.g},${fg!.b})` : '#fff',
-                        fontSize: '24px',
-                        lineHeight: '32px',
-                      }"
-                    >
-                      Large text preview — 24px
-                    </p>
-                  </div>
-                </div>
-                <Textarea
-                  :value="summary"
-                  rows="5"
-                  readonly
-                  class="font-mono text-sm"
-                  placeholder="Result summary…"
-                />
               </div>
             </div>
-
-            <p class="text-xs text-neutral-500">
-              Ratio uses relative luminance per WCAG (sRGB). Large text means ≥24px normal or
-              ≥18.66px bold.
-            </p>
+            <div v-else class="text-muted-foreground text-sm"
+              >Enter valid colors to see results.</div
+            >
           </div>
+        </div>
+
+        <div
+          class="border-border grid content-start gap-4 border-t pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0"
+        >
+          <div class="grid gap-4">
+            <Label class="mb-2 block">Preview</Label>
+            <div class="grid gap-4">
+              <div
+                class="border-border border-t pt-3 first:border-t-0 first:pt-0"
+                :style="{
+                  backgroundColor: bg?.r !== undefined ? `rgb(${bg!.r},${bg!.g},${bg!.b})` : '#000',
+                }"
+              >
+                <div class="grid gap-2">
+                  <p
+                    class="font-sans"
+                    :style="{
+                      color: fg?.r !== undefined ? `rgb(${fg!.r},${fg!.g},${fg!.b})` : '#fff',
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                    }"
+                  >
+                    Normal text preview — 16px regular
+                  </p>
+                  <p
+                    class="font-sans font-semibold"
+                    :style="{
+                      color: fg?.r !== undefined ? `rgb(${fg!.r},${fg!.g},${fg!.b})` : '#fff',
+                      fontSize: '19px',
+                      lineHeight: '28px',
+                    }"
+                  >
+                    Large text preview — 19px semibold
+                  </p>
+                  <p
+                    class="font-sans"
+                    :style="{
+                      color: fg?.r !== undefined ? `rgb(${fg!.r},${fg!.g},${fg!.b})` : '#fff',
+                      fontSize: '24px',
+                      lineHeight: '32px',
+                    }"
+                  >
+                    Large text preview — 24px
+                  </p>
+                </div>
+              </div>
+              <Textarea
+                :value="summary"
+                rows="5"
+                readonly
+                class="font-mono text-sm"
+                placeholder="Result summary…"
+              />
+            </div>
+          </div>
+
+          <p class="text-muted-foreground text-xs">
+            Ratio uses relative luminance per WCAG (sRGB). Large text means ≥24px normal or ≥18.66px
+            bold.
+          </p>
         </div>
       </div>
     </div>
-  </section>
+    <tool-explanation
+      title="Color contrast checker"
+      intro="Color contrast measures the difference in brightness between foreground text and its background. The WCAG contrast ratio helps determine whether text is readable for a wider range of people."
+      detail="Choose foreground and background colors to see a live preview and the ratio between them. The results indicate whether the pair meets WCAG thresholds for normal and large text."
+      use-case="Check text colors for websites, apps, buttons and other interface states before using them in a design."
+    />
+  </ToolLayout>
 </template>

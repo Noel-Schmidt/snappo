@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 
 const props = withDefaults(defineProps<SeparatorProps & { class?: HTMLAttributes['class'] }>(), {
   orientation: 'horizontal',
+  class: undefined,
   decorative: true,
 })
 
@@ -16,11 +17,11 @@ const delegatedProps = reactiveOmit(props, 'class')
 
 <template>
   <Separator
-    data-slot="separator-root"
+    data-slot="separator"
     v-bind="delegatedProps"
     :class="
       cn(
-        `bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=vertical]:h-full data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px`,
+        'bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:self-stretch',
         props.class
       )
     "

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CheckIcon } from '@lucide/vue'
 import { reactiveOmit, useCurrentElement } from '@vueuse/core'
 import type { ListboxItemEmits, ListboxItemProps } from 'reka-ui'
 import { ListboxItem, useForwardPropsEmits, useId } from 'reka-ui'
@@ -67,7 +68,7 @@ onUnmounted(() => {
     data-slot="command-item"
     :class="
       cn(
-        `data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground outline-hidden relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-3 text-sm data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0`,
+        'data-highlighted:bg-muted data-highlighted:text-foreground data-highlighted:*:[svg]:text-foreground outline-hidden in-data-[slot=dialog-content]:rounded-lg! group/command-item relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg:not([class*=size-])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0',
         props.class
       )
     "
@@ -78,5 +79,8 @@ onUnmounted(() => {
     "
   >
     <slot />
+    <CheckIcon
+      class="group-has-data-[slot=command-shortcut]/command-item:hidden ml-auto opacity-0 group-data-[checked=true]/command-item:opacity-100"
+    />
   </ListboxItem>
 </template>

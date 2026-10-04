@@ -1,25 +1,23 @@
-<template>
-  <div class="grid gap-3">
-    <div class="flex items-center justify-between">
-      <span class="text-sm text-neutral-300">{{ label }}</span>
-    </div>
-    <div class="flex flex-wrap gap-2">
+﻿<template>
+  <section class="grid gap-3">
+    <h3 class="text-sm font-semibold">{{ label }}</h3>
+    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2 2xl:grid-cols-4">
       <button
-        v-for="(c, i) in items"
-        :key="i"
-        class="group relative h-14 w-14 overflow-hidden rounded-md border border-neutral-800"
-        :style="{ background: rgbHex(c) }"
-        :title="rgbHex(c)"
-        @click="onCopy(c)"
+        v-for="(color, index) in items"
+        :key="index"
+        class="border-border bg-card hover:bg-muted focus-visible:ring-ring group grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-2 rounded-lg border p-2 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+        :aria-label="'Copy ' + rgbHex(color) + ' from ' + label + ' palette'"
+        :title="'Copy ' + rgbHex(color)"
+        @click="onCopy(color)"
       >
         <span
-          class="pointer-events-none absolute bottom-0 left-0 right-0 bg-black/40 p-0.5 text-[10px] opacity-0 transition-opacity group-hover:opacity-100"
-        >
-          {{ rgbHex(c) }}
-        </span>
+          class="border-border block h-10 w-10 rounded-md border"
+          :style="{ backgroundColor: rgbHex(color) }"
+        />
+        <code class="truncate font-mono text-xs uppercase">{{ rgbHex(color) }}</code>
       </button>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -35,22 +33,26 @@ const props = defineProps<{
 }>()
 
 const items = computed<RGB[]>(() => {
-  const c = props.colors
-  if (Array.isArray(c)) return c.filter(isRGB)
-  const arr = c && Array.isArray(c.value) ? c.value : []
-  return arr.filter(isRGB)
+  const colors = props.colors
+  if (Array.isArray(colors)) return colors.filter(isRGB)
+  const values = colors && Array.isArray(colors.value) ? colors.value : []
+  return values.filter(isRGB)
 })
 
-function isRGB(x: unknown): x is RGB {
-  const o = x as any
-  return o && Number.isFinite(o.r) && Number.isFinite(o.g) && Number.isFinite(o.b)
+function isRGB(value: unknown): value is RGB {
+  const color = value as Partial<RGB> | null
+  return Boolean(
+    color && Number.isFinite(color.r) && Number.isFinite(color.g) && Number.isFinite(color.b)
+  )
 }
 
-async function onCopy(c: RGB): Promise<void> {
-  const hex = rgbHex(c)
+async function onCopy(color: RGB): Promise<void> {
+  const hex = rgbHex(color)
   try {
     await navigator.clipboard.writeText(hex)
-  } catch {}
-  toast('Copied color', { description: hex })
+    toast('Copied color', { description: hex })
+  } catch {
+    toast('Could not copy color', { description: 'Check clipboard permissions and try again.' })
+  }
 }
 </script>

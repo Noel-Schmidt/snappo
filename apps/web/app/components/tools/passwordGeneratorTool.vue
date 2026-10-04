@@ -5,7 +5,7 @@ import { toast } from 'vue-sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
+import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 
 type Opts = {
@@ -144,8 +144,10 @@ async function copyPw(): Promise<void> {
   if (!password.value) return
   try {
     await navigator.clipboard.writeText(password.value)
-  } catch {}
-  toast('Copied password')
+    toast('Password copied')
+  } catch {
+    toast('Could not copy password', { description: 'Check clipboard permissions and try again.' })
+  }
 }
 
 watch(opts, generate, { deep: true })
@@ -157,141 +159,166 @@ function set<K extends keyof Opts>(key: K, val: unknown) {
 </script>
 
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
-        <div class="grid gap-6 md:grid-cols-12">
-          <div class="md:col-span-4">
-            <div class="grid gap-5">
-              <div class="grid gap-2">
-                <Label for="length"
-                  >Length <span class="text-neutral-400">({{ opts.length }})</span></Label
-                >
-                <div class="flex items-center gap-3">
-                  <input
-                    id="length"
-                    v-model.number="opts.length"
-                    type="range"
-                    min="4"
-                    max="128"
-                    step="1"
-                    class="w-full accent-neutral-300"
-                  />
-                  <Input v-model.number="opts.length" type="number" class="w-20" />
-                </div>
-              </div>
-
-              <div class="grid gap-2">
-                <Label>Character sets</Label>
-                <div class="grid gap-3">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-neutral-300">Lowercase a–z</span>
-                    <Switch
-                      :model-value="opts.lower"
-                      @update:model-value="(v) => set('lower', v)"
-                    />
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-neutral-300">Uppercase A–Z</span>
-                    <Switch
-                      :model-value="opts.upper"
-                      @update:model-value="(v) => set('upper', v)"
-                    />
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-neutral-300">Digits 0–9</span>
-                    <Switch
-                      :model-value="opts.digits"
-                      @update:model-value="(v) => set('digits', v)"
-                    />
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-neutral-300">Symbols !@#$…</span>
-                    <Switch
-                      :model-value="opts.symbols"
-                      @update:model-value="(v) => set('symbols', v)"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div class="grid gap-2">
-                <Label>Rules</Label>
-                <div class="grid gap-3">
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-neutral-300">Exclude ambiguous</span>
-                    <Switch
-                      :model-value="opts.noAmbiguous"
-                      @update:model-value="(v) => set('noAmbiguous', v)"
-                    />
-                  </div>
-                  <div class="flex items-center justify-between">
-                    <span class="text-sm text-neutral-300">Require each selected set</span>
-                    <Switch
-                      :model-value="opts.requireEach"
-                      @update:model-value="(v) => set('requireEach', v)"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div class="grid gap-2">
-                <Label>Strength</Label>
-                <div class="h-2 w-full overflow-hidden rounded bg-neutral-800">
-                  <div
-                    class="h-full"
-                    :class="[
-                      strength.percent >= 80
-                        ? 'bg-green-500'
-                        : strength.percent >= 60
-                          ? 'bg-emerald-500'
-                          : strength.percent >= 40
-                            ? 'bg-yellow-500'
-                            : 'bg-red-500',
-                    ]"
-                    :style="{ width: strength.percent + '%' }"
-                  />
-                </div>
-                <p class="text-xs text-neutral-400">
-                  ~{{ entropyBits }} bits • {{ strength.label }}
-                </p>
-              </div>
-
-              <div class="flex gap-2 pt-2">
-                <Button :disabled="poolSize === 0" @click="generate">Generate</Button>
-                <Button variant="outline" :disabled="!password" @click="copyPw">Copy</Button>
-              </div>
+  <ToolLayout>
+    <div class="space-y-6">
+      <div class="grid lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)]">
+        <div class="grid content-start gap-6">
+          <div class="grid gap-2">
+            <Label for="pw">Your password</Label>
+            <div class="flex gap-2">
+              <Input
+                id="pw"
+                :model-value="password"
+                readonly
+                spellcheck="false"
+                autocomplete="off"
+                class="h-12 min-w-0 font-mono text-base tracking-wide sm:text-lg"
+                aria-live="polite"
+              />
+              <Button variant="outline" :disabled="!password" class="h-12 px-4" @click="copyPw"
+                >Copy</Button
+              >
             </div>
+            <p class="text-muted-foreground text-sm"
+              >Created in your browser with Web Crypto. Your password is never sent anywhere.</p
+            >
           </div>
-
-          <div class="md:col-span-8">
-            <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
-              <div class="grid gap-4">
-                <div class="grid gap-2">
-                  <Label for="pw">Password</Label>
-                  <Input id="pw" v-model="password" readonly class="font-mono" />
-                  <p class="text-xs text-neutral-500">
-                    Generated client-side using Web Crypto. Snappo never sends this value anywhere.
-                  </p>
-                </div>
-
-                <Separator class="bg-neutral-800" />
-
-                <div class="grid gap-2">
-                  <Label>Character pool</Label>
-                  <p class="text-xs text-neutral-400">Active characters: {{ poolSize }}</p>
-                  <div class="space-y-1 text-xs text-neutral-400">
-                    <div v-if="opts.lower">a–z: {{ pools.lower.join('') }}</div>
-                    <div v-if="opts.upper">A–Z: {{ pools.upper.join('') }}</div>
-                    <div v-if="opts.digits">0–9: {{ pools.digits.join('') }}</div>
-                    <div v-if="opts.symbols">Symbols: {{ pools.symbols.join('') }}</div>
-                  </div>
-                </div>
-              </div>
+          <div class="grid gap-3">
+            <div class="flex items-center justify-between gap-4"
+              ><Label for="length">Password length</Label
+              ><span class="text-foreground font-mono text-sm tabular-nums">{{
+                opts.length
+              }}</span></div
+            >
+            <Slider
+              v-model.number="opts.length"
+              min="4"
+              max="128"
+              step="1"
+              aria-label="Password length"
+            />
+            <div class="flex items-center justify-between gap-4"
+              ><span class="text-muted-foreground text-xs">4</span
+              ><Input
+                id="length"
+                v-model.number="opts.length"
+                type="number"
+                min="4"
+                max="128"
+                class="h-9 w-20 text-right tabular-nums"
+                aria-label="Password length in characters"
+              /><span class="text-muted-foreground text-xs">128</span></div
+            >
+          </div>
+          <div class="grid gap-3">
+            <h2 class="text-sm font-semibold">Character types</h2>
+            <div class="grid grid-cols-2 gap-2">
+              <label
+                class="border-border flex min-h-12 items-center justify-between gap-2 rounded-lg border px-3"
+                ><span class="text-sm"
+                  >Lowercase <span class="text-muted-foreground">a?z</span></span
+                ><Switch
+                  :model-value="opts.lower"
+                  aria-label="Include lowercase letters"
+                  @update:model-value="(v) => set('lower', v)"
+              /></label>
+              <label
+                class="border-border flex min-h-12 items-center justify-between gap-2 rounded-lg border px-3"
+                ><span class="text-sm"
+                  >Uppercase <span class="text-muted-foreground">A?Z</span></span
+                ><Switch
+                  :model-value="opts.upper"
+                  aria-label="Include uppercase letters"
+                  @update:model-value="(v) => set('upper', v)"
+              /></label>
+              <label
+                class="border-border flex min-h-12 items-center justify-between gap-2 rounded-lg border px-3"
+                ><span class="text-sm">Numbers <span class="text-muted-foreground">0?9</span></span
+                ><Switch
+                  :model-value="opts.digits"
+                  aria-label="Include numbers"
+                  @update:model-value="(v) => set('digits', v)"
+              /></label>
+              <label
+                class="border-border flex min-h-12 items-center justify-between gap-2 rounded-lg border px-3"
+                ><span class="text-sm">Symbols <span class="text-muted-foreground">!@#$</span></span
+                ><Switch
+                  :model-value="opts.symbols"
+                  aria-label="Include symbols"
+                  @update:model-value="(v) => set('symbols', v)"
+              /></label>
             </div>
+            <p v-if="poolSize === 0" class="text-destructive text-sm" role="alert"
+              >Select at least one character type to generate a password.</p
+            >
           </div>
+          <div class="border-border grid gap-3 border-t pt-5">
+            <h2 class="text-sm font-semibold">Options</h2>
+            <label class="flex items-center justify-between gap-4"
+              ><span class="text-sm">Exclude look-alike characters</span
+              ><Switch
+                :model-value="opts.noAmbiguous"
+                aria-label="Exclude look-alike characters"
+                @update:model-value="(v) => set('noAmbiguous', v)"
+            /></label>
+            <label class="flex items-center justify-between gap-4"
+              ><span class="text-sm">Include each selected type</span
+              ><Switch
+                :model-value="opts.requireEach"
+                aria-label="Require each selected character type"
+                @update:model-value="(v) => set('requireEach', v)"
+            /></label>
+          </div>
+          <Button :disabled="poolSize === 0" class="h-11 w-full" @click="generate"
+            >Generate password</Button
+          >
         </div>
+        <aside
+          class="border-border grid content-start gap-6 border-t pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0"
+        >
+          <div class="grid gap-3">
+            <div class="flex items-baseline justify-between gap-3"
+              ><h2 class="text-sm font-semibold">Estimated strength</h2
+              ><span class="text-sm capitalize">{{ strength.label }}</span></div
+            >
+            <div
+              class="bg-muted h-2 w-full overflow-hidden rounded-full"
+              role="progressbar"
+              :aria-valuenow="strength.percent"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              :aria-label="'Estimated password strength: ' + strength.label"
+              ><div
+                class="h-full rounded-full transition-[width]"
+                :class="
+                  strength.percent >= 80
+                    ? 'bg-primary'
+                    : strength.percent >= 50
+                      ? 'bg-amber-500'
+                      : 'bg-destructive'
+                "
+                :style="{ width: strength.percent + '%' }"
+            /></div>
+            <p class="text-muted-foreground text-sm">{{ entropyBits }} bits of estimated entropy</p>
+          </div>
+          <div class="border-border grid gap-2 border-t pt-5"
+            ><h2 class="text-sm font-semibold">Character pool</h2
+            ><p class="text-muted-foreground text-sm"
+              >{{ poolSize }} possible characters across {{ activePools.length }} selected types.</p
+            ></div
+          >
+          <p class="text-muted-foreground text-xs leading-relaxed"
+            >Strength is an estimate based on length and selected characters. A longer, unique
+            password is harder to guess.</p
+          >
+        </aside>
       </div>
     </div>
-  </section>
+    <ToolExplanation
+      title="About password strength"
+      intro="The estimate uses the password length and the size of the selected character pool. It does not account for every attack method or a site's password rules."
+      detail="Choose the character types your account accepts, then generate a unique password. Store it in a trusted password manager and avoid reusing it across accounts."
+      use-case="Use the length field and character options to meet an account's password requirements."
+    />
+  </ToolLayout>
 </template>

@@ -1,37 +1,42 @@
 <template>
-  <page-header
-    title="Explore Tools"
-    subtitle="Explore Snappo’s free collection of developer utilities. Generate hashes, pick colors, convert text, and more — all in one place"
-    badge="All Tools"
-  />
+  <main class="bg-background text-foreground">
+    <page-header
+      title="Developer tools"
+      subtitle="Format JSON, test patterns, compare text, and tune colors. Then get back to building."
+    >
+      <template #heading>
+        Handle the small tasks.<br /><span class="text-teal-700 dark:text-teal-300"
+          >Get back to building.</span
+        >
+      </template>
+    </page-header>
 
-  <catalog-view />
+    <catalog-view />
+  </main>
 </template>
 
 <script setup lang="ts">
 import PageHeader from '~/components/core/pageHeader.vue'
 import CatalogView from '~/components/tool/catalogView.vue'
 
-const title = 'Explore Tools'
-const site = 'Snappo'
-const fullTitle = `${title} | ${site}`
-const url = 'https://snappo.dev/tools'
+const title = 'Developer Tools'
 const description =
-  'Explore Snappo’s free collection of developer utilities. Generate hashes, pick colors, convert text, and more — try them all in one place.'
+  'Browse Snappo tools for JSON, regular expressions, text, passwords, colors, cron schedules, and more.'
+const url = 'https://snappo.me/tools'
 
 useSeoMeta({
-  title: fullTitle,
+  title: `${title} | Snappo`,
   description,
-  ogTitle: fullTitle,
+  ogTitle: `${title} | Snappo`,
   ogDescription: description,
   ogUrl: url,
   ogType: 'website',
   twitterCard: 'summary_large_image',
 })
 
-defineOgImageComponent('Pergel', {
-  headline: 'All Tools',
-  title: title,
-  description: description,
+defineOgImage('Pergel', {
+  headline: title,
+  title,
+  description,
 })
 </script>

@@ -6,35 +6,44 @@ import type { HTMLAttributes } from 'vue'
 
 import { cn } from '@/lib/utils'
 
-const props = defineProps<SwitchRootProps & { class?: HTMLAttributes['class'] }>()
+const props = withDefaults(
+  defineProps<
+    SwitchRootProps & {
+      class?: HTMLAttributes['class']
+      size?: 'sm' | 'default'
+    }
+  >(),
+  {
+    size: 'default',
+    class: undefined,
+  }
+)
 
 const emits = defineEmits<SwitchRootEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+const delegatedProps = reactiveOmit(props, 'class', 'size')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
 
 <template>
   <SwitchRoot
+    v-slot="slotProps"
     data-slot="switch"
+    :data-size="size"
     v-bind="forwarded"
     :class="
       cn(
-        'data-[state=checked]:bg-primary data-[state=unchecked]:bg-input focus-visible:border-ring focus-visible:ring-ring/50 dark:data-[state=unchecked]:bg-input/80 shadow-xs peer inline-flex h-[1.15rem] w-8 shrink-0 items-center rounded-full border border-transparent outline-none transition-all focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
+        'data-checked:bg-primary data-unchecked:bg-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 dark:data-unchecked:bg-input/80 focus-visible:ring-3 aria-invalid:ring-3 group/switch data-disabled:cursor-not-allowed data-disabled:opacity-50 peer relative inline-flex shrink-0 items-center rounded-full border border-transparent outline-none transition-all after:absolute after:-inset-x-3 after:-inset-y-2 data-[size=default]:h-[18.4px] data-[size=sm]:h-3.5 data-[size=default]:w-8 data-[size=sm]:w-6',
         props.class
       )
     "
   >
     <SwitchThumb
       data-slot="switch-thumb"
-      :class="
-        cn(
-          'bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground pointer-events-none block size-4 rounded-full ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0'
-        )
-      "
+      class="bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0 pointer-events-none block rounded-full ring-0 transition-transform group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3"
     >
-      <slot name="thumb" />
+      <slot name="thumb" v-bind="slotProps" />
     </SwitchThumb>
   </SwitchRoot>
 </template>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>You're offline · Snappo</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        background: #0a0a0a;
+        color: #fafafa;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        place-items: center;
+        padding: 24px;
+      }
+      main {
+        max-width: 440px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 7vw, 36px);
+        letter-spacing: -0.04em;
+      }
+      p {
+        margin: 14px 0 28px;
+        color: #a3a3a3;
+        line-height: 1.65;
+      }
+      button {
+        border: 0;
+        border-radius: 8px;
+        background: #008080;
+        padding: 11px 18px;
+        color: #171717;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:focus-visible {
+        outline: 2px solid white;
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>You're offline</h1>
+      <p>Snappo couldn't reach the network. Reconnect to continue using all developer tools.</p>
+      <button type="button" onclick="location.reload()">Try again</button>
+    </main>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 <template>
-  <page-header :title="entry.title" :subtitle="entry.description" :badge="entry.badge" />
+  <page-header :title="entry.title" :subtitle="entry.description" />
   <component :is="Comp" />
 </template>
 
@@ -12,7 +12,6 @@ const appCfg = useAppConfig()
 const tools = appCfg.tools
 
 if (!tools.length) {
-  console.log(tools)
   throw createError({ statusCode: 500, statusMessage: 'App-Config tools empty' })
 }
 
