@@ -32,6 +32,7 @@
     "nuxt": "^4.5.2",
     "nuxt-og-image": "6.10.3",
     "reka-ui": "^2.10.5",
+    "satori": "^0.35.0",
     "shadcn-nuxt": "2.8.2",
     "shadcn-vue": "^2.8.2",
     "sharp": "^0.35.5",
