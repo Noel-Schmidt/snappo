@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue'
+import { toast } from 'vue-sonner'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Slider } from '@/components/ui/slider'
 import { Separator } from '@/components/ui/separator'
+import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
-import { toast } from 'vue-sonner'
 
 type Shadow = {
   x: number
@@ -179,25 +180,25 @@ const presets: Preset[] = [
                   <Button
                     size="sm"
                     variant="outline"
-                    @click="moveUp(i)"
                     :disabled="i === 0"
                     class="h-11 px-5"
+                    @click="moveUp(i)"
                     >↑</Button
                   >
                   <Button
                     size="sm"
                     variant="outline"
-                    @click="moveDown(i)"
                     :disabled="i === shadows.length - 1"
                     class="h-11 px-5"
+                    @click="moveDown(i)"
                     >↓</Button
                   >
                   <Button
                     size="sm"
                     variant="outline"
-                    @click="removeShadow(i)"
                     :disabled="shadows.length === 1"
                     class="h-11 px-5"
+                    @click="removeShadow(i)"
                     >Remove</Button
                   >
                 </div>
@@ -214,7 +215,7 @@ const presets: Preset[] = [
                       step="1"
                       aria-label="Horizontal shadow offset"
                     />
-                    <Input type="number" class="h-11 w-24" v-model.number="s.x" />
+                    <Input v-model.number="s.x" type="number" class="h-11 w-24" />
                   </div>
                 </div>
 
@@ -228,7 +229,7 @@ const presets: Preset[] = [
                       step="1"
                       aria-label="Vertical shadow offset"
                     />
-                    <Input type="number" class="h-11 w-24" v-model.number="s.y" />
+                    <Input v-model.number="s.y" type="number" class="h-11 w-24" />
                   </div>
                 </div>
 
@@ -242,7 +243,7 @@ const presets: Preset[] = [
                       step="1"
                       aria-label="Shadow blur"
                     />
-                    <Input type="number" class="h-11 w-24" v-model.number="s.blur" />
+                    <Input v-model.number="s.blur" type="number" class="h-11 w-24" />
                   </div>
                 </div>
 
@@ -256,7 +257,7 @@ const presets: Preset[] = [
                       step="1"
                       aria-label="Shadow spread"
                     />
-                    <Input type="number" class="h-11 w-24" v-model.number="s.spread" />
+                    <Input v-model.number="s.spread" type="number" class="h-11 w-24" />
                   </div>
                 </div>
 
@@ -264,8 +265,8 @@ const presets: Preset[] = [
                   <Label>Color</Label>
                   <div class="flex items-center gap-3">
                     <input
-                      type="color"
                       v-model="s.color"
+                      type="color"
                       class="border-input h-9 w-9 rounded border bg-transparent p-0"
                     />
                     <Input v-model="s.color" placeholder="#000000" class="h-11" />
@@ -283,12 +284,12 @@ const presets: Preset[] = [
                       aria-label="Shadow opacity"
                     />
                     <Input
+                      v-model.number="s.opacity"
                       type="number"
                       step="0.01"
                       min="0"
                       max="1"
                       class="h-11 w-24"
-                      v-model.number="s.opacity"
                     />
                   </div>
                 </div>
@@ -316,7 +317,7 @@ const presets: Preset[] = [
             <Label>Generated CSS</Label>
             <Textarea :value="cssText" rows="3" readonly class="font-mono text-sm" />
             <div class="flex gap-2">
-              <Button @click="copyCss" class="h-11 px-5">Copy CSS</Button>
+              <Button class="h-11 px-5" @click="copyCss">Copy CSS</Button>
             </div>
           </div>
         </div>
@@ -331,15 +332,15 @@ const presets: Preset[] = [
             <div class="flex items-center gap-3">
               <input
                 id="bgc"
-                type="color"
                 v-model="bg"
+                type="color"
                 class="border-input h-9 w-9 rounded border bg-transparent p-0"
               />
               <Input v-model="bg" class="h-11 w-40" />
               <div class="ml-auto flex items-center gap-3">
                 <Label for="size">Preview size</Label>
                 <Slider v-model.number="boxSize" min="160" max="420" step="1" aria-label="size" />
-                <Input type="number" class="h-11 w-20" v-model.number="boxSize" />
+                <Input v-model.number="boxSize" type="number" class="h-11 w-20" />
               </div>
             </div>
           </div>

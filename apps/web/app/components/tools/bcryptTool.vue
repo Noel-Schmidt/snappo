@@ -61,8 +61,8 @@
               <Button
                 :disabled="busy || !password"
                 :aria-busy="busy"
-                @click="generate"
                 class="h-11 px-5"
+                @click="generate"
               >
                 <Loader2 v-if="busy" class="mr-2 h-4 w-4 animate-spin" />
                 {{ busy ? 'Generating hash...' : 'Generate hash' }}
@@ -70,16 +70,16 @@
               <Button
                 variant="outline"
                 :disabled="busy || !hash"
-                @click="copy(hash)"
                 class="h-11 px-5"
+                @click="copy(hash)"
               >
                 Copy hash
               </Button>
               <Button
                 variant="ghost"
                 :disabled="busy || (!password && !hash)"
-                @click="resetLeft"
                 class="h-11 px-5"
+                @click="resetLeft"
               >
                 Clear
               </Button>
@@ -145,22 +145,22 @@
             </div>
 
             <div class="flex flex-wrap gap-2">
-              <Button :disabled="busy || !hashIn || !pwCheck" @click="verify" class="h-11 px-5">
+              <Button :disabled="busy || !hashIn || !pwCheck" class="h-11 px-5" @click="verify">
                 Verify password
               </Button>
               <Button
                 variant="outline"
                 :disabled="busy || !hashIn"
-                @click="copy(hashIn)"
                 class="h-11 px-5"
+                @click="copy(hashIn)"
               >
                 Copy hash
               </Button>
               <Button
                 variant="ghost"
                 :disabled="busy || (!hashIn && !pwCheck && verdict === 'idle')"
-                @click="resetRight"
                 class="h-11 px-5"
+                @click="resetRight"
               >
                 Clear
               </Button>

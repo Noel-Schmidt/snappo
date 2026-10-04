@@ -105,7 +105,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type Component } from 'vue'
 import {
   Braces,
   Clock,
@@ -120,6 +119,7 @@ import {
   Search,
   X,
 } from 'lucide-vue-next'
+import { computed, ref, type Component } from 'vue'
 
 import { useAppConfig } from '#imports'
 import { Input } from '@/components/ui/input'

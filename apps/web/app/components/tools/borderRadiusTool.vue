@@ -5,7 +5,6 @@ import { toast } from 'vue-sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Slider } from '@/components/ui/slider'
 import {
   Select,
   SelectTrigger,
@@ -14,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
+import { Slider } from '@/components/ui/slider'
 import { Textarea } from '@/components/ui/textarea'
 
 type Unit = 'px' | '%'
@@ -154,14 +154,14 @@ async function copyCss() {
           <div class="flex gap-2">
             <Button
               :variant="linked ? 'default' : 'outline'"
-              @click="linked = true"
               class="h-11 px-5"
+              @click="linked = true"
               >Linked</Button
             >
             <Button
               :variant="!linked ? 'default' : 'outline'"
-              @click="linked = false"
               class="h-11 px-5"
+              @click="linked = false"
               >Independent</Button
             >
           </div>
@@ -172,14 +172,14 @@ async function copyCss() {
           <div class="flex gap-2">
             <Button
               :variant="!elliptical ? 'default' : 'outline'"
-              @click="elliptical = false"
               class="h-11 px-5"
+              @click="elliptical = false"
               >Circular</Button
             >
             <Button
               :variant="elliptical ? 'default' : 'outline'"
-              @click="elliptical = true"
               class="h-11 px-5"
+              @click="elliptical = true"
               >Elliptical</Button
             >
           </div>
@@ -327,9 +327,9 @@ async function copyCss() {
           <Label>Generated CSS</Label>
           <Textarea :value="cssText" rows="3" readonly />
           <div class="flex gap-2">
-            <Button @click="copyCss" class="h-11 px-5">Copy CSS</Button>
-            <Button variant="outline" @click="setAll(0)" class="h-11 px-5">All 0</Button>
-            <Button variant="outline" @click="setAll(unit === '%' ? 50 : 16)" class="h-11 px-5"
+            <Button class="h-11 px-5" @click="copyCss">Copy CSS</Button>
+            <Button variant="outline" class="h-11 px-5" @click="setAll(0)">All 0</Button>
+            <Button variant="outline" class="h-11 px-5" @click="setAll(unit === '%' ? 50 : 16)"
               >Baseline</Button
             >
           </div>

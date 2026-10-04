@@ -12,12 +12,12 @@
           <Label for="palette-color">Base color</Label>
           <div class="flex items-center gap-3">
             <input
-              v-model="colorPicker"
               id="palette-color-picker"
+              v-model="colorPicker"
               type="color"
               aria-label="Choose base color"
-              @input="onPicker"
               class="border-border h-12 w-14 cursor-pointer rounded-lg border bg-transparent p-1"
+              @input="onPicker"
             />
             <Input
               id="palette-color"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
@@ -8,10 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
-    data-slot="dialog-header"
-    :class="cn('gap-2 flex flex-col', props.class)"
-  >
+  <div data-slot="dialog-header" :class="cn('flex flex-col gap-2', props.class)">
     <slot />
   </div>
 </template>

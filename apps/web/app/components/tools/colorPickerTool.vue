@@ -53,14 +53,14 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
-            <Button @click="copy(hexWithAlpha)" class="h-10 px-4">Copy HEX</Button>
+            <Button class="h-10 px-4" @click="copy(hexWithAlpha)">Copy HEX</Button>
             <Button
               variant="outline"
-              @click="copy(`rgba(${r}, ${g}, ${b}, ${round(a, 2)})`)"
               class="h-10 px-4"
+              @click="copy(`rgba(${r}, ${g}, ${b}, ${round(a, 2)})`)"
               >Copy RGBA</Button
             >
-            <Button variant="outline" @click="randomize" class="h-10 px-4">Random</Button>
+            <Button variant="outline" class="h-10 px-4" @click="randomize">Random</Button>
             <div class="text-muted-foreground ml-auto text-xs"
               >WCAG vs #0a0a0a: {{ contrastDark.ratio.toFixed(2) }} ({{ contrastDark.level }})</div
             >
@@ -77,8 +77,8 @@
                 id="hex"
                 v-model="hexInput"
                 placeholder="#1f2937 or #1f2937cc"
-                @change="onHexChange"
                 class="h-11"
+                @change="onHexChange"
               />
             </div>
 
@@ -89,8 +89,8 @@
                   id="rgba"
                   v-model="rgbaInput"
                   placeholder="31,41,55,0.80"
-                  @change="onRgbaChange"
                   class="h-11"
+                  @change="onRgbaChange"
                 />
               </div>
               <div class="grid gap-2">
@@ -99,8 +99,8 @@
                   id="hsl"
                   v-model="hslInput"
                   placeholder="220,21%,17%,0.80"
-                  @change="onHslChange"
                   class="h-11"
+                  @change="onHslChange"
                 />
               </div>
             </div>
@@ -111,8 +111,8 @@
                 id="oklch"
                 v-model="oklchInput"
                 placeholder="0.65 0.10 220 / 0.9"
-                @change="onOklchChange"
                 class="h-11"
+                @change="onOklchChange"
               />
             </div>
           </div>
@@ -171,8 +171,8 @@
                 <Button
                   variant="outline"
                   :disabled="history.length === 0"
-                  @click="clearHistory"
                   class="h-11 px-5"
+                  @click="clearHistory"
                   >Clear History</Button
                 >
               </div>

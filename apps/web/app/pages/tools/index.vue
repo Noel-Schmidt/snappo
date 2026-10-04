@@ -16,8 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import CatalogView from '~/components/tool/catalogView.vue'
 import PageHeader from '~/components/core/pageHeader.vue'
+import CatalogView from '~/components/tool/catalogView.vue'
 
 const title = 'Developer Tools'
 const description =

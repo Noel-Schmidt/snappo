@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
@@ -8,10 +9,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div
-    data-slot="popover-title"
-    :class="cn('font-medium cn-font-heading', props.class)"
-  >
+  <div data-slot="popover-title" :class="cn('cn-font-heading font-medium', props.class)">
     <slot />
   </div>
 </template>

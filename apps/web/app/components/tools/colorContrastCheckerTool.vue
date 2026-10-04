@@ -308,7 +308,7 @@ async function copySummary() {
                 </div>
               </div>
               <div class="flex gap-2">
-                <Button :disabled="!summary" @click="copySummary" class="h-11 px-5"
+                <Button :disabled="!summary" class="h-11 px-5" @click="copySummary"
                   >Copy summary</Button
                 >
               </div>

@@ -226,12 +226,12 @@ async function copyOne(u: string) {
             </div>
 
             <div class="flex gap-2 pt-2">
-              <Button @click="onGenerate" class="h-11 px-5">Generate</Button>
+              <Button class="h-11 px-5" @click="onGenerate">Generate</Button>
               <Button
                 variant="outline"
                 :disabled="uuids.length === 0"
-                @click="copyAll"
                 class="h-11 px-5"
+                @click="copyAll"
                 >Copy all</Button
               >
             </div>
@@ -250,7 +250,7 @@ async function copyOne(u: string) {
             <div v-if="uuids.length" class="divide-border divide-y">
               <div v-for="u in uuids" :key="u" class="flex items-center justify-between gap-3 py-2">
                 <code class="text-foreground break-all font-mono text-sm">{{ u }}</code>
-                <Button size="sm" variant="outline" @click="copyOne(u)" class="h-9 px-3"
+                <Button size="sm" variant="outline" class="h-9 px-3" @click="copyOne(u)"
                   >Copy</Button
                 >
               </div>

@@ -59,6 +59,7 @@
 
 <script setup lang="ts">
 import { Github, Mail } from 'lucide-vue-next'
+
 import PageHeader from '~/components/core/pageHeader.vue'
 
 const title = 'Contact Snappo | Developer Tools'

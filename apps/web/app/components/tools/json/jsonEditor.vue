@@ -196,8 +196,8 @@ function handleKeydown(event: KeyboardEvent): void {
         >{{ token.text }}</span
       ></code></pre>
     <textarea
-      ref="textarea"
       id="json-input"
+      ref="textarea"
       :value="modelValue"
       class="border-input focus-visible:border-ring focus-visible:ring-ring/50 selection:bg-primary/20 caret-foreground placeholder:text-muted-foreground absolute inset-0 h-full min-h-full w-full resize-none break-words rounded-none border-0 bg-transparent px-5 py-3 font-mono text-[13px] leading-6 text-transparent selection:text-transparent placeholder:opacity-100 focus-visible:outline-none focus-visible:ring-2 sm:px-6"
       placeholder="Paste or type JSON here…"

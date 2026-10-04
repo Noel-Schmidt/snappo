@@ -12,7 +12,6 @@ const appCfg = useAppConfig()
 const tools = appCfg.tools
 
 if (!tools.length) {
-  console.log(tools)
   throw createError({ statusCode: 500, statusMessage: 'App-Config tools empty' })
 }
 

@@ -107,14 +107,14 @@ onBeforeUnmount(killWorker)
             </div>
 
             <div class="flex gap-2 pt-2">
-              <Button :disabled="!canRun" @click="run" class="h-11 px-5">
+              <Button :disabled="!canRun" class="h-11 px-5" @click="run">
                 <span v-if="running">Processing…</span>
                 <span v-else>Run</span>
               </Button>
-              <Button variant="outline" :disabled="!output" @click="copyOut" class="h-11 px-5"
+              <Button variant="outline" :disabled="!output" class="h-11 px-5" @click="copyOut"
                 >Copy output</Button
               >
-              <Button variant="ghost" @click="clearAll" class="h-11 px-5">Clear</Button>
+              <Button variant="ghost" class="h-11 px-5" @click="clearAll">Clear</Button>
             </div>
           </div>
 

@@ -52,15 +52,15 @@
               <Button
                 :variant="mode === 'side' ? 'default' : 'outline'"
                 size="sm"
-                @click="mode = 'side'"
                 class="h-11 px-5"
+                @click="mode = 'side'"
                 >Side-by-Side</Button
               >
               <Button
                 :variant="mode === 'unified' ? 'default' : 'outline'"
                 size="sm"
-                @click="mode = 'unified'"
                 class="h-11 px-5"
+                @click="mode = 'unified'"
                 >Unified</Button
               >
             </div>
@@ -73,19 +73,19 @@
               ><Switch v-model:checked="lineNumbers"
             /></div>
             <div class="flex flex-wrap gap-2">
-              <Button :disabled="!left && !right" @click="run" class="h-11 px-5">Compare</Button>
+              <Button :disabled="!left && !right" class="h-11 px-5" @click="run">Compare</Button>
               <Button
                 variant="outline"
                 :disabled="!left && !right"
-                @click="clearAll"
                 class="h-11 px-5"
+                @click="clearAll"
                 >Clear</Button
               >
               <Button
                 variant="outline"
                 :disabled="!unified.length"
-                @click="copyUnified"
                 class="h-11 px-5"
+                @click="copyUnified"
                 >Copy unified</Button
               >
             </div>
@@ -179,8 +179,8 @@ import { ref, computed } from 'vue'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 
 const left = ref(''),
   right = ref('')

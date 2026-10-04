@@ -69,8 +69,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import { Braces, Clock, FileCode, Hash, Key, Palette } from 'lucide-vue-next'
+import { computed, ref } from 'vue'
 
 const categories = ['All', 'Code', 'Security', 'Design']
 const activeCategory = ref('All')

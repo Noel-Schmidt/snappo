@@ -175,7 +175,7 @@ function set<K extends keyof Opts>(key: K, val: unknown) {
                 class="h-12 min-w-0 font-mono text-base tracking-wide sm:text-lg"
                 aria-live="polite"
               />
-              <Button variant="outline" :disabled="!password" @click="copyPw" class="h-12 px-4"
+              <Button variant="outline" :disabled="!password" class="h-12 px-4" @click="copyPw"
                 >Copy</Button
               >
             </div>
@@ -269,7 +269,7 @@ function set<K extends keyof Opts>(key: K, val: unknown) {
                 @update:model-value="(v) => set('requireEach', v)"
             /></label>
           </div>
-          <Button :disabled="poolSize === 0" @click="generate" class="h-11 w-full"
+          <Button :disabled="poolSize === 0" class="h-11 w-full" @click="generate"
             >Generate password</Button
           >
         </div>

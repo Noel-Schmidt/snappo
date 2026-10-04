@@ -57,8 +57,8 @@
             <Label for="seed">Seed</Label>
             <Input id="seed" v-model="seedInput" placeholder="optional" class="h-11" />
             <div class="flex gap-2">
-              <Button variant="outline" @click="shuffleSeed" class="h-11 px-5">Randomize</Button>
-              <Button variant="outline" @click="resetOptions" class="h-11 px-5">Reset</Button>
+              <Button variant="outline" class="h-11 px-5" @click="shuffleSeed">Randomize</Button>
+              <Button variant="outline" class="h-11 px-5" @click="resetOptions">Reset</Button>
             </div>
           </div>
 
@@ -87,11 +87,11 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-3">
-            <Button @click="generate" class="h-11 px-5">Generate</Button>
-            <Button variant="outline" :disabled="!output" @click="copy" class="h-11 px-5"
+            <Button class="h-11 px-5" @click="generate">Generate</Button>
+            <Button variant="outline" :disabled="!output" class="h-11 px-5" @click="copy"
               >Copy</Button
             >
-            <Button variant="outline" :disabled="!output" @click="clearAll" class="h-11 px-5"
+            <Button variant="outline" :disabled="!output" class="h-11 px-5" @click="clearAll"
               >Clear</Button
             >
           </div>
@@ -133,9 +133,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
-import { Slider } from '@/components/ui/slider'
 
 type Mode = 'paragraphs' | 'sentences' | 'words'
 type Preset = 'classic' | 'tech' | 'hacker'

@@ -2,8 +2,8 @@
 import { computed, ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
 
-import JsonNode from './json/jsonNode.vue'
 import JsonEditor from './json/jsonEditor.vue'
+import JsonNode from './json/jsonNode.vue'
 
 import ToolLayout from '@/components/tool/toolLayout.vue'
 import { Button } from '@/components/ui/button'

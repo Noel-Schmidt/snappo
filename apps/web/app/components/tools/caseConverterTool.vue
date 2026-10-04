@@ -34,10 +34,10 @@
               </div>
             </div>
             <div class="flex flex-wrap items-center gap-3">
-              <Button variant="outline" :disabled="!src" @click="clearAll" class="h-11 px-5"
+              <Button variant="outline" :disabled="!src" class="h-11 px-5" @click="clearAll"
                 >Clear</Button
               >
-              <Button variant="outline" :disabled="!src" @click="copyAll" class="h-11 px-5"
+              <Button variant="outline" :disabled="!src" class="h-11 px-5" @click="copyAll"
                 >Copy all</Button
               >
             </div>
@@ -108,8 +108,8 @@ import { reactive, ref, watch } from 'vue'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 
 type Options = { trim: boolean; collapse: boolean; diacritics: boolean; preserveAcronyms: boolean }
 const src = ref('')

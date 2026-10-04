@@ -63,7 +63,6 @@ function parseField(raw: string, field: Field): Spec {
     return spec
   }
 
-  const [min, _max] = limits[field]
   const parts = s.split(',')
   for (const part of parts) {
     const p = part.trim()
@@ -346,7 +345,7 @@ function applyPreset(p: Preset) {
             <Label for="expr">Cron expression</Label>
             <Input id="expr" :value="cronOut" readonly class="h-11" />
             <div class="flex gap-2">
-              <Button @click="copyCron" class="h-11 px-5">Copy</Button>
+              <Button class="h-11 px-5" @click="copyCron">Copy</Button>
             </div>
           </div>
           <div class="grid gap-2">
@@ -362,7 +361,7 @@ function applyPreset(p: Preset) {
             <Label for="in">Cron expression</Label>
             <Input id="in" v-model="cronIn" class="h-11" />
             <div class="flex gap-2">
-              <Button :disabled="!!errorMsg" @click="copyCron" class="h-11 px-5">Copy</Button>
+              <Button :disabled="!!errorMsg" class="h-11 px-5" @click="copyCron">Copy</Button>
             </div>
           </div>
           <div class="grid gap-2">
