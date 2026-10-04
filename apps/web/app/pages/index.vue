@@ -34,12 +34,17 @@
           <NuxtLink to="/tools" class="text-foreground underline underline-offset-4">
             All developer tools
           </NuxtLink>
+          <NuxtLink to="/blog" class="text-foreground underline underline-offset-4">
+            Developer blog
+          </NuxtLink>
         </div>
       </div>
     </div>
   </section>
 
   <features-section />
+
+  <latest-blog-posts />
 
   <contribution-section />
 
@@ -50,6 +55,7 @@ import ContributionSection from '~/components/home/contributionSection.vue'
 import FaqSection from '~/components/home/faqSection.vue'
 import FeaturesSection from '~/components/home/featuresSection.vue'
 import HeroSection from '~/components/home/heroSection.vue'
+import LatestBlogPosts from '~/components/home/latestBlogPosts.vue'
 
 useSeoConfig({
   title: 'Developer tools',
