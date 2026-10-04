@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     $production: {
       preset: 'cloudflare-pages',
     },
-    prerender: { routes: ['/sitemap-tools.xml'] },
+    prerender: { routes: ['/sitemap-tools.xml', '/sitemap-blog.xml'] },
   },
 
   devtools: { enabled: false },
@@ -38,7 +38,14 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    sources: ['/sitemap-tools.xml'],
+    sources: ['/sitemap-tools.xml', '/sitemap-blog.xml'],
+  },
+
+  content: {
+    database: {
+      type: 'd1',
+      bindingName: 'DB',
+    },
   },
 
   css: ['~/assets/css/tailwind.css'],
@@ -61,6 +68,7 @@ export default defineNuxtConfig({
 
   modules: [
     'shadcn-nuxt',
+    '@nuxt/content',
     'nuxt-og-image',
     '@nuxtjs/sitemap',
     '@nuxtjs/robots',

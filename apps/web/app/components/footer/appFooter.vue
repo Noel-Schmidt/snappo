@@ -30,6 +30,12 @@
         >
           FAQ
         </NuxtLink>
+        <NuxtLink
+          to="/blog"
+          class="transition-colors hover:text-teal-300 focus-visible:text-teal-300"
+        >
+          Blog
+        </NuxtLink>
         <a
           href="https://github.com/noel-schmidt/snappo"
           target="_blank"

@@ -69,7 +69,7 @@
     >
       <div
         v-if="open"
-        class="border-border bg-background border-t px-4 pb-5 pt-4 md:hidden sm:px-6"
+        class="border-border bg-background border-t px-4 pb-5 pt-4 sm:px-6 md:hidden"
       >
         <div class="mb-4">
           <app-navigation-search />
@@ -129,6 +129,7 @@ const open = ref(false)
 
 const items = [
   { label: 'Explore tools', href: '/tools' },
+  { label: 'Blog', href: '/blog' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ]
