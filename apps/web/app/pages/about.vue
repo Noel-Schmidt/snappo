@@ -37,7 +37,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-defineOgImageComponent('Pergel', {
+defineOgImage('Pergel', {
   headline: 'About Snappo',
   title: 'A developer toolbox for everyday tasks',
   description,

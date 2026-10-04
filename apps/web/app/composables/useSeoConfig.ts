@@ -1,4 +1,4 @@
-import { defineOgImageComponent } from '#og-image/app/composables/defineOgImageComponent'
+import { defineOgImage } from '#og-image/app/composables/defineOgImage'
 
 export function useSeoConfig(opts: {
   title: string
@@ -20,7 +20,7 @@ export function useSeoConfig(opts: {
     twitterCard: 'summary_large_image',
   })
 
-  defineOgImageComponent('Pergel', {
+  defineOgImage('Pergel', {
     headline: opts.headline,
     title: opts.title,
     description: opts.description,

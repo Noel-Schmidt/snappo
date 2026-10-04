@@ -34,7 +34,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-defineOgImageComponent('Pergel', {
+defineOgImage('Pergel', {
   headline: title,
   title,
   description,

@@ -75,7 +75,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-defineOgImageComponent('Pergel', {
+defineOgImage('Pergel', {
   headline: 'Contact Snappo',
   title: 'Questions, feedback, or tool ideas',
   description,

@@ -1,4 +1,4 @@
-import { defineOgImageComponent } from '#og-image/app/composables/defineOgImageComponent'
+import { defineOgImage } from '#og-image/app/composables/defineOgImage'
 
 export function useToolSeo(entry: {
   slug: string
@@ -23,7 +23,7 @@ export function useToolSeo(entry: {
     twitterCard: 'summary_large_image',
   })
 
-  defineOgImageComponent(cfg.defaultOgComponent, {
+  defineOgImage(cfg.defaultOgComponent, {
     headline: entry.badge,
     title: entry.title,
     description: entry.description,
