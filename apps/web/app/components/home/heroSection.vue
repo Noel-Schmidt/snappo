@@ -2,17 +2,15 @@
   <section
     class="hero border-border bg-background text-foreground relative isolate overflow-hidden border-b"
   >
-    <div
-      class="hero-atmosphere pointer-events-none absolute inset-0 overflow-hidden"
-      aria-hidden="true"
-    >
-      <div class="hero-light" />
-    </div>
     <div class="hero-grid pointer-events-none absolute inset-0" aria-hidden="true">
       <div class="hero-grid-inner mx-auto grid h-full max-w-6xl grid-cols-12">
         <div v-for="column in 12" :key="column" class="border-border/40 border-l last:border-r" />
       </div>
     </div>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute -top-64 left-1/2 h-[34rem] w-[min(80rem,90vw)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.09),transparent_68%)] blur-2xl"
+    />
 
     <div
       class="relative z-10 mx-auto grid max-w-7xl items-center gap-16 px-6 py-20 sm:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:py-32"
@@ -132,17 +130,6 @@ const quickTools = [
 </script>
 
 <style scoped>
-.hero-light {
-  position: absolute;
-  top: -24rem;
-  right: -12rem;
-  width: min(78vw, 72rem);
-  height: min(64vw, 52rem);
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgb(45 212 191 / 0.07), transparent 68%);
-  filter: blur(24px);
-}
-
 .hero-grid {
   mask-image: linear-gradient(to bottom, black 0%, rgb(0 0 0 / 0.65) 58%, transparent 100%);
   opacity: 0.7;
