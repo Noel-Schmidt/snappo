@@ -174,96 +174,103 @@ async function copyOne(u: string) {
 </script>
 
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
-        <div class="grid gap-6 md:grid-cols-12">
-          <div class="grid gap-5 md:col-span-4">
-            <div class="flex flex-col space-y-4">
+  <ToolLayout>
+    <div class="space-y-6">
+      <div class="grid lg:grid-cols-[minmax(18rem,0.85fr)_minmax(0,1.15fr)]">
+        <div class="grid content-start gap-5">
+          <div class="flex flex-col space-y-4">
+            <div class="grid gap-2">
+              <Label for="ver">Version</Label>
+              <Select v-model="version">
+                <SelectTrigger id="ver"><SelectValue placeholder="Select version" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="v4">UUID v4 (random)</SelectItem>
+                  <SelectItem value="v1">UUID v1 (time-based)</SelectItem>
+                  <SelectItem value="v5">UUID v5 (namespace)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div class="grid gap-2">
+              <Label for="cnt">Count</Label>
+              <Input id="cnt" v-model.number="count" type="number" min="1" max="500" class="h-11" />
+            </div>
+
+            <div v-if="needsV5" class="border-border grid gap-4 border-t pt-4">
               <div class="grid gap-2">
-                <Label for="ver">Version</Label>
-                <Select v-model="version">
-                  <SelectTrigger id="ver"
-                    ><SelectValue placeholder="Select version"
-                  /></SelectTrigger>
+                <Label>Namespace</Label>
+                <Select v-model="nsPreset">
+                  <SelectTrigger><SelectValue placeholder="Namespace" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="v4">UUID v4 (random)</SelectItem>
-                    <SelectItem value="v1">UUID v1 (time-based)</SelectItem>
-                    <SelectItem value="v5">UUID v5 (namespace)</SelectItem>
+                    <SelectItem value="dns">DNS (6ba7b810-…)</SelectItem>
+                    <SelectItem value="url">URL (6ba7b811-…)</SelectItem>
+                    <SelectItem value="oid">OID (6ba7b812-…)</SelectItem>
+                    <SelectItem value="x500">X.500 (6ba7b814-…)</SelectItem>
+                    <SelectItem value="custom">Custom</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-
+              <div v-if="nsPreset === 'custom'" class="grid gap-2">
+                <Label for="ns">Custom namespace UUID</Label>
+                <Input
+                  id="ns"
+                  v-model="nsCustom"
+                  placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                  class="h-11"
+                />
+              </div>
               <div class="grid gap-2">
-                <Label for="cnt">Count</Label>
-                <Input id="cnt" v-model.number="count" type="number" min="1" max="500" />
-              </div>
-
-              <div v-if="needsV5" class="grid gap-4 rounded-lg border border-neutral-800 p-3">
-                <div class="grid gap-2">
-                  <Label>Namespace</Label>
-                  <Select v-model="nsPreset">
-                    <SelectTrigger><SelectValue placeholder="Namespace" /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="dns">DNS (6ba7b810-…)</SelectItem>
-                      <SelectItem value="url">URL (6ba7b811-…)</SelectItem>
-                      <SelectItem value="oid">OID (6ba7b812-…)</SelectItem>
-                      <SelectItem value="x500">X.500 (6ba7b814-…)</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div v-if="nsPreset === 'custom'" class="grid gap-2">
-                  <Label for="ns">Custom namespace UUID</Label>
-                  <Input
-                    id="ns"
-                    v-model="nsCustom"
-                    placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                  />
-                </div>
-                <div class="grid gap-2">
-                  <Label for="name">Name</Label>
-                  <Input id="name" v-model="v5name" placeholder="example.com" />
-                </div>
-              </div>
-
-              <div class="flex gap-2 pt-2">
-                <Button @click="onGenerate">Generate</Button>
-                <Button variant="outline" :disabled="uuids.length === 0" @click="copyAll"
-                  >Copy all</Button
-                >
+                <Label for="name">Name</Label>
+                <Input id="name" v-model="v5name" placeholder="example.com" class="h-11" />
               </div>
             </div>
-          </div>
 
-          <div class="md:col-span-8">
-            <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-4">
-              <div class="flex items-center justify-between">
-                <Label>Results</Label>
-                <span class="text-xs text-neutral-400">{{ uuids.length }} UUID(s)</span>
-              </div>
-              <Separator class="my-3 bg-neutral-800" />
-              <div v-if="uuids.length" class="grid gap-2">
-                <div
-                  v-for="u in uuids"
-                  :key="u"
-                  class="flex items-center justify-between rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2"
-                >
-                  <code class="break-all font-mono text-sm text-neutral-200">{{ u }}</code>
-                  <Button size="sm" variant="outline" @click="copyOne(u)">Copy</Button>
-                </div>
-              </div>
-              <p v-else class="text-sm text-neutral-400"
-                >No UUIDs yet. Choose options and generate.</p
+            <div class="flex gap-2 pt-2">
+              <Button class="h-11 px-5" @click="onGenerate">Generate</Button>
+              <Button
+                variant="outline"
+                :disabled="uuids.length === 0"
+                class="h-11 px-5"
+                @click="copyAll"
+                >Copy all</Button
               >
             </div>
-            <p class="mt-3 text-xs text-neutral-500">
-              Conforms to RFC 4122. v1 uses a random node identifier with multicast bit set and a
-              random 14-bit clock sequence.
-            </p>
           </div>
+        </div>
+
+        <div
+          class="border-border grid content-start gap-4 border-t pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0"
+        >
+          <div class="grid gap-3">
+            <div class="flex items-center justify-between">
+              <Label>Results</Label>
+              <span class="text-muted-foreground text-xs">{{ uuids.length }} UUID(s)</span>
+            </div>
+            <Separator class="bg-muted my-3" />
+            <div v-if="uuids.length" class="divide-border divide-y">
+              <div v-for="u in uuids" :key="u" class="flex items-center justify-between gap-3 py-2">
+                <code class="text-foreground break-all font-mono text-sm">{{ u }}</code>
+                <Button size="sm" variant="outline" class="h-9 px-3" @click="copyOne(u)"
+                  >Copy</Button
+                >
+              </div>
+            </div>
+            <p v-else class="text-muted-foreground text-sm"
+              >No UUIDs yet. Choose options and generate.</p
+            >
+          </div>
+          <p class="text-muted-foreground mt-3 text-xs">
+            Conforms to RFC 4122. v1 uses a random node identifier with multicast bit set and a
+            random 14-bit clock sequence.
+          </p>
         </div>
       </div>
     </div>
-  </section>
+    <tool-explanation
+      title="UUID generator"
+      intro="A UUID is a 128-bit identifier commonly used to distinguish records or resources. Different UUID versions derive values from random data, time-related data or a namespace and name."
+      detail="Choose a version and quantity to generate identifiers. Version 5 uses a namespace and name, so repeating the same inputs produces the same UUID; other versions follow their own generation methods."
+      use-case="Create identifiers for development fixtures, test data and systems that need unique IDs."
+    />
+  </ToolLayout>
 </template>

@@ -10,13 +10,14 @@
     "node.js"
   ],
   "devDependencies": {
-    "eslint": "^9.36.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^7.0.0 || ^8.0.0",
+    "eslint": "^9.36.0",
     "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-unused-imports": "^4.0.0",
     "eslint-plugin-vue": "^10.4.0",
-    "eslint-plugin-nuxt": "^4.0.0",
+    "typescript": "5.9.3",
     "vue-eslint-parser": "^10.2.0"
   }
 }

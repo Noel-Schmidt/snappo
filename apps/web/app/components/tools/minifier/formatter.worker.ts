@@ -128,7 +128,7 @@ function prettyCss(s: string): string {
 }
 
 function minHtml(s: string): string {
-  s = protectBlocks(s, (inner, tag) => inner)
+  s = protectBlocks(s, (inner) => inner)
   s = s.replace(/<!--[\s\S]*?-->/g, '')
   s = s.replace(/>\s+</g, '><').replace(/\s{2,}/g, ' ')
   return s.trim()

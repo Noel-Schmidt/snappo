@@ -1,298 +1,350 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
 
+import JsonEditor from './json/jsonEditor.vue'
 import JsonNode from './json/jsonNode.vue'
 
+import ToolLayout from '@/components/tool/toolLayout.vue'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
   Select,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 
 type IndentOpt = '2' | '4' | 'tab'
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue }
 
-const input = ref<string>('')
-const output = ref<string>('')
-const status = ref<string>('')
-
+const input = ref('')
+const output = ref('')
+const error = ref('')
 const indent = ref<IndentOpt>('2')
-const sortKeys = ref<boolean>(false)
-const jsonc = ref<boolean>(false)
-const viewText = ref<boolean>(false)
+const sortKeys = ref(false)
+const jsonc = ref(false)
+const viewText = ref(false)
+const parsed = ref<JsonValue | undefined>(undefined)
+const isValid = ref(false)
 
-const parsed = ref<any | null>(null)
+const lineCount = computed(() => (input.value ? input.value.split('\n').length : 0))
+const byteCount = computed(() => new TextEncoder().encode(input.value).length)
+const statusLabel = computed(() => {
+  if (!input.value.trim()) return 'Ready for JSON'
+  return isValid.value ? 'Valid JSON' : 'Invalid JSON'
+})
 
-function looksBinary(s: string): boolean {
-  if (!s) return false
-  let ctrls = 0
-  for (let i = 0; i < s.length && i < 4096; i++) {
-    const c = s.charCodeAt(i)
-    if ((c >= 0 && c < 9) || (c > 13 && c < 32)) ctrls++
+function looksBinary(source: string): boolean {
+  let controls = 0
+  for (let i = 0; i < source.length && i < 4096; i++) {
+    const code = source.charCodeAt(i)
+    if ((code >= 0 && code < 9) || (code > 13 && code < 32)) controls++
   }
-  return ctrls > 8
+  return controls > 8
 }
-function toIndent(i: IndentOpt): number | string {
-  return i === '2' ? 2 : i === '4' ? 4 : '\t'
+
+function toIndent(value: IndentOpt): number | string {
+  return value === 'tab' ? '\t' : Number(value)
 }
-function stripJSONC(src: string): string {
-  let out = '',
-    i = 0,
-    inStr = false,
-    q = '',
-    esc = false
-  while (i < src.length) {
-    const ch = src[i]
-    if (inStr) {
-      out += ch
-      if (esc) esc = false
-      else if (ch === '\\') esc = true
-      else if (ch === q) {
-        inStr = false
-        q = ''
-      }
+
+function stripJsonc(source: string): string {
+  let result = ''
+  let inString = false
+  let quote = ''
+  let escaped = false
+
+  for (let i = 0; i < source.length; i++) {
+    const char = source[i]
+    if (inString) {
+      result += char
+      if (escaped) escaped = false
+      else if (char === '\\') escaped = true
+      else if (char === quote) inString = false
+      continue
+    }
+    if (char === '"' || char === "'") {
+      inString = true
+      quote = char
+      result += char
+    } else if (char === '/' && source[i + 1] === '/') {
+      while (i < source.length && source[i] !== '\n') i++
+      result += '\n'
+    } else if (char === '/' && source[i + 1] === '*') {
+      i += 2
+      while (i < source.length && !(source[i] === '*' && source[i + 1] === '/')) i++
       i++
-      continue
-    }
-    if (ch === '"' || ch === "'") {
-      inStr = true
-      q = ch
-      out += ch
-      i++
-      continue
-    }
-    if (ch === '/' && src[i + 1] === '/') {
-      i += 2
-      while (i < src.length && src[i] !== '\n') i++
-      continue
-    }
-    if (ch === '/' && src[i + 1] === '*') {
-      i += 2
-      while (i < src.length && !(src[i] === '*' && src[i + 1] === '/')) i++
-      i += 2
-      continue
-    }
-    out += ch
-    i++
+    } else result += char
   }
-  return out.replace(/,\s*(\}|\])/g, '$1')
-}
-function sortObjectKeys<T>(val: T): T {
-  if (Array.isArray(val)) return val.map(sortObjectKeys) as any
-  if (val && typeof val === 'object') {
-    const obj = val as Record<string, any>
-    const sorted: Record<string, any> = {}
-    for (const k of Object.keys(obj).sort()) sorted[k] = sortObjectKeys(obj[k])
-    return sorted as any
-  }
-  return val
-}
-function formatErrorWithPosition(src: string, err: unknown): string {
-  const msg = String((err as any)?.message || err)
-  const m = /position (\d+)/i.exec(msg)
-  if (m) {
-    const pos = Number(m[1])
-    const before = src.slice(0, pos)
-    let line = 1,
-      col = 1
-    for (let i = 0; i < before.length; i++) {
-      if (before[i] === '\n') {
-        line++
-        col = 1
-      } else {
-        col++
-      }
-    }
-    return `${msg} (line ${line}, col ${col})`
-  }
-  return msg
+
+  return result.replace(/,\s*([}\]])/g, '$1')
 }
 
-function prettify() {
-  if (looksBinary(input.value)) {
-    failBinary()
-    return
+function sortObjectKeys(value: JsonValue): JsonValue {
+  if (Array.isArray(value)) return value.map(sortObjectKeys)
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort((a, b) => a.localeCompare(b))
+        .map((key) => [key, sortObjectKeys(value[key])])
+    )
   }
-  let src = input.value
-  if (jsonc.value) src = stripJSONC(src)
-  try {
-    const obj = JSON.parse(src)
-    const finalObj = sortKeys.value ? sortObjectKeys(obj) : obj
-    parsed.value = finalObj
-    output.value = JSON.stringify(finalObj, toIndent(indent.value) as any)
-    status.value = 'Valid JSON'
-  } catch (e) {
-    parsed.value = null
-    output.value = ''
-    status.value = formatErrorWithPosition(src, e)
-  }
-}
-function minify() {
-  if (looksBinary(input.value)) {
-    failBinary()
-    return
-  }
-  let src = input.value
-  if (jsonc.value) src = stripJSONC(src)
-  try {
-    const obj = JSON.parse(src)
-    const finalObj = sortKeys.value ? sortObjectKeys(obj) : obj
-    parsed.value = finalObj
-    output.value = JSON.stringify(finalObj)
-    status.value = 'Valid JSON'
-  } catch (e) {
-    parsed.value = null
-    output.value = ''
-    status.value = formatErrorWithPosition(src, e)
-  }
-}
-function validateOnly() {
-  if (looksBinary(input.value)) {
-    failBinary()
-    return
-  }
-  let src = input.value
-  if (jsonc.value) src = stripJSONC(src)
-  try {
-    JSON.parse(src)
-    status.value = 'Valid JSON'
-  } catch (e) {
-    status.value = formatErrorWithPosition(src, e)
-  }
-}
-function failBinary() {
-  parsed.value = null
-  output.value = ''
-  status.value = 'Input looks like non-text/binary. Please paste UTF-8 JSON.'
-  toast('Invalid input', { description: status.value })
+  return value
 }
 
-async function copyOut() {
+function formatError(source: string, cause: unknown): string {
+  const message = String((cause as Error)?.message || cause)
+  const position = /position (\d+)/i.exec(message)
+  if (!position) return message
+
+  const lines = source.slice(0, Number(position[1])).split('\n')
+  return `${message} (line ${lines.length}, column ${lines[lines.length - 1].length + 1})`
+}
+
+function parseInput(): JsonValue {
+  const source = jsonc.value ? stripJsonc(input.value) : input.value
+  const value = JSON.parse(source) as JsonValue
+  return sortKeys.value ? sortObjectKeys(value) : value
+}
+
+function updatePreview(): void {
+  if (!input.value.trim()) {
+    parsed.value = undefined
+    output.value = ''
+    error.value = ''
+    isValid.value = false
+    return
+  }
+
+  if (looksBinary(input.value)) {
+    parsed.value = undefined
+    output.value = ''
+    error.value = 'Input looks like binary data. Please paste UTF-8 JSON.'
+    isValid.value = false
+    return
+  }
+
+  try {
+    const value = parseInput()
+    parsed.value = value
+    output.value = JSON.stringify(value, null, toIndent(indent.value))
+    error.value = ''
+    isValid.value = true
+  } catch (cause) {
+    parsed.value = undefined
+    output.value = ''
+    error.value = formatError(jsonc.value ? stripJsonc(input.value) : input.value, cause)
+    isValid.value = false
+  }
+}
+
+watch([input, indent, sortKeys, jsonc], updatePreview, { immediate: true })
+
+function formatInput(): void {
+  updatePreview()
+  if (!isValid.value) return
+  input.value = JSON.stringify(parsed.value, null, toIndent(indent.value))
+}
+
+function formatAfterPaste(): void {
+  window.setTimeout(formatInput, 0)
+}
+
+function minify(): void {
+  if (!isValid.value) return
+  output.value = JSON.stringify(parsed.value)
+}
+
+function validate(): void {
+  updatePreview()
+  if (isValid.value) toast('Valid JSON')
+}
+
+function clearAll(): void {
+  input.value = ''
+}
+
+async function copyOutput(): Promise<void> {
   if (!output.value) return
   try {
     await navigator.clipboard.writeText(output.value)
-    toast('Copied output')
-  } catch {}
+    toast('Output copied')
+  } catch {
+    toast('Could not copy output')
+  }
 }
-function downloadOut() {
+
+function downloadOutput(): void {
   if (!output.value) return
-  const blob = new Blob([output.value], { type: 'application/json;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'data.json'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
+  const url = URL.createObjectURL(
+    new Blob([output.value], { type: 'application/json;charset=utf-8' })
+  )
+  const link = document.createElement('a')
+  link.href = url
+  link.download = 'data.json'
+  link.click()
   URL.revokeObjectURL(url)
 }
 </script>
 
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
-        <div class="grid gap-6 md:grid-cols-12">
-          <div class="grid gap-5 self-start md:sticky md:top-4 md:col-span-5">
-            <div class="grid gap-2">
-              <Label for="src">Input (JSON or JSONC)</Label>
-              <Textarea
-                id="src"
-                v-model="input"
-                class="h-[420px] resize-none overflow-auto font-mono text-sm leading-6"
-                spellcheck="false"
-                placeholder="Paste JSON here…"
-              />
-              <p class="text-xs text-neutral-500"
-                >Large-paste friendly. Binary-like input is refused.</p
-              >
-            </div>
+  <ToolLayout>
+    <div class="space-y-12">
+      <div class="space-y-6">
+        <div
+          class="border-border flex flex-wrap items-center justify-between gap-4 border-b px-5 py-4 sm:px-6"
+        >
+          <p class="text-muted-foreground text-sm">Format JSON directly in the input field.</p>
+          <div class="flex items-center gap-2 text-sm" aria-live="polite">
+            <span
+              class="size-2 rounded-full"
+              :class="
+                isValid
+                  ? 'bg-emerald-500'
+                  : input.trim()
+                    ? 'bg-amber-500'
+                    : 'bg-muted-foreground/50'
+              "
+              aria-hidden="true"
+            />
+            <span
+              :class="isValid ? 'text-emerald-700 dark:text-emerald-400' : 'text-muted-foreground'"
+            >
+              {{ statusLabel }}
+            </span>
+          </div>
+        </div>
 
-            <div class="grid gap-2">
-              <Label>Indentation</Label>
-              <Select v-model="indent">
-                <SelectTrigger class="w-40"><SelectValue placeholder="2 spaces" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2">2 spaces</SelectItem>
-                  <SelectItem value="4">4 spaces</SelectItem>
-                  <SelectItem value="tab">Tabs</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <div
+          class="border-border flex flex-wrap items-center justify-between gap-3 border-b px-5 py-3 sm:px-6"
+        >
+          <div class="flex flex-wrap items-center gap-2">
+            <Button size="sm" :disabled="!isValid" @click="formatInput">Format input</Button>
+            <Button size="sm" variant="outline" :disabled="!isValid" @click="minify"
+              >Minify preview</Button
+            >
+            <Button size="sm" variant="ghost" @click="validate">Validate</Button>
+            <Button size="sm" variant="ghost" :disabled="!input" @click="clearAll">Clear</Button>
+          </div>
+          <div class="flex items-center gap-2">
+            <Label for="indent" class="text-muted-foreground text-xs">Indentation</Label>
+            <Select v-model="indent">
+              <SelectTrigger id="indent" class="h-8 w-32 text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2">2 spaces</SelectItem>
+                <SelectItem value="4">4 spaces</SelectItem>
+                <SelectItem value="tab">Tabs</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-            <div class="grid gap-3">
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-neutral-300">Sort keys (deep)</span>
-                <Switch v-model:checked="sortKeys" />
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-neutral-300"
-                  >Allow JSONC (comments, trailing commas)</span
+        <div class="grid min-h-[560px] lg:grid-cols-2">
+          <div class="border-border flex min-w-0 flex-col border-b lg:border-b-0 lg:border-r">
+            <div class="flex items-center justify-between px-5 pb-3 pt-4 sm:px-6">
+              <div class="flex items-center gap-2">
+                <Label for="json-input" class="text-sm font-medium">Input</Label>
+                <span v-if="error" class="text-destructive text-xs" role="status"
+                  >Invalid JSON</span
                 >
-                <Switch v-model:checked="jsonc" />
               </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-neutral-300">View formatted text instead of tree</span>
-                <Switch v-model:checked="viewText" />
-              </div>
+              <span class="text-muted-foreground text-xs">
+                {{ lineCount }} lines · {{ byteCount }} bytes
+              </span>
             </div>
-
-            <div class="flex flex-wrap gap-2 pt-1">
-              <Button @click="prettify">Pretty-print</Button>
-              <Button variant="outline" @click="minify">Minify</Button>
-              <Button variant="ghost" @click="validateOnly">Validate</Button>
-            </div>
-
-            <Separator class="bg-neutral-800" />
-
-            <div class="grid gap-1">
-              <Label>Status</Label>
-              <p
-                class="text-sm"
-                :class="status.startsWith('Valid') ? 'text-emerald-400' : 'text-red-400'"
-              >
-                {{ status || '—' }}
+            <JsonEditor
+              v-model="input"
+              :indent="indent"
+              :jsonc="jsonc"
+              @blur="formatInput"
+              @paste="formatAfterPaste"
+            />
+            <div
+              class="border-border flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3 sm:px-6"
+            >
+              <p id="input-help" class="text-muted-foreground text-xs">
+                Valid JSON is formatted when you leave the editor.
               </p>
-            </div>
-
-            <div class="flex gap-2">
-              <Button :disabled="!output" @click="copyOut">Copy output</Button>
-              <Button variant="outline" :disabled="!output" @click="downloadOut">Download</Button>
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <label class="flex items-center gap-2 text-xs">
+                  <Switch v-model:checked="jsonc" aria-label="Allow JSONC" />
+                  Allow JSONC
+                </label>
+                <label class="flex items-center gap-2 text-xs">
+                  <Switch v-model:checked="sortKeys" aria-label="Sort object keys" />
+                  Sort keys
+                </label>
+              </div>
             </div>
           </div>
 
-          <div class="md:col-span-7">
-            <div class="h-full rounded-xl border border-neutral-800 bg-neutral-900/40 p-4">
-              <Label class="mb-2 block">Preview</Label>
-
-              <div v-if="!viewText" class="font-mono text-sm leading-6">
-                <div v-if="parsed !== null">
-                  <JsonNode :v="parsed" :root-open="true" @copy="toast('Copied')" />
-                </div>
-                <p v-else class="text-sm text-neutral-400"
-                  >No parsed data. Pretty-print or minify to parse and preview.</p
+          <div class="flex min-w-0 flex-col">
+            <div
+              class="border-border flex flex-wrap items-center justify-between gap-3 border-b px-5 py-3 sm:px-6"
+            >
+              <div class="flex items-center gap-3">
+                <Label class="text-sm font-medium">Preview</Label>
+                <span v-if="isValid" class="text-muted-foreground text-xs">
+                  {{ output.length }} characters
+                </span>
+              </div>
+              <div class="flex items-center gap-1">
+                <label class="mr-2 flex items-center gap-2 text-xs">
+                  <Switch v-model:checked="viewText" aria-label="Show formatted text" />
+                  Text
+                </label>
+                <Button size="sm" variant="ghost" :disabled="!output" @click="copyOutput"
+                  >Copy</Button
+                >
+                <Button size="sm" variant="ghost" :disabled="!output" @click="downloadOutput"
+                  >Download</Button
                 >
               </div>
+            </div>
 
-              <div v-else class="grid gap-2">
-                <Textarea
-                  v-model="output"
-                  class="h-[420px] resize-none overflow-auto font-mono text-sm leading-6"
-                  readonly
-                  spellcheck="false"
-                />
+            <div class="min-h-[400px] flex-1 overflow-auto p-5 sm:p-6">
+              <Textarea
+                v-if="viewText && isValid"
+                :model-value="output"
+                readonly
+                class="focus-visible:ring-ring min-h-[380px] resize-y border-0 bg-transparent p-0 font-mono text-[13px] leading-6 shadow-none focus-visible:ring-2"
+                aria-label="Formatted JSON output"
+              />
+              <div
+                v-else-if="isValid && parsed !== undefined"
+                class="font-mono text-[13px] leading-6"
+              >
+                <JsonNode :v="parsed" :root-open="true" @copy="toast('Value copied')" />
+              </div>
+              <div
+                v-else-if="error"
+                class="border-destructive/40 bg-destructive/5 rounded-md border p-4"
+                role="alert"
+              >
+                <p class="text-destructive text-sm font-medium">Syntax error</p>
+                <p class="text-muted-foreground mt-1 break-words font-mono text-xs">{{ error }}</p>
+              </div>
+              <div
+                v-else
+                class="text-muted-foreground flex min-h-[340px] flex-col items-center justify-center gap-3 text-center"
+              >
+                <span class="font-mono text-3xl opacity-50" aria-hidden="true">{ }</span>
+                <p class="text-sm">Your formatted JSON preview will appear here.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <tool-explanation
+        title="JSON formatter and validator"
+        intro="JSON is a text format for structured data. The formatter checks your input as you type and shows valid JSON in a readable layout."
+        detail="Choose indentation, sort object keys, or allow JSONC comments and trailing commas. Processing stays in your browser."
+        use-case="Inspect API responses, configuration files, and structured data while developing."
+      />
     </div>
-  </section>
+  </ToolLayout>
 </template>

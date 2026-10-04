@@ -1,25 +1,25 @@
 <template>
   <tool-layout>
-    <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
+    <div class="space-y-6">
       <div class="grid gap-8">
         <div class="grid gap-6 md:grid-cols-2">
           <div class="grid gap-2">
             <Label for="left">Left</Label>
-            <textarea
+            <Textarea
               id="left"
               v-model="left"
               rows="10"
-              class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
+              class="border-border bg-background text-foreground focus:ring-ring w-full rounded-md border p-3 text-sm outline-none focus:ring-2"
               placeholder="Paste original text"
             />
           </div>
           <div class="grid gap-2">
             <Label for="right">Right</Label>
-            <textarea
+            <Textarea
               id="right"
               v-model="right"
               rows="10"
-              class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
+              class="border-border bg-background text-foreground focus:ring-ring w-full rounded-md border p-3 text-sm outline-none focus:ring-2"
               placeholder="Paste changed text"
             />
           </div>
@@ -29,19 +29,19 @@
           <div class="grid gap-3">
             <Label>Options</Label>
             <div class="flex items-center justify-between"
-              ><span class="text-sm text-neutral-300">Ignore whitespace</span
+              ><span class="text-foreground/80 text-sm">Ignore whitespace</span
               ><Switch v-model:checked="opts.ignoreWs"
             /></div>
             <div class="flex items-center justify-between"
-              ><span class="text-sm text-neutral-300">Trim line ends</span
+              ><span class="text-foreground/80 text-sm">Trim line ends</span
               ><Switch v-model:checked="opts.trim"
             /></div>
             <div class="flex items-center justify-between"
-              ><span class="text-sm text-neutral-300">Ignore case</span
+              ><span class="text-foreground/80 text-sm">Ignore case</span
               ><Switch v-model:checked="opts.ignoreCase"
             /></div>
             <div class="flex items-center justify-between"
-              ><span class="text-sm text-neutral-300">Word highlights</span
+              ><span class="text-foreground/80 text-sm">Word highlights</span
               ><Switch v-model:checked="opts.wordLevel"
             /></div>
           </div>
@@ -52,28 +52,40 @@
               <Button
                 :variant="mode === 'side' ? 'default' : 'outline'"
                 size="sm"
+                class="h-11 px-5"
                 @click="mode = 'side'"
                 >Side-by-Side</Button
               >
               <Button
                 :variant="mode === 'unified' ? 'default' : 'outline'"
                 size="sm"
+                class="h-11 px-5"
                 @click="mode = 'unified'"
                 >Unified</Button
               >
             </div>
             <div class="flex items-center justify-between"
-              ><span class="text-sm text-neutral-300">Wrap long lines</span
+              ><span class="text-foreground/80 text-sm">Wrap long lines</span
               ><Switch v-model:checked="wrap"
             /></div>
             <div class="flex items-center justify-between"
-              ><span class="text-sm text-neutral-300">Show line numbers</span
+              ><span class="text-foreground/80 text-sm">Show line numbers</span
               ><Switch v-model:checked="lineNumbers"
             /></div>
             <div class="flex flex-wrap gap-2">
-              <Button :disabled="!left && !right" @click="run">Compare</Button>
-              <Button variant="outline" :disabled="!left && !right" @click="clearAll">Clear</Button>
-              <Button variant="outline" :disabled="!unified.length" @click="copyUnified"
+              <Button :disabled="!left && !right" class="h-11 px-5" @click="run">Compare</Button>
+              <Button
+                variant="outline"
+                :disabled="!left && !right"
+                class="h-11 px-5"
+                @click="clearAll"
+                >Clear</Button
+              >
+              <Button
+                variant="outline"
+                :disabled="!unified.length"
+                class="h-11 px-5"
+                @click="copyUnified"
                 >Copy unified</Button
               >
             </div>
@@ -82,34 +94,28 @@
           <div class="grid gap-3">
             <Label>Summary</Label>
             <div class="flex flex-wrap items-center gap-2 text-sm">
-              <span
-                class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
+              <span class="border-input bg-muted text-foreground rounded-md border px-2 py-1"
                 >+ {{ stats.added }} added</span
               >
-              <span
-                class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
+              <span class="border-input bg-muted text-foreground rounded-md border px-2 py-1"
                 >− {{ stats.removed }} removed</span
               >
-              <span
-                class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
+              <span class="border-input bg-muted text-foreground rounded-md border px-2 py-1"
                 >= {{ stats.unchanged }} unchanged</span
               >
-              <span
-                class="rounded-md border border-neutral-700 bg-neutral-800/60 px-2 py-1 text-neutral-100"
+              <span class="border-input bg-muted text-foreground rounded-md border px-2 py-1"
                 >{{ stats.time }} ms</span
               >
             </div>
           </div>
         </div>
 
-        <div
-          class="h-px w-full bg-gradient-to-r from-transparent via-neutral-800 to-transparent"
-        ></div>
+        <div class="bg-border h-px w-full"></div>
 
         <div v-if="mode === 'side'" class="grid gap-3">
-          <div class="overflow-auto rounded-md border border-neutral-800">
+          <div class="border-border overflow-auto rounded-md border">
             <table class="w-full table-fixed border-collapse text-sm">
-              <thead class="sticky top-0 bg-neutral-900/80 text-neutral-300">
+              <thead class="bg-muted text-foreground/80 sticky top-0">
                 <tr>
                   <th v-if="lineNumbers" class="w-12 px-2 py-2 text-right font-medium">#</th>
                   <th class="w-1/2 px-2 py-2 text-left font-medium">Left</th>
@@ -118,49 +124,53 @@
                 </tr>
               </thead>
               <tbody :class="wrap ? '' : 'whitespace-pre'">
-                <tr
-                  v-for="(row, i) in sideRows"
-                  :key="i"
-                  class="border-t border-neutral-800 align-top"
-                >
+                <tr v-for="(row, i) in sideRows" :key="i" class="border-border border-t align-top">
                   <td
                     v-if="lineNumbers"
-                    class="px-2 py-1 text-right tabular-nums text-neutral-500"
+                    class="text-muted-foreground px-2 py-1 text-right tabular-nums"
                     >{{ row.ln ?? '' }}</td
                   >
                   <td class="px-2 py-1" :class="cellClass(row.tl)" v-html="row.lHtml"></td>
                   <td
                     v-if="lineNumbers"
-                    class="px-2 py-1 text-right tabular-nums text-neutral-500"
+                    class="text-muted-foreground px-2 py-1 text-right tabular-nums"
                     >{{ row.rn ?? '' }}</td
                   >
                   <td class="px-2 py-1" :class="cellClass(row.tr)" v-html="row.rHtml"></td>
                 </tr>
                 <tr v-if="!sideRows.length"
-                  ><td :colspan="lineNumbers ? 4 : 2" class="px-3 py-6 text-center text-neutral-500"
+                  ><td
+                    :colspan="lineNumbers ? 4 : 2"
+                    class="text-muted-foreground px-3 py-6 text-center"
                     >No differences</td
                   ></tr
                 >
               </tbody>
             </table>
           </div>
-          <p class="text-xs text-neutral-500"
+          <p class="text-muted-foreground text-xs"
             >Green = added, Red = removed. Yellow marks changed words.</p
           >
         </div>
 
         <div v-else class="grid gap-3">
-          <div class="overflow-auto rounded-md border border-neutral-800">
+          <div class="border-border overflow-auto rounded-md border">
             <pre :class="['p-3 text-sm leading-relaxed', wrap ? '' : 'whitespace-pre']">
 <span v-for="(row,i) in unified" :key="i" :class="lineClass(row.t)">
-<span v-if="lineNumbers" class="select-none mr-2 tabular-nums text-neutral-400">{{ row.ln ?? ' ' }}/{{ row.rn ?? ' ' }}</span><span v-html="row.html"></span>
+<span v-if="lineNumbers" class="select-none mr-2 tabular-nums text-muted-foreground">{{ row.ln ?? ' ' }}/{{ row.rn ?? ' ' }}</span><span v-html="row.html"></span>
 </span>
               </pre>
           </div>
-          <p class="text-xs text-neutral-500">Unified uses “+” and “−”.</p>
+          <p class="text-muted-foreground text-xs">Unified uses “+” and “−”.</p>
         </div>
       </div>
     </div>
+    <tool-explanation
+      title="Text and code diff checker"
+      intro="A diff compares two versions of text and marks what was added, removed or changed. It is useful for reviewing edits in source code, configuration and documents."
+      detail="Paste the original and updated versions to see their differences. The available views present the changes in different layouts so you can inspect either the overall result or individual lines."
+      use-case="Compare drafts, code snippets, settings files or copied outputs before replacing the original."
+    />
   </tool-layout>
 </template>
 
@@ -170,6 +180,7 @@ import { ref, computed } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 
 const left = ref(''),
   right = ref('')
@@ -400,7 +411,7 @@ const unified = computed(() => {
 function cellClass(t: 'eq' | 'add' | 'del' | null) {
   if (t === 'add') return 'bg-emerald-500/10 text-emerald-200'
   if (t === 'del') return 'bg-rose-500/10 text-rose-200'
-  return 'text-neutral-200'
+  return 'text-foreground'
 }
 function lineClass(t: 'eq' | 'add' | 'del') {
   if (t === 'add') return 'bg-emerald-500/10 text-emerald-200'

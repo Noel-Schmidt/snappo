@@ -1,60 +1,53 @@
 <template>
-  <section id="story" class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="grid gap-16 md:grid-cols-2">
-        <div class="space-y-6">
-          <h2 class="text-4xl font-extrabold tracking-tight sm:text-5xl">Our Story</h2>
-          <p class="text-lg leading-relaxed text-neutral-300">
-            Snappo was founded in 2025 by
-            <span class="font-medium text-neutral-100">Noel Schmidt</span>. It delivers core
-            developer utilities directly in the browser — no installs, no accounts, no tracking.
-          </p>
-          <p class="text-lg leading-relaxed text-neutral-300">
-            Built around speed, security, and simplicity. All tools run client-side to keep data
-            private.
-          </p>
-        </div>
+  <section id="story" class="border-border bg-muted/40 text-foreground border-y py-16 sm:py-20">
+    <div class="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+      <div class="max-w-xl">
+        <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">Why Snappo exists</h2>
+        <p class="text-muted-foreground mt-5 text-base leading-7">
+          Snappo started in 2025 as a project by Noel Schmidt. Small development tasks can interrupt
+          bigger ones: checking a JSON response, comparing two pieces of text, or converting a
+          color. Snappo keeps those utilities together, so they are easy to find when you need them.
+        </p>
+        <p class="text-muted-foreground mt-4 leading-7">
+          The project is open source. Its tools cover code, text, security, color, and CSS, with
+          each utility focused on one job.
+        </p>
+        <NuxtLink
+          to="/tools"
+          class="text-foreground mt-6 inline-flex text-sm font-medium underline decoration-teal-500 underline-offset-4 transition-colors hover:text-teal-700 dark:hover:text-teal-300"
+        >
+          Browse the tool collection
+        </NuxtLink>
+      </div>
 
-        <div class="relative">
-          <div class="absolute -inset-16 opacity-10">
-            <div
-              class="h-full w-full bg-[conic-gradient(at_30%_0%,#ec4899,transparent_25%,#8b5cf6_40%,transparent_60%,#38bdf8_80%,transparent_95%)] blur-3xl"
-            ></div>
-          </div>
-
-          <div class="relative">
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-6">
-              <div
-                class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 backdrop-blur-sm"
-              >
-                <p class="text-xs font-semibold text-neutral-400">Founded</p>
-                <p class="mt-1 text-xl font-bold text-neutral-100">2025</p>
-              </div>
-              <div
-                class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 backdrop-blur-sm"
-              >
-                <p class="text-xs font-semibold text-neutral-400">Useful tools</p>
-                <p class="mt-1 text-xl font-bold text-neutral-100">NaN</p>
-              </div>
-            </div>
-
-            <div class="mt-8 grid grid-cols-1 gap-6 sm:mt-12 sm:grid-cols-2 sm:gap-x-14 sm:gap-y-6">
-              <div
-                class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 backdrop-blur-sm sm:translate-x-4"
-              >
-                <p class="text-xs font-semibold text-neutral-400">Blog Posts</p>
-                <p class="mt-1 text-xl font-bold text-neutral-100">NaN</p>
-              </div>
-              <div
-                class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 backdrop-blur-sm sm:-translate-x-2"
-              >
-                <p class="text-xs font-semibold text-neutral-400">Active Users</p>
-                <p class="mt-1 text-xl font-bold text-neutral-100">NaN</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="grid content-start gap-x-8 gap-y-8 sm:grid-cols-2">
+        <article v-for="group in toolGroups" :key="group.title">
+          <h3 class="text-sm font-semibold text-teal-700 dark:text-teal-300">{{ group.title }}</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-6">{{ group.description }}</p>
+        </article>
       </div>
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+const toolGroups = [
+  {
+    title: 'Code & text',
+    description: 'Format JSON, test regular expressions, compare text, and build cron schedules.',
+  },
+  {
+    title: 'Security',
+    description: 'Choose password length and character sets, or adjust the bcrypt cost factor.',
+  },
+  {
+    title: 'Color',
+    description:
+      'Convert color values, build palettes, and check foreground and background contrast.',
+  },
+  {
+    title: 'CSS',
+    description: 'Preview border radii and box shadows, then copy the corresponding CSS values.',
+  },
+]
+</script>

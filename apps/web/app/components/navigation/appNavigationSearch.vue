@@ -84,28 +84,31 @@ onBeforeUnmount(() => {
     <PopoverTrigger as-child>
       <button
         type="button"
-        class="group flex h-9 w-full items-center gap-2 rounded-md border border-neutral-800 bg-neutral-900/40 px-3 text-left text-sm text-neutral-300 hover:border-neutral-700 hover:bg-neutral-900 focus:outline-none md:w-80"
+        class="border-border bg-background text-foreground hover:border-input hover:bg-accent group flex h-9 w-full items-center gap-2 rounded-md border px-3 text-left text-sm focus:outline-none md:w-80"
         aria-label="Search tools"
         @click="openSearch"
       >
-        <Search class="h-4 w-4 text-neutral-500" />
-        <span class="flex-1 truncate text-neutral-400 group-hover:text-neutral-300"
+        <Search class="text-muted-foreground h-4 w-4" />
+        <span class="text-muted-foreground group-hover:text-foreground flex-1 truncate"
           >Search tools</span
         >
         <kbd
-          class="hidden rounded border border-neutral-700 bg-neutral-950 px-1.5 py-0.5 text-[10px] text-neutral-400 md:block"
+          class="border-input bg-card text-muted-foreground hidden rounded border px-1.5 py-0.5 text-[10px] md:block"
           >/</kbd
         >
       </button>
     </PopoverTrigger>
 
-    <PopoverContent align="start" class="w-[520px] border-neutral-800 bg-neutral-950 p-0">
+    <PopoverContent
+      align="start"
+      class="border-border bg-popover w-[min(520px,calc(100vw-2rem))] p-0"
+    >
       <Command>
         <CommandInput
           v-model="q"
           data-cmd-input
           placeholder="Type to search tools…"
-          class="placeholder:text-neutral-500"
+          class="placeholder:text-muted-foreground"
         />
         <CommandList class="max-h-80">
           <CommandEmpty>No tools found.</CommandEmpty>
@@ -119,17 +122,17 @@ onBeforeUnmount(() => {
               @select="onSelect(t)"
             >
               <div class="mt-0.5">
-                <Search class="h-4 w-4 text-neutral-500" />
+                <Search class="text-muted-foreground h-4 w-4" />
               </div>
               <div class="min-w-0">
-                <div class="text-sm text-neutral-100">{{ t.title }}</div>
-                <div class="line-clamp-1 text-xs text-neutral-400"> /tools/{{ t.slug }} </div>
+                <div class="text-foreground text-sm">{{ t.title }}</div>
+                <div class="text-muted-foreground line-clamp-1 text-xs"> /tools/{{ t.slug }} </div>
                 <div v-if="t.tags?.length" class="mt-1 flex flex-wrap gap-1.5">
                   <Badge
                     v-for="tag in t.tags.slice(0, 4)"
                     :key="tag"
                     variant="secondary"
-                    class="border-neutral-800 bg-neutral-900 text-neutral-300"
+                    class="border-border bg-muted text-muted-foreground"
                   >
                     <Tag class="mr-1 h-3 w-3" /> {{ tag }}
                   </Badge>

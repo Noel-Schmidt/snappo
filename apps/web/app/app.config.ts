@@ -5,13 +5,35 @@ export default defineAppConfig({
 
   tools: [
     {
+      slug: 'jwt-decoder',
+      title: 'JWT Decoder',
+      badge: 'Security',
+      description:
+        'Decode JSON Web Token headers and payloads, inspect expiration, and verify HS256, RS256, or ES256 signatures.',
+      component: 'jwtDecoderTool.vue',
+      tags: ['jwt', 'json web token', 'decode', 'signature', 'security', 'authentication'],
+      status: 'beta',
+      accent: 'rgba(239,68,68,0.35)',
+    },
+    {
+      slug: 'favicon-generator',
+      title: 'Favicon Generator',
+      badge: 'Design',
+      description:
+        'Create favicon, Apple, Android, and PWA icon files from an image, with ready-to-paste HTML and manifest snippets.',
+      component: 'faviconGeneratorTool.vue',
+      tags: ['favicon', 'icon', 'pwa', 'manifest', 'generator'],
+      status: 'beta',
+      accent: 'rgba(20,184,166,0.35)',
+    },
+    {
       slug: 'bcrypt-generator',
       title: 'Bcrypt Generator',
       subtitle:
-        'Generate and verify secure bcrypt hashes with adjustable salt rounds. Test different strengths and understand the impact on speed and security.',
+        'Create a bcrypt hash or verify a password against an existing hash. Adjust the cost factor to compare hashing work.',
       badge: 'Hashing',
       description:
-        'Generate secure bcrypt hashes with Snappo. Adjust salt rounds, test performance, and learn hashing — try it now for free.',
+        'Create bcrypt hashes, adjust the cost factor, and verify passwords against existing hashes.',
       component: 'bcryptTool.vue',
       tags: ['security', 'hash', 'bcrypt'],
       status: 'beta',
@@ -23,7 +45,7 @@ export default defineAppConfig({
       title: 'Case Converter',
       badge: 'Text',
       description:
-        'Convert text between camelCase, snake_case, PascalCase, kebab-case, and more. Copy results instantly and speed up your workflow — try it now with Snappo.',
+        'Convert text between camelCase, snake_case, PascalCase, kebab-case, and other common naming styles.',
       component: 'caseConverterTool.vue',
       tags: ['text', 'converter', 'case'],
       status: 'beta',
@@ -35,7 +57,7 @@ export default defineAppConfig({
       title: 'Color Picker',
       badge: 'Design',
       description:
-        'Pick, convert, and copy colors in HEX, RGB, HSL, and more. Build palettes, check contrast, and export tokens — try it now with Snappo.',
+        'Pick colors and convert between HEX, RGB, and HSL values. Copy color values for use in a project.',
       component: 'colorPickerTool.vue',
       tags: ['color', 'picker', 'design'],
       status: 'beta',
@@ -46,7 +68,7 @@ export default defineAppConfig({
       title: 'Lorem Ipsum Generator',
       badge: 'Text',
       description:
-        'Generate placeholder text by words, sentences, or paragraphs. Add HTML tags, set lengths, and copy instantly — try it now with Snappo.',
+        'Generate placeholder text by word, sentence, or paragraph count, with optional HTML tags.',
       component: 'loremIpsumTool.vue',
       tags: ['text', 'lorem', 'ipsum', 'generator'],
       status: 'beta',
@@ -57,7 +79,7 @@ export default defineAppConfig({
       title: 'Regex Tester',
       badge: 'Code',
       description:
-        'Test and debug regular expressions with real-time highlighting, match groups, and quick reference — try it now with Snappo.',
+        'Test regular expressions against sample text with highlighted matches, capture groups, and a syntax reference.',
       component: 'regexTesterTool.vue',
       tags: ['regex', 'regexp', 'test', 'debug'],
       status: 'beta',
@@ -69,7 +91,7 @@ export default defineAppConfig({
       title: 'Diff Checker',
       badge: 'Code',
       description:
-        'Compare two texts side by side and highlight differences instantly. Detect changes, edits, and duplicates — try it now with Snappo.',
+        'Compare two text inputs side by side and inspect the lines that were added, removed, or changed.',
       component: 'diffCheckerTool.vue',
       tags: ['diff', 'compare', 'text', 'code'],
       status: 'beta',
@@ -81,7 +103,7 @@ export default defineAppConfig({
       title: 'Palette Generator',
       badge: 'Design',
       description:
-        'Generate color palettes from a base color. Explore harmonies, shades, tints, and export palettes for your projects — try it now with Snappo.',
+        'Build a color palette from a base color and explore related hues, shades, and tints.',
       component: 'paletteGeneratorTool.vue',
       tags: ['palette', 'colors', 'design', 'generator'],
       status: 'beta',
@@ -93,7 +115,7 @@ export default defineAppConfig({
       title: 'Minifier',
       badge: 'Code',
       description:
-        'Minify JavaScript, CSS, or HTML to reduce file size and improve load times. Copy optimized code instantly — try it now with Snappo.',
+        'Minify JavaScript, CSS, or HTML by removing whitespace and other unnecessary characters.',
       component: 'minifierTool.vue',
       tags: ['minify', 'javascript', 'css', 'html', 'optimize'],
       status: 'beta',
@@ -104,7 +126,7 @@ export default defineAppConfig({
       title: 'Password Generator',
       badge: 'Security',
       description:
-        'Generate strong, customizable passwords with adjustable length, character sets, and options for symbols and numbers — try it now with Snappo.',
+        'Generate passwords with a chosen length and character sets, including letters, numbers, and symbols.',
       component: 'passwordGeneratorTool.vue',
       tags: ['password', 'security', 'generator', 'random'],
       status: 'stable',
@@ -115,7 +137,7 @@ export default defineAppConfig({
       title: 'Cron Tool',
       badge: 'Code',
       description:
-        'Generate and parse cron expressions with presets, human-readable output, and next run previews — try it now with Snappo.',
+        'Build or parse cron expressions, review a readable schedule, and preview upcoming run times.',
       component: 'cronTool.vue',
       tags: ['cron', 'scheduler', 'time', 'generator', 'parser'],
       status: 'beta',
@@ -126,7 +148,7 @@ export default defineAppConfig({
       title: 'UUID Tool',
       badge: 'Code',
       description:
-        'Generate UUIDs of different versions (v1, v4, v5). Create single or bulk identifiers and copy them instantly — try it now with Snappo.',
+        'Generate UUIDs in supported versions, individually or in batches, for use as unique identifiers.',
       component: 'uuidTool.vue',
       tags: ['uuid', 'generator', 'id', 'random'],
       status: 'stable',
@@ -137,7 +159,7 @@ export default defineAppConfig({
       title: 'Border Radius Generator',
       badge: 'Design',
       description:
-        'Visually adjust and preview border-radius values. Copy CSS snippets for consistent rounded corners in your designs — try it now with Snappo.',
+        'Adjust corner radii in a visual preview and copy the resulting CSS border-radius value.',
       component: 'borderRadiusTool.vue',
       tags: ['border', 'radius', 'css', 'design', 'generator'],
       status: 'beta',
@@ -148,7 +170,7 @@ export default defineAppConfig({
       title: 'JSON Tool',
       badge: 'Code',
       description:
-        'Format, validate, and minify JSON. Highlight errors, beautify structure, and copy clean JSON instantly — try it now with Snappo.',
+        'Format, validate, or minify JSON. Inspect syntax errors and copy the corrected output.',
       component: 'jsonTool.vue',
       tags: ['json', 'formatter', 'validator', 'minify'],
       status: 'beta',
@@ -159,21 +181,105 @@ export default defineAppConfig({
       title: 'Color Contrast Checker',
       badge: 'Design',
       description:
-        'Check color contrast ratios for WCAG accessibility compliance. Test AA and AAA levels and ensure your designs are readable — try it now with Snappo.',
+        'Check the contrast ratio between foreground and background colors against WCAG AA and AAA criteria.',
       component: 'colorContrastCheckerTool.vue',
       tags: ['color', 'contrast', 'accessibility', 'design'],
       status: 'stable',
       accent: 'rgba(132,204,22,0.35)',
     },
-      {
-          slug: 'box-shadow-generator',
-          title: 'Box Shadow Generator',
-          badge: 'Design',
-          description: 'Create and preview CSS box-shadow effects visually. Adjust blur, spread, and color values, then copy WCAG-friendly CSS snippets — try it now with Snappo.',
-          component: 'boxShadowGeneratorTool.vue',
-          tags: ['box-shadow', 'css', 'design', 'generator'],
-          status: 'beta',
-          accent: 'rgba(250,204,21,0.35)'
-      }
+    {
+      slug: 'box-shadow-generator',
+      title: 'Box Shadow Generator',
+      badge: 'Design',
+      description:
+        'Adjust blur, spread, offset, and color in a preview, then copy the CSS box-shadow value.',
+      component: 'boxShadowGeneratorTool.vue',
+      tags: ['box-shadow', 'css', 'design', 'generator'],
+      status: 'beta',
+      accent: 'rgba(250,204,21,0.35)',
+    },
+    {
+      slug: 'url-encoder',
+      title: 'URL Encoder / Decoder',
+      badge: 'Text',
+      description:
+        'Encode URL values or full URLs, and decode percent-encoded text with input validation.',
+      component: 'urlEncoderTool.vue',
+      tags: ['url', 'uri', 'encode', 'decode', 'percent encoding'],
+      status: 'stable',
+      accent: 'rgba(20,184,166,0.35)',
+    },
+    {
+      slug: 'timestamp-converter',
+      title: 'Timestamp Converter',
+      badge: 'Code',
+      description:
+        'Convert Unix timestamps to UTC dates and ISO 8601 dates to seconds or milliseconds.',
+      component: 'timestampConverterTool.vue',
+      tags: ['timestamp', 'unix', 'epoch', 'date', 'time', 'converter'],
+      status: 'stable',
+      accent: 'rgba(59,130,246,0.35)',
+    },
+    {
+      slug: 'base64-tool',
+      title: 'Base64 Encoder / Decoder',
+      badge: 'Code',
+      description: 'Encode UTF-8 text as Base64 or decode Base64 back to readable text.',
+      component: 'base64Tool.vue',
+      tags: ['base64', 'encode', 'decode', 'text', 'utf-8'],
+      status: 'stable',
+      accent: 'rgba(14,165,233,0.35)',
+    },
+    {
+      slug: 'html-entities',
+      title: 'HTML Entity Encoder / Decoder',
+      badge: 'Code',
+      description: 'Escape HTML-sensitive characters or decode common named and numeric entities.',
+      component: 'htmlEntitiesTool.vue',
+      tags: ['html', 'entity', 'entities', 'escape', 'decode'],
+      status: 'stable',
+      accent: 'rgba(249,115,22,0.35)',
+    },
+    {
+      slug: 'number-base-converter',
+      title: 'Number Base Converter',
+      badge: 'Code',
+      description: 'Convert whole numbers between binary, octal, decimal, and hexadecimal.',
+      component: 'numberBaseConverterTool.vue',
+      tags: ['number', 'base', 'binary', 'octal', 'decimal', 'hexadecimal', 'hex'],
+      status: 'stable',
+      accent: 'rgba(139,92,246,0.35)',
+    },
+    {
+      slug: 'csv-to-json',
+      title: 'CSV to JSON Converter',
+      badge: 'Code',
+      description: 'Convert CSV rows into JSON objects using the first row as column names.',
+      component: 'csvToJsonTool.vue',
+      tags: ['csv', 'json', 'converter', 'data'],
+      status: 'stable',
+      accent: 'rgba(34,197,94,0.35)',
+    },
+    {
+      slug: 'markdown-table-generator',
+      title: 'Markdown Table Generator',
+      badge: 'Text',
+      description: 'Turn tab-separated rows into a Markdown table with escaped cell values.',
+      component: 'markdownTableTool.vue',
+      tags: ['markdown', 'table', 'generator', 'gfm', 'text'],
+      status: 'stable',
+      accent: 'rgba(20,184,166,0.35)',
+    },
+    {
+      slug: 'hmac-generator',
+      title: 'HMAC Generator',
+      badge: 'Security',
+      description:
+        'Generate or verify HMAC values with SHA-1, SHA-256, SHA-512, or MD5 in hex or Base64.',
+      component: 'hmacTool.vue',
+      tags: ['hmac', 'hash', 'authentication', 'verify', 'sha-1', 'sha-256', 'sha-512', 'md5'],
+      status: 'stable',
+      accent: 'rgba(239,68,68,0.35)',
+    },
   ],
 })

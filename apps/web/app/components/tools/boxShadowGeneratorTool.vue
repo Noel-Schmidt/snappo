@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { reactive, ref, computed } from 'vue'
+import { toast } from 'vue-sonner'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
-import { toast } from 'vue-sonner'
 
 type Shadow = {
   x: number
@@ -45,7 +47,13 @@ function moveDown(i: number) {
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const x = hex.trim().replace(/^#/, '')
   if (!/^[0-9a-fA-F]{3,6}$/.test(x)) return null
-  const h = x.length === 3 ? x.split('').map(c => c + c).join('') : x
+  const h =
+    x.length === 3
+      ? x
+          .split('')
+          .map((c) => c + c)
+          .join('')
+      : x
   const r = parseInt(h.slice(0, 2), 16)
   const g = parseInt(h.slice(2, 4), 16)
   const b = parseInt(h.slice(4, 6), 16)
@@ -74,7 +82,10 @@ const previewStyle = computed(() => ({
 }))
 
 async function copyCss() {
-  try { await navigator.clipboard.writeText(cssText.value); toast('Copied CSS') } catch {}
+  try {
+    await navigator.clipboard.writeText(cssText.value)
+    toast('Copied CSS')
+  } catch {}
 }
 
 type Preset = { label: string; apply: () => void }
@@ -82,160 +93,272 @@ const presets: Preset[] = [
   {
     label: 'Soft shadow',
     apply: () => {
-      shadows.splice(0, shadows.length,
-          { x: 0, y: 10, blur: 30, spread: -10, color: '#000000', opacity: 0.35, inset: false },
-          { x: 0, y: 2, blur: 6, spread: 0, color: '#000000', opacity: 0.12, inset: false },
+      shadows.splice(
+        0,
+        shadows.length,
+        { x: 0, y: 10, blur: 30, spread: -10, color: '#000000', opacity: 0.35, inset: false },
+        { x: 0, y: 2, blur: 6, spread: 0, color: '#000000', opacity: 0.12, inset: false }
       )
-    }
+    },
   },
   {
     label: 'Hard shadow',
     apply: () => {
-      shadows.splice(0, shadows.length,
-          { x: 8, y: 8, blur: 0, spread: 0, color: '#000000', opacity: 0.4, inset: false }
-      )
-    }
+      shadows.splice(0, shadows.length, {
+        x: 8,
+        y: 8,
+        blur: 0,
+        spread: 0,
+        color: '#000000',
+        opacity: 0.4,
+        inset: false,
+      })
+    },
   },
   {
     label: 'Neumorphism',
     apply: () => {
       bg.value = '#0f1220'
-      shadows.splice(0, shadows.length,
-          { x: 12, y: 12, blur: 24, spread: 0, color: '#000000', opacity: 0.45, inset: false },
-          { x: -12, y: -12, blur: 24, spread: 0, color: '#3a3f67', opacity: 0.25, inset: false },
-          { x: 0, y: 0, blur: 0, spread: 2, color: '#ffffff', opacity: 0.04, inset: true },
+      shadows.splice(
+        0,
+        shadows.length,
+        { x: 12, y: 12, blur: 24, spread: 0, color: '#000000', opacity: 0.45, inset: false },
+        { x: -12, y: -12, blur: 24, spread: 0, color: '#3a3f67', opacity: 0.25, inset: false },
+        { x: 0, y: 0, blur: 0, spread: 2, color: '#ffffff', opacity: 0.04, inset: true }
       )
-    }
+    },
   },
 ]
 </script>
 
 <template>
-  <section class="bg-neutral-950 text-neutral-50 py-24">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6 grid gap-8 md:grid-cols-12">
-        <div class="md:col-span-6 md:sticky md:top-4 self-start">
-          <div class="grid gap-6 max-h-[calc(100vh-6rem)] overflow-auto pr-2">
-            <div class="grid gap-2">
-              <Label>Presets</Label>
-              <div class="flex flex-wrap gap-2">
-                <Button v-for="p in presets" :key="p.label" variant="outline" class="h-8 px-3" @click="p.apply()">
-                  {{ p.label }}
-                </Button>
-                <Button variant="ghost" class="h-8 px-3" @click="() => shadows.splice(0, shadows.length, { x:0,y:12,blur:24,spread:-6,color:'#000000',opacity:0.35,inset:false })">Reset</Button>
-              </div>
-            </div>
-
-            <div class="grid gap-4">
-              <div
-                  v-for="(s, i) in shadows"
-                  :key="i"
-                  class="rounded-lg border border-neutral-800 bg-neutral-900/60 p-4"
+  <ToolLayout>
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(20rem,0.95fr)]">
+      <div class="grid content-start gap-6">
+        <div class="grid content-start gap-6">
+          <div class="grid gap-2">
+            <Label>Presets</Label>
+            <div class="flex flex-wrap gap-2">
+              <Button
+                v-for="p in presets"
+                :key="p.label"
+                variant="outline"
+                class="h-9 px-3"
+                @click="p.apply()"
               >
-                <div class="mb-3 flex items-center justify-between">
-                  <Label>Shadow {{ i + 1 }}</Label>
-                  <div class="flex items-center gap-2">
-                    <Button size="sm" variant="outline" @click="moveUp(i)" :disabled="i===0">↑</Button>
-                    <Button size="sm" variant="outline" @click="moveDown(i)" :disabled="i===shadows.length-1">↓</Button>
-                    <Button size="sm" variant="outline" @click="removeShadow(i)" :disabled="shadows.length===1">Remove</Button>
-                  </div>
-                </div>
-
-                <div class="grid gap-4 md:grid-cols-2">
-                  <div class="grid gap-2">
-                    <Label>Horizontal offset</Label>
-                    <div class="flex items-center gap-3">
-                      <input type="range" min="-100" max="100" step="1" v-model.number="s.x" class="w-full accent-neutral-300" />
-                      <Input type="number" class="w-24" v-model.number="s.x" />
-                    </div>
-                  </div>
-
-                  <div class="grid gap-2">
-                    <Label>Vertical offset</Label>
-                    <div class="flex items-center gap-3">
-                      <input type="range" min="-100" max="100" step="1" v-model.number="s.y" class="w-full accent-neutral-300" />
-                      <Input type="number" class="w-24" v-model.number="s.y" />
-                    </div>
-                  </div>
-
-                  <div class="grid gap-2">
-                    <Label>Blur radius</Label>
-                    <div class="flex items-center gap-3">
-                      <input type="range" min="0" max="200" step="1" v-model.number="s.blur" class="w-full accent-neutral-300" />
-                      <Input type="number" class="w-24" v-model.number="s.blur" />
-                    </div>
-                  </div>
-
-                  <div class="grid gap-2">
-                    <Label>Spread radius</Label>
-                    <div class="flex items-center gap-3">
-                      <input type="range" min="-100" max="100" step="1" v-model.number="s.spread" class="w-full accent-neutral-300" />
-                      <Input type="number" class="w-24" v-model.number="s.spread" />
-                    </div>
-                  </div>
-
-                  <div class="grid gap-2">
-                    <Label>Color</Label>
-                    <div class="flex items-center gap-3">
-                      <input type="color" v-model="s.color" class="h-9 w-9 rounded border border-neutral-700 bg-transparent p-0" />
-                      <Input v-model="s.color" placeholder="#000000" />
-                    </div>
-                  </div>
-
-                  <div class="grid gap-2">
-                    <Label>Opacity</Label>
-                    <div class="flex items-center gap-3">
-                      <input type="range" min="0" max="1" step="0.01" v-model.number="s.opacity" class="w-full accent-neutral-300" />
-                      <Input type="number" step="0.01" min="0" max="1" class="w-24" v-model.number="s.opacity" />
-                    </div>
-                  </div>
-
-                  <div class="grid gap-2">
-                    <Label>Inset</Label>
-                    <div class="flex items-center justify-between rounded border border-neutral-800 px-3 py-2">
-                      <span class="text-sm text-neutral-300">Inset shadow</span>
-                      <Switch v-model:checked="s.inset" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Button variant="outline" class="w-full" @click="addShadow">Add shadow</Button>
-            </div>
-
-            <Separator class="bg-neutral-800" />
-
-            <div class="grid gap-2">
-              <Label>Generated CSS</Label>
-              <Textarea :value="cssText" rows="3" readonly class="font-mono text-sm" />
-              <div class="flex gap-2">
-                <Button @click="copyCss">Copy CSS</Button>
-              </div>
+                {{ p.label }}
+              </Button>
+              <Button
+                variant="ghost"
+                class="h-9 px-3"
+                @click="
+                  () =>
+                    shadows.splice(0, shadows.length, {
+                      x: 0,
+                      y: 12,
+                      blur: 24,
+                      spread: -6,
+                      color: '#000000',
+                      opacity: 0.35,
+                      inset: false,
+                    })
+                "
+                >Reset</Button
+              >
             </div>
           </div>
-        </div>
 
-        <div class="md:col-span-6 md:sticky md:top-4 self-start">
-          <div class="grid gap-6">
-            <div class="grid gap-2">
-              <Label for="bgc">Preview background</Label>
-              <div class="flex items-center gap-3">
-                <input id="bgc" type="color" v-model="bg" class="h-9 w-9 rounded border border-neutral-700 bg-transparent p-0" />
-                <Input v-model="bg" class="w-40" />
-                <div class="ml-auto flex items-center gap-3">
-                  <Label for="size">Preview size</Label>
-                  <input id="size" type="range" min="160" max="420" step="1" v-model.number="boxSize" class="w-40 accent-neutral-300" />
-                  <Input type="number" class="w-20" v-model.number="boxSize" />
+          <div class="grid gap-4">
+            <div
+              v-for="(s, i) in shadows"
+              :key="i"
+              class="border-border border-t pt-4 first:border-t-0 first:pt-0"
+            >
+              <div class="mb-3 flex items-center justify-between">
+                <Label>Shadow {{ i + 1 }}</Label>
+                <div class="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    :disabled="i === 0"
+                    class="h-11 px-5"
+                    @click="moveUp(i)"
+                    >↑</Button
+                  >
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    :disabled="i === shadows.length - 1"
+                    class="h-11 px-5"
+                    @click="moveDown(i)"
+                    >↓</Button
+                  >
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    :disabled="shadows.length === 1"
+                    class="h-11 px-5"
+                    @click="removeShadow(i)"
+                    >Remove</Button
+                  >
+                </div>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-2">
+                <div class="grid gap-2">
+                  <Label>Horizontal offset</Label>
+                  <div class="flex items-center gap-3">
+                    <Slider
+                      v-model.number="s.x"
+                      min="-100"
+                      max="100"
+                      step="1"
+                      aria-label="Horizontal shadow offset"
+                    />
+                    <Input v-model.number="s.x" type="number" class="h-11 w-24" />
+                  </div>
+                </div>
+
+                <div class="grid gap-2">
+                  <Label>Vertical offset</Label>
+                  <div class="flex items-center gap-3">
+                    <Slider
+                      v-model.number="s.y"
+                      min="-100"
+                      max="100"
+                      step="1"
+                      aria-label="Vertical shadow offset"
+                    />
+                    <Input v-model.number="s.y" type="number" class="h-11 w-24" />
+                  </div>
+                </div>
+
+                <div class="grid gap-2">
+                  <Label>Blur radius</Label>
+                  <div class="flex items-center gap-3">
+                    <Slider
+                      v-model.number="s.blur"
+                      min="0"
+                      max="200"
+                      step="1"
+                      aria-label="Shadow blur"
+                    />
+                    <Input v-model.number="s.blur" type="number" class="h-11 w-24" />
+                  </div>
+                </div>
+
+                <div class="grid gap-2">
+                  <Label>Spread radius</Label>
+                  <div class="flex items-center gap-3">
+                    <Slider
+                      v-model.number="s.spread"
+                      min="-100"
+                      max="100"
+                      step="1"
+                      aria-label="Shadow spread"
+                    />
+                    <Input v-model.number="s.spread" type="number" class="h-11 w-24" />
+                  </div>
+                </div>
+
+                <div class="grid gap-2">
+                  <Label>Color</Label>
+                  <div class="flex items-center gap-3">
+                    <input
+                      v-model="s.color"
+                      type="color"
+                      class="border-input h-9 w-9 rounded border bg-transparent p-0"
+                    />
+                    <Input v-model="s.color" placeholder="#000000" class="h-11" />
+                  </div>
+                </div>
+
+                <div class="grid gap-2">
+                  <Label>Opacity</Label>
+                  <div class="flex items-center gap-3">
+                    <Slider
+                      v-model.number="s.opacity"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      aria-label="Shadow opacity"
+                    />
+                    <Input
+                      v-model.number="s.opacity"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="1"
+                      class="h-11 w-24"
+                    />
+                  </div>
+                </div>
+
+                <div class="grid gap-2">
+                  <Label>Inset</Label>
+                  <div
+                    class="border-border flex items-center justify-between rounded border px-3 py-2"
+                  >
+                    <span class="text-foreground/80 text-sm">Inset shadow</span>
+                    <Switch v-model:checked="s.inset" />
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6 flex items-center justify-center min-h-[360px]" :style="{ backgroundColor: bg }">
-              <div :style="previewStyle" />
+            <Button variant="outline" class="h-11 w-full px-5" @click="addShadow"
+              >Add shadow</Button
+            >
+          </div>
+
+          <Separator class="bg-muted" />
+
+          <div class="grid gap-2">
+            <Label>Generated CSS</Label>
+            <Textarea :value="cssText" rows="3" readonly class="font-mono text-sm" />
+            <div class="flex gap-2">
+              <Button class="h-11 px-5" @click="copyCss">Copy CSS</Button>
             </div>
           </div>
         </div>
       </div>
+
+      <div
+        class="border-border grid content-start gap-6 border-t pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0"
+      >
+        <div class="grid gap-6">
+          <div class="grid gap-2">
+            <Label for="bgc">Preview background</Label>
+            <div class="flex items-center gap-3">
+              <input
+                id="bgc"
+                v-model="bg"
+                type="color"
+                class="border-input h-9 w-9 rounded border bg-transparent p-0"
+              />
+              <Input v-model="bg" class="h-11 w-40" />
+              <div class="ml-auto flex items-center gap-3">
+                <Label for="size">Preview size</Label>
+                <Slider v-model.number="boxSize" min="160" max="420" step="1" aria-label="size" />
+                <Input v-model.number="boxSize" type="number" class="h-11 w-20" />
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="flex min-h-[320px] items-center justify-center p-6"
+            :style="{ backgroundColor: bg }"
+          >
+            <div :style="previewStyle" />
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
+    <tool-explanation
+      title="CSS box-shadow generator"
+      intro="The CSS box-shadow property adds one or more shadows to an element. Each layer can set horizontal and vertical offset, blur, spread, color and opacity."
+      detail="This generator updates the preview as you edit layers. Combine outer or inset shadows to build a complete effect, then copy the resulting CSS declaration."
+      use-case="Use it to tune elevation for cards, buttons, dialogs and other interface elements."
+    />
+  </ToolLayout>
 </template>
