@@ -1,15 +1,15 @@
 <template>
   <tool-layout>
-    <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
+    <div class="space-y-6">
       <div class="grid gap-8">
         <div class="grid gap-6 md:grid-cols-3">
           <div class="grid gap-2 md:col-span-2">
             <Label for="src">Input</Label>
-            <textarea
+            <Textarea
               id="src"
               v-model="src"
               rows="8"
-              class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
+              class="border-border bg-background text-foreground focus:ring-ring w-full rounded-md border p-3 text-sm outline-none focus:ring-2"
               placeholder="Paste or type text…"
             />
           </div>
@@ -17,50 +17,54 @@
             <div class="grid gap-3">
               <Label>Options</Label>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-neutral-300">Trim</span>
+                <span class="text-foreground/80 text-sm">Trim</span>
                 <Switch v-model:checked="opts.trim" />
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-neutral-300">Collapse spaces</span>
+                <span class="text-foreground/80 text-sm">Collapse spaces</span>
                 <Switch v-model:checked="opts.collapse" />
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-neutral-300">Remove diacritics</span>
+                <span class="text-foreground/80 text-sm">Remove diacritics</span>
                 <Switch v-model:checked="opts.diacritics" />
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-neutral-300">Preserve acronyms</span>
+                <span class="text-foreground/80 text-sm">Preserve acronyms</span>
                 <Switch v-model:checked="opts.preserveAcronyms" />
               </div>
             </div>
             <div class="flex flex-wrap items-center gap-3">
-              <Button variant="outline" :disabled="!src" @click="clearAll">Clear</Button>
-              <Button variant="outline" :disabled="!src" @click="copyAll">Copy all</Button>
+              <Button variant="outline" :disabled="!src" @click="clearAll" class="h-11 px-5"
+                >Clear</Button
+              >
+              <Button variant="outline" :disabled="!src" @click="copyAll" class="h-11 px-5"
+                >Copy all</Button
+              >
             </div>
-            <p class="text-xs text-neutral-500">Runs client-side. No data leaves your browser.</p>
+            <p class="text-muted-foreground text-xs"
+              >Runs client-side. No data leaves your browser.</p
+            >
           </div>
         </div>
 
-        <div
-          class="h-px w-full bg-gradient-to-r from-transparent via-neutral-800 to-transparent"
-        ></div>
+        <div class="bg-border h-px w-full"></div>
 
         <div class="grid items-start gap-6 md:grid-cols-2">
           <div class="grid gap-4">
             <div v-for="key in ['lower', 'upper', 'title', 'sentence']" :key="key">
               <div class="mb-2 flex items-center justify-between">
-                <label class="text-sm text-neutral-300">{{ labels[key] }}</label>
+                <label class="text-foreground/80 text-sm">{{ labels[key] }}</label>
                 <button
-                  class="rounded-md border border-neutral-800 bg-neutral-950 px-2.5 py-1 text-xs text-neutral-200 hover:bg-neutral-900 disabled:opacity-40"
+                  class="border-border bg-background text-foreground hover:bg-muted rounded-md border px-2.5 py-1 text-xs disabled:opacity-40"
                   :disabled="!out[key]"
                   @click="copy(out[key])"
                   >Copy</button
                 >
               </div>
-              <textarea
+              <Textarea
                 readonly
                 rows="2"
-                class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
+                class="border-border bg-background text-foreground focus:ring-ring w-full rounded-md border p-3 text-sm outline-none focus:ring-2"
                 :value="out[key]"
               />
             </div>
@@ -71,18 +75,18 @@
               :key="key"
             >
               <div class="mb-2 flex items-center justify-between">
-                <label class="text-sm text-neutral-300">{{ labels[key] }}</label>
+                <label class="text-foreground/80 text-sm">{{ labels[key] }}</label>
                 <button
-                  class="rounded-md border border-neutral-800 bg-neutral-950 px-2.5 py-1 text-xs text-neutral-200 hover:bg-neutral-900 disabled:opacity-40"
+                  class="border-border bg-background text-foreground hover:bg-muted rounded-md border px-2.5 py-1 text-xs disabled:opacity-40"
                   :disabled="!out[key]"
                   @click="copy(out[key])"
                   >Copy</button
                 >
               </div>
-              <textarea
+              <Textarea
                 readonly
                 rows="2"
-                class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
+                class="border-border bg-background text-foreground focus:ring-ring w-full rounded-md border p-3 text-sm outline-none focus:ring-2"
                 :value="out[key]"
               />
             </div>
@@ -90,6 +94,12 @@
         </div>
       </div>
     </div>
+    <tool-explanation
+      title="Text case converter"
+      intro="Text case converters change capitalization and separators to match common writing styles and programming naming conventions."
+      detail="This tool shows several converted forms of the same text, including formats commonly used for variables, constants, titles and sentences. Cleanup options help normalize whitespace or punctuation before copying a result."
+      use-case="Convert labels, identifiers, API fields and pasted text without rewriting each format by hand."
+    />
   </tool-layout>
 </template>
 
@@ -98,6 +108,7 @@ import { reactive, ref, watch } from 'vue'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 
 type Options = { trim: boolean; collapse: boolean; diacritics: boolean; preserveAcronyms: boolean }

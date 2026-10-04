@@ -287,133 +287,139 @@ function applyPreset(p: Preset) {
 </script>
 
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="mb-6 flex items-center gap-3">
-        <Label>Mode</Label>
-        <Select v-model="mode">
-          <SelectTrigger class="w-40">
-            <SelectValue placeholder="generator" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="generator">Generator</SelectItem>
-            <SelectItem value="parser">Parser</SelectItem>
-          </SelectContent>
-        </Select>
+  <ToolLayout>
+    <div class="border-border flex flex-wrap items-center justify-between gap-3 border-b pb-4">
+      <Label>Mode</Label>
+      <Select v-model="mode">
+        <SelectTrigger class="w-40">
+          <SelectValue placeholder="generator" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="generator">Generator</SelectItem>
+          <SelectItem value="parser">Parser</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+
+    <div class="grid gap-6">
+      <div class="flex flex-wrap gap-2">
+        <Label class="mr-2">Presets</Label>
+        <Button
+          v-for="p in presets"
+          :key="p.expr"
+          variant="outline"
+          class="h-9 px-3"
+          @click="applyPreset(p)"
+        >
+          {{ p.label }}
+        </Button>
       </div>
 
-      <div class="grid gap-6 rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
-        <div class="flex flex-wrap gap-2">
-          <Label class="mr-2">Presets</Label>
-          <Button
-            v-for="p in presets"
-            :key="p.expr"
-            variant="outline"
-            class="h-8 px-3"
-            @click="applyPreset(p)"
-          >
-            {{ p.label }}
-          </Button>
-        </div>
+      <Separator class="bg-muted" />
 
-        <Separator class="bg-neutral-800" />
-
-        <div v-if="mode === 'generator'" class="grid gap-5 md:grid-cols-2">
-          <div class="grid gap-4">
-            <div class="grid gap-2">
-              <Label for="m">Minute</Label>
-              <Input id="m" v-model="gen.minute" />
-            </div>
-            <div class="grid gap-2">
-              <Label for="h">Hour</Label>
-              <Input id="h" v-model="gen.hour" />
-            </div>
-            <div class="grid gap-2">
-              <Label for="dom">Day of month</Label>
-              <Input id="dom" v-model="gen.dom" />
-            </div>
-            <div class="grid gap-2">
-              <Label for="mon">Month</Label>
-              <Input id="mon" v-model="gen.month" />
-            </div>
-            <div class="grid gap-2">
-              <Label for="dow">Day of week</Label>
-              <Input id="dow" v-model="gen.dow" />
-            </div>
-          </div>
-
-          <div class="grid gap-4">
-            <div class="grid gap-2">
-              <Label for="expr">Cron expression</Label>
-              <Input id="expr" :value="cronOut" readonly />
-              <div class="flex gap-2">
-                <Button @click="copyCron">Copy</Button>
-              </div>
-            </div>
-            <div class="grid gap-2">
-              <Label>Human readable</Label>
-              <Textarea :value="humanReadable" rows="3" readonly />
-            </div>
-          </div>
-        </div>
-
-        <div v-else class="grid gap-5 md:grid-cols-2">
-          <div class="grid gap-4">
-            <div class="grid gap-2">
-              <Label for="in">Cron expression</Label>
-              <Input id="in" v-model="cronIn" />
-              <div class="flex gap-2">
-                <Button :disabled="!!errorMsg" @click="copyCron">Copy</Button>
-              </div>
-            </div>
-            <div class="grid gap-2">
-              <Label>Human readable</Label>
-              <Textarea :value="humanReadable" rows="3" readonly />
-            </div>
-          </div>
-
+      <div v-if="mode === 'generator'" class="grid gap-6 lg:grid-cols-2">
+        <div class="grid gap-4">
           <div class="grid gap-2">
-            <Label>Fields</Label>
-            <div v-if="!errorMsg" class="space-y-1 text-sm text-neutral-300">
-              <div
-                ><span class="text-neutral-500">minute:</span>
-                {{ describeField(parsedState.parsed!.minute, 'minute') }}</div
-              >
-              <div
-                ><span class="text-neutral-500">hour:</span>
-                {{ describeField(parsedState.parsed!.hour, 'hour') }}</div
-              >
-              <div
-                ><span class="text-neutral-500">day of month:</span>
-                {{ describeField(parsedState.parsed!.dom, 'dom') }}</div
-              >
-              <div
-                ><span class="text-neutral-500">month:</span>
-                {{ describeField(parsedState.parsed!.month, 'month') }}</div
-              >
-              <div
-                ><span class="text-neutral-500">day of week:</span>
-                {{ describeField(parsedState.parsed!.dow, 'dow') }}</div
-              >
-            </div>
-            <p v-else class="text-sm text-red-400">{{ errorMsg }}</p>
+            <Label for="m">Minute</Label>
+            <Input id="m" v-model="gen.minute" class="h-11" />
+          </div>
+          <div class="grid gap-2">
+            <Label for="h">Hour</Label>
+            <Input id="h" v-model="gen.hour" class="h-11" />
+          </div>
+          <div class="grid gap-2">
+            <Label for="dom">Day of month</Label>
+            <Input id="dom" v-model="gen.dom" class="h-11" />
+          </div>
+          <div class="grid gap-2">
+            <Label for="mon">Month</Label>
+            <Input id="mon" v-model="gen.month" class="h-11" />
+          </div>
+          <div class="grid gap-2">
+            <Label for="dow">Day of week</Label>
+            <Input id="dow" v-model="gen.dow" class="h-11" />
           </div>
         </div>
 
-        <Separator class="bg-neutral-800" />
+        <div class="grid gap-4">
+          <div class="grid gap-2">
+            <Label for="expr">Cron expression</Label>
+            <Input id="expr" :value="cronOut" readonly class="h-11" />
+            <div class="flex gap-2">
+              <Button @click="copyCron" class="h-11 px-5">Copy</Button>
+            </div>
+          </div>
+          <div class="grid gap-2">
+            <Label>Human readable</Label>
+            <Textarea :value="humanReadable" rows="3" readonly />
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="grid gap-6 lg:grid-cols-2">
+        <div class="grid gap-4">
+          <div class="grid gap-2">
+            <Label for="in">Cron expression</Label>
+            <Input id="in" v-model="cronIn" class="h-11" />
+            <div class="flex gap-2">
+              <Button :disabled="!!errorMsg" @click="copyCron" class="h-11 px-5">Copy</Button>
+            </div>
+          </div>
+          <div class="grid gap-2">
+            <Label>Human readable</Label>
+            <Textarea :value="humanReadable" rows="3" readonly />
+          </div>
+        </div>
 
         <div class="grid gap-2">
-          <Label>Next executions</Label>
-          <div v-if="!errorMsg && previewRuns.length" class="text-sm text-neutral-300">
-            <ul class="list-disc pl-5">
-              <li v-for="d in previewRuns" :key="d.toISOString()">
-                {{ d.toLocaleString() }}
-              </li>
-            </ul>
+          <Label>Fields</Label>
+          <div v-if="!errorMsg" class="text-foreground/80 space-y-1 text-sm">
+            <div
+              ><span class="text-muted-foreground">minute:</span>
+              {{ describeField(parsedState.parsed!.minute, 'minute') }}</div
+            >
+            <div
+              ><span class="text-muted-foreground">hour:</span>
+              {{ describeField(parsedState.parsed!.hour, 'hour') }}</div
+            >
+            <div
+              ><span class="text-muted-foreground">day of month:</span>
+              {{ describeField(parsedState.parsed!.dom, 'dom') }}</div
+            >
+            <div
+              ><span class="text-muted-foreground">month:</span>
+              {{ describeField(parsedState.parsed!.month, 'month') }}</div
+            >
+            <div
+              ><span class="text-muted-foreground">day of week:</span>
+              {{ describeField(parsedState.parsed!.dow, 'dow') }}</div
+            >
           </div>
-          <p v-else class="text-sm text-neutral-400">No preview available.</p>
+          <p v-else class="text-destructive text-sm">{{ errorMsg }}</p>
         </div>
       </div>
+
+      <Separator class="bg-muted" />
+
+      <div class="grid gap-2">
+        <Label>Next executions</Label>
+        <div v-if="!errorMsg && previewRuns.length" class="text-foreground/80 text-sm">
+          <ul class="list-disc pl-5">
+            <li v-for="d in previewRuns" :key="d.toISOString()">
+              {{ d.toLocaleString() }}
+            </li>
+          </ul>
+        </div>
+        <p v-else class="text-muted-foreground text-sm"
+          >No upcoming runs match this expression yet. Try a more frequent schedule.</p
+        >
+      </div>
     </div>
-  </section>
+    <tool-explanation
+      title="Cron expression generator and parser"
+      intro="Cron expressions describe recurring schedules with fields for minutes, hours, days, months and weekdays. Their compact syntax is used by many schedulers and automation systems."
+      detail="Build a schedule with the generator or enter an existing expression to inspect its meaning. The upcoming run preview helps check that the schedule matches the intended timing."
+      use-case="Use this tool when configuring scheduled jobs, backups, scripts or other recurring tasks."
+    />
+  </ToolLayout>
 </template>

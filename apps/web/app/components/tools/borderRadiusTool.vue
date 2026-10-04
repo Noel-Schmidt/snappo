@@ -5,6 +5,7 @@ import { toast } from 'vue-sonner'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Slider } from '@/components/ui/slider'
 import {
   Select,
   SelectTrigger,
@@ -134,213 +135,212 @@ async function copyCss() {
 </script>
 
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div
-        class="grid gap-8 rounded-xl border border-neutral-800 bg-neutral-900/40 p-6 md:grid-cols-12"
-      >
-        <div class="grid gap-6 md:col-span-5">
-          <div class="grid gap-2">
-            <Label>Unit</Label>
-            <Select v-model="unit">
-              <SelectTrigger class="w-40"><SelectValue placeholder="px" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="px">px</SelectItem>
-                <SelectItem value="%">%</SelectItem>
-              </SelectContent>
-            </Select>
+  <ToolLayout>
+    <div class="grid gap-6 lg:grid-cols-[minmax(18rem,0.85fr)_minmax(0,1.15fr)]">
+      <div class="grid content-start gap-6">
+        <div class="grid gap-2">
+          <Label>Unit</Label>
+          <Select v-model="unit">
+            <SelectTrigger class="w-40"><SelectValue placeholder="px" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="px">px</SelectItem>
+              <SelectItem value="%">%</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div class="grid gap-2">
+          <Label>Link corners</Label>
+          <div class="flex gap-2">
+            <Button
+              :variant="linked ? 'default' : 'outline'"
+              @click="linked = true"
+              class="h-11 px-5"
+              >Linked</Button
+            >
+            <Button
+              :variant="!linked ? 'default' : 'outline'"
+              @click="linked = false"
+              class="h-11 px-5"
+              >Independent</Button
+            >
           </div>
+        </div>
 
-          <div class="grid gap-2">
-            <Label>Link corners</Label>
-            <div class="flex gap-2">
-              <Button :variant="linked ? 'default' : 'outline'" @click="linked = true"
-                >Linked</Button
-              >
-              <Button :variant="!linked ? 'default' : 'outline'" @click="linked = false"
-                >Independent</Button
-              >
-            </div>
+        <div class="grid gap-2">
+          <Label>Mode</Label>
+          <div class="flex gap-2">
+            <Button
+              :variant="!elliptical ? 'default' : 'outline'"
+              @click="elliptical = false"
+              class="h-11 px-5"
+              >Circular</Button
+            >
+            <Button
+              :variant="elliptical ? 'default' : 'outline'"
+              @click="elliptical = true"
+              class="h-11 px-5"
+              >Elliptical</Button
+            >
           </div>
+        </div>
 
+        <Separator class="bg-muted" />
+
+        <div class="grid gap-5">
           <div class="grid gap-2">
-            <Label>Mode</Label>
-            <div class="flex gap-2">
-              <Button :variant="!elliptical ? 'default' : 'outline'" @click="elliptical = false"
-                >Circular</Button
-              >
-              <Button :variant="elliptical ? 'default' : 'outline'" @click="elliptical = true"
-                >Elliptical</Button
-              >
-            </div>
-          </div>
-
-          <Separator class="bg-neutral-800" />
-
-          <div class="grid gap-5">
-            <div class="grid gap-2">
-              <Label>Top-left</Label>
-              <div class="flex items-center gap-3">
-                <input
-                  v-model.number="r.tl.x"
-                  type="range"
-                  :min="0"
-                  :max="unit === '%' ? 100 : 9999"
-                  step="1"
-                  class="w-full accent-neutral-300"
-                />
-                <Input v-model.number="r.tl.x" type="number" class="w-24" />
-                <template v-if="elliptical">
-                  <span class="text-neutral-400">/</span>
-                  <input
-                    v-model.number="r.tl.y"
-                    type="range"
-                    :min="0"
-                    :max="unit === '%' ? 100 : 9999"
-                    step="1"
-                    class="w-full accent-neutral-300"
-                  />
-                  <Input v-model.number="r.tl.y" type="number" class="w-24" />
-                </template>
-              </div>
-            </div>
-
-            <div class="grid gap-2">
-              <Label>Top-right</Label>
-              <div class="flex items-center gap-3">
-                <input
-                  v-model.number="r.tr.x"
-                  type="range"
-                  :min="0"
-                  :max="unit === '%' ? 100 : 9999"
-                  step="1"
-                  class="w-full accent-neutral-300"
-                />
-                <Input v-model.number="r.tr.x" type="number" class="w-24" />
-                <template v-if="elliptical">
-                  <span class="text-neutral-400">/</span>
-                  <input
-                    v-model.number="r.tr.y"
-                    type="range"
-                    :min="0"
-                    :max="unit === '%' ? 100 : 9999"
-                    step="1"
-                    class="w-full accent-neutral-300"
-                  />
-                  <Input v-model.number="r.tr.y" type="number" class="w-24" />
-                </template>
-              </div>
-            </div>
-
-            <div class="grid gap-2">
-              <Label>Bottom-right</Label>
-              <div class="flex items-center gap-3">
-                <input
-                  v-model.number="r.br.x"
-                  type="range"
-                  :min="0"
-                  :max="unit === '%' ? 100 : 9999"
-                  step="1"
-                  class="w-full accent-neutral-300"
-                />
-                <Input v-model.number="r.br.x" type="number" class="w-24" />
-                <template v-if="elliptical">
-                  <span class="text-neutral-400">/</span>
-                  <input
-                    v-model.number="r.br.y"
-                    type="range"
-                    :min="0"
-                    :max="unit === '%' ? 100 : 9999"
-                    step="1"
-                    class="w-full accent-neutral-300"
-                  />
-                  <Input v-model.number="r.br.y" type="number" class="w-24" />
-                </template>
-              </div>
-            </div>
-
-            <div class="grid gap-2">
-              <Label>Bottom-left</Label>
-              <div class="flex items-center gap-3">
-                <input
-                  v-model.number="r.bl.x"
-                  type="range"
-                  :min="0"
-                  :max="unit === '%' ? 100 : 9999"
-                  step="1"
-                  class="w-full accent-neutral-300"
-                />
-                <Input v-model.number="r.bl.x" type="number" class="w-24" />
-                <template v-if="elliptical">
-                  <span class="text-neutral-400">/</span>
-                  <input
-                    v-model.number="r.bl.y"
-                    type="range"
-                    :min="0"
-                    :max="unit === '%' ? 100 : 9999"
-                    step="1"
-                    class="w-full accent-neutral-300"
-                  />
-                  <Input v-model.number="r.bl.y" type="number" class="w-24" />
-                </template>
-              </div>
-            </div>
-          </div>
-
-          <Separator class="bg-neutral-800" />
-
-          <div class="grid gap-2">
-            <Label>Presets</Label>
-            <div class="flex flex-wrap gap-2">
-              <Button
-                v-for="p in presets"
-                :key="p.label"
-                variant="outline"
-                class="h-8 px-3"
-                @click="p.apply()"
-              >
-                {{ p.label }}
-              </Button>
-              <Button variant="ghost" class="h-8 px-3" @click="resetAll">Reset</Button>
-            </div>
-          </div>
-
-          <div class="grid gap-2">
-            <Label for="sz">Preview size</Label>
+            <Label>Top-left</Label>
             <div class="flex items-center gap-3">
-              <input
-                id="sz"
-                v-model.number="size"
-                type="range"
-                min="120"
-                max="420"
+              <Slider
+                v-model.number="r.tl.x"
+                :min="0"
+                :max="unit === '%' ? 100 : 9999"
                 step="1"
-                class="w-full accent-neutral-300"
+                aria-label="Top-left horizontal radius"
               />
-              <Input v-model.number="size" type="number" class="w-24" />
+              <Input v-model.number="r.tl.x" type="number" class="h-11 w-24" />
+              <template v-if="elliptical">
+                <span class="text-muted-foreground">/</span>
+                <Slider
+                  v-model.number="r.tl.y"
+                  :min="0"
+                  :max="unit === '%' ? 100 : 9999"
+                  step="1"
+                  aria-label="Top-left vertical radius"
+                />
+                <Input v-model.number="r.tl.y" type="number" class="h-11 w-24" />
+              </template>
+            </div>
+          </div>
+
+          <div class="grid gap-2">
+            <Label>Top-right</Label>
+            <div class="flex items-center gap-3">
+              <Slider
+                v-model.number="r.tr.x"
+                :min="0"
+                :max="unit === '%' ? 100 : 9999"
+                step="1"
+                aria-label="Top-right horizontal radius"
+              />
+              <Input v-model.number="r.tr.x" type="number" class="h-11 w-24" />
+              <template v-if="elliptical">
+                <span class="text-muted-foreground">/</span>
+                <Slider
+                  v-model.number="r.tr.y"
+                  :min="0"
+                  :max="unit === '%' ? 100 : 9999"
+                  step="1"
+                  aria-label="Top-right vertical radius"
+                />
+                <Input v-model.number="r.tr.y" type="number" class="h-11 w-24" />
+              </template>
+            </div>
+          </div>
+
+          <div class="grid gap-2">
+            <Label>Bottom-right</Label>
+            <div class="flex items-center gap-3">
+              <Slider
+                v-model.number="r.br.x"
+                :min="0"
+                :max="unit === '%' ? 100 : 9999"
+                step="1"
+                aria-label="Bottom-right horizontal radius"
+              />
+              <Input v-model.number="r.br.x" type="number" class="h-11 w-24" />
+              <template v-if="elliptical">
+                <span class="text-muted-foreground">/</span>
+                <Slider
+                  v-model.number="r.br.y"
+                  :min="0"
+                  :max="unit === '%' ? 100 : 9999"
+                  step="1"
+                  aria-label="Bottom-right vertical radius"
+                />
+                <Input v-model.number="r.br.y" type="number" class="h-11 w-24" />
+              </template>
+            </div>
+          </div>
+
+          <div class="grid gap-2">
+            <Label>Bottom-left</Label>
+            <div class="flex items-center gap-3">
+              <Slider
+                v-model.number="r.bl.x"
+                :min="0"
+                :max="unit === '%' ? 100 : 9999"
+                step="1"
+                aria-label="Bottom-left horizontal radius"
+              />
+              <Input v-model.number="r.bl.x" type="number" class="h-11 w-24" />
+              <template v-if="elliptical">
+                <span class="text-muted-foreground">/</span>
+                <Slider
+                  v-model.number="r.bl.y"
+                  :min="0"
+                  :max="unit === '%' ? 100 : 9999"
+                  step="1"
+                  aria-label="Bottom-left vertical radius"
+                />
+                <Input v-model.number="r.bl.y" type="number" class="h-11 w-24" />
+              </template>
             </div>
           </div>
         </div>
 
-        <div class="grid gap-6 md:col-span-7">
-          <div class="flex items-center justify-center">
-            <div
-              class="border border-neutral-700/60 bg-neutral-800/60 shadow-xl"
-              :style="previewStyle"
-            />
-          </div>
+        <Separator class="bg-muted" />
 
-          <div class="grid gap-2">
-            <Label>Generated CSS</Label>
-            <Textarea :value="cssText" rows="3" readonly />
-            <div class="flex gap-2">
-              <Button @click="copyCss">Copy CSS</Button>
-              <Button variant="outline" @click="setAll(0)">All 0</Button>
-              <Button variant="outline" @click="setAll(unit === '%' ? 50 : 16)">Baseline</Button>
-            </div>
+        <div class="grid gap-2">
+          <Label>Presets</Label>
+          <div class="flex flex-wrap gap-2">
+            <Button
+              v-for="p in presets"
+              :key="p.label"
+              variant="outline"
+              class="h-9 px-3"
+              @click="p.apply()"
+            >
+              {{ p.label }}
+            </Button>
+            <Button variant="ghost" class="h-9 px-3" @click="resetAll">Reset</Button>
+          </div>
+        </div>
+
+        <div class="grid gap-2">
+          <Label for="sz">Preview size</Label>
+          <div class="flex items-center gap-3">
+            <Slider v-model.number="size" min="120" max="420" step="1" aria-label="sz" />
+            <Input v-model.number="size" type="number" class="h-11 w-24" />
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="border-border grid content-start gap-6 border-t pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0"
+      >
+        <div class="flex items-center justify-center">
+          <div class="border-border bg-muted border shadow-sm" :style="previewStyle" />
+        </div>
+
+        <div class="grid gap-2">
+          <Label>Generated CSS</Label>
+          <Textarea :value="cssText" rows="3" readonly />
+          <div class="flex gap-2">
+            <Button @click="copyCss" class="h-11 px-5">Copy CSS</Button>
+            <Button variant="outline" @click="setAll(0)" class="h-11 px-5">All 0</Button>
+            <Button variant="outline" @click="setAll(unit === '%' ? 50 : 16)" class="h-11 px-5"
+              >Baseline</Button
+            >
           </div>
         </div>
       </div>
     </div>
-  </section>
+    <tool-explanation
+      title="CSS border-radius generator"
+      intro="The CSS border-radius property rounds the corners of an element. It accepts one to four values for individual corners and can use pixels or percentages."
+      detail="Linking corners keeps a consistent shape, while elliptical mode lets horizontal and vertical radii differ. Presets provide common shapes such as circles and pills, and the preview shows the generated declaration."
+      use-case="Use the controls to create rounded buttons, cards, avatars and other interface shapes, then copy the CSS."
+    />
+  </ToolLayout>
 </template>

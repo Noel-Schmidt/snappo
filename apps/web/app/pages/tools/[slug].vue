@@ -1,5 +1,5 @@
 <template>
-  <page-header :title="entry.title" :subtitle="entry.description" :badge="entry.badge" />
+  <page-header :title="entry.title" :subtitle="entry.description" />
   <component :is="Comp" />
 </template>
 

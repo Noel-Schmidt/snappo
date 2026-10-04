@@ -69,9 +69,9 @@ onBeforeUnmount(killWorker)
 </script>
 
 <template>
-  <section class="bg-neutral-950 py-24 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
+  <section class="bg-background text-foreground py-10 sm:py-14">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="space-y-6">
         <div class="grid gap-6 md:grid-cols-12">
           <div class="grid gap-4 self-start md:sticky md:top-4 md:col-span-3">
             <div class="grid gap-2">
@@ -107,12 +107,14 @@ onBeforeUnmount(killWorker)
             </div>
 
             <div class="flex gap-2 pt-2">
-              <Button :disabled="!canRun" @click="run">
+              <Button :disabled="!canRun" @click="run" class="h-11 px-5">
                 <span v-if="running">Processing…</span>
                 <span v-else>Run</span>
               </Button>
-              <Button variant="outline" :disabled="!output" @click="copyOut">Copy output</Button>
-              <Button variant="ghost" @click="clearAll">Clear</Button>
+              <Button variant="outline" :disabled="!output" @click="copyOut" class="h-11 px-5"
+                >Copy output</Button
+              >
+              <Button variant="ghost" @click="clearAll" class="h-11 px-5">Clear</Button>
             </div>
           </div>
 
@@ -125,13 +127,13 @@ onBeforeUnmount(killWorker)
                 class="h-[360px] resize-none overflow-auto font-mono text-sm leading-6"
                 spellcheck="false"
               />
-              <p class="text-xs text-neutral-500">
+              <p class="text-muted-foreground text-xs">
                 Large inputs run in a Web Worker. Use “mixed” for HTML with
                 &lt;script&gt;/&lt;style&gt;.
               </p>
             </div>
 
-            <Separator class="bg-neutral-800" />
+            <Separator class="bg-muted" />
 
             <div class="grid gap-2">
               <Label for="out">Output</Label>
@@ -146,6 +148,12 @@ onBeforeUnmount(killWorker)
           </div>
         </div>
       </div>
+      <tool-explanation
+        title="Code minifier and formatter"
+        intro="Minification removes unnecessary whitespace and, where supported, comments from source code to reduce its size. Formatting expands compact code into a more readable layout."
+        detail="Choose a supported language and action, then review the output before copying it. Formatting and minification are useful for inspecting or preparing code, but the result should still be tested in its target project."
+        use-case="Use this tool for quick checks on code snippets and small text-based assets."
+      />
     </div>
   </section>
 </template>

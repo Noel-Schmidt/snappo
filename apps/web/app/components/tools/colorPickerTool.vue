@@ -1,17 +1,16 @@
 <template>
   <tool-layout>
-    <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
-      <div class="grid gap-8 md:grid-cols-2">
-        <div class="grid gap-6">
+    <div class="space-y-6">
+      <div class="grid gap-0 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
+        <div class="grid content-start gap-6">
           <div
             ref="svRef"
-            class="relative aspect-square w-full rounded-lg border border-neutral-800"
+            class="border-border relative aspect-[1.25/1] w-full cursor-crosshair touch-none overflow-hidden rounded-xl border sm:aspect-[1.45/1]"
             :style="svStyle"
-            @mousedown="startSV"
-            @touchstart.prevent="startSV"
+            @pointerdown.prevent="startSV"
           >
             <div
-              class="absolute h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-white"
+              class="pointer-events-none absolute h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_1px_5px_rgba(0,0,0,0.55)]"
               :style="{
                 left: `${sv.x * 100}%`,
                 top: `${(1 - sv.y) * 100}%`,
@@ -20,20 +19,24 @@
             />
           </div>
 
-          <div class="grid gap-4">
-            <div class="grid gap-1">
-              <Label>Hue</Label>
-              <div class="h-3 w-full rounded-full" :style="{ background: hueGradient }"></div>
-              <input
-                v-model.number="h"
-                type="range"
-                min="0"
-                max="360"
-                class="w-full accent-neutral-300"
-              />
+          <div class="grid gap-5">
+            <div class="grid gap-2">
+              <div class="flex items-center justify-between"
+                ><Label>Hue</Label
+                ><span class="text-muted-foreground text-xs tabular-nums"
+                  >{{ Math.round(h) }}°</span
+                ></div
+              >
+              <div class="h-2.5 w-full rounded-full" :style="{ background: hueGradient }"></div>
+              <Slider v-model.number="h" min="0" max="360" aria-label="Hue" />
             </div>
-            <div class="grid gap-1">
-              <Label>Alpha</Label>
+            <div class="grid gap-2">
+              <div class="flex items-center justify-between"
+                ><Label>Opacity</Label
+                ><span class="text-muted-foreground text-xs tabular-nums"
+                  >{{ alphaPct }}%</span
+                ></div
+              >
               <div class="relative h-3 w-full overflow-hidden rounded-full">
                 <div
                   class="absolute inset-0 bg-[linear-gradient(45deg,#000_25%,transparent_25%),linear-gradient(-45deg,#000_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#000_75%),linear-gradient(-45deg,transparent_75%,#000_75%)] opacity-20 [background-position:0_0,0_5px,5px_-5px,-5px_0] [background-size:10px_10px]"
@@ -45,29 +48,28 @@
                   }"
                 ></div>
               </div>
-              <input
-                v-model.number="alphaPct"
-                type="range"
-                min="0"
-                max="100"
-                class="w-full accent-neutral-300"
-              />
+              <Slider v-model.number="alphaPct" min="0" max="100" aria-label="Alpha transparency" />
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-3">
-            <Button @click="copy(hexWithAlpha)">Copy HEX</Button>
-            <Button variant="outline" @click="copy(`rgba(${r}, ${g}, ${b}, ${round(a, 2)})`)"
+          <div class="flex flex-wrap items-center gap-2">
+            <Button @click="copy(hexWithAlpha)" class="h-10 px-4">Copy HEX</Button>
+            <Button
+              variant="outline"
+              @click="copy(`rgba(${r}, ${g}, ${b}, ${round(a, 2)})`)"
+              class="h-10 px-4"
               >Copy RGBA</Button
             >
-            <Button variant="outline" @click="randomize">Random</Button>
-            <div class="ml-auto text-xs text-neutral-400"
+            <Button variant="outline" @click="randomize" class="h-10 px-4">Random</Button>
+            <div class="text-muted-foreground ml-auto text-xs"
               >WCAG vs #0a0a0a: {{ contrastDark.ratio.toFixed(2) }} ({{ contrastDark.level }})</div
             >
           </div>
         </div>
 
-        <div class="grid gap-6">
+        <div
+          class="border-border grid content-start gap-6 border-t pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0"
+        >
           <div class="grid gap-4">
             <div class="grid gap-2">
               <Label for="hex">HEX</Label>
@@ -76,6 +78,7 @@
                 v-model="hexInput"
                 placeholder="#1f2937 or #1f2937cc"
                 @change="onHexChange"
+                class="h-11"
               />
             </div>
 
@@ -87,6 +90,7 @@
                   v-model="rgbaInput"
                   placeholder="31,41,55,0.80"
                   @change="onRgbaChange"
+                  class="h-11"
                 />
               </div>
               <div class="grid gap-2">
@@ -96,6 +100,7 @@
                   v-model="hslInput"
                   placeholder="220,21%,17%,0.80"
                   @change="onHslChange"
+                  class="h-11"
                 />
               </div>
             </div>
@@ -107,6 +112,7 @@
                 v-model="oklchInput"
                 placeholder="0.65 0.10 220 / 0.9"
                 @change="onOklchChange"
+                class="h-11"
               />
             </div>
           </div>
@@ -116,16 +122,21 @@
               <Label>Preview</Label>
               <div class="grid grid-cols-2 gap-3">
                 <div
-                  class="rounded-lg border border-neutral-800 p-4"
-                  :style="{ backgroundColor: rgbaString }"
+                  class="border-border relative flex min-h-20 items-center rounded-xl border p-4"
+                  :style="checkerboardStyle"
                 >
-                  <p class="text-sm text-white">On color</p>
+                  <div
+                    class="flex min-h-20 w-full items-center rounded-lg p-3"
+                    :style="{ backgroundColor: rgbaString, color: previewTextColor }"
+                  >
+                    <p class="text-sm">Text on selected color</p>
+                  </div>
                 </div>
                 <div
-                  class="rounded-lg border border-neutral-800 bg-white p-4"
-                  :style="{ color: rgbaString }"
+                  class="border-border flex min-h-20 items-center rounded-xl border bg-white p-4"
+                  :style="{ color: `rgb(${r}, ${g}, ${b})` }"
                 >
-                  <p class="text-sm">On white</p>
+                  <p class="text-sm">Selected text on white</p>
                 </div>
               </div>
             </div>
@@ -136,7 +147,7 @@
                 <button
                   v-for="sw in suggestions"
                   :key="sw.key"
-                  class="h-8 rounded-md border border-neutral-800"
+                  class="border-border focus-visible:ring-ring h-9 rounded-lg border transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2"
                   :style="{ backgroundColor: sw.css }"
                   :title="sw.label"
                   @click="apply(sw)"
@@ -150,14 +161,18 @@
                 <button
                   v-for="(hItem, i) in history"
                   :key="i"
-                  class="h-8 w-8 rounded-md border border-neutral-800"
+                  class="border-border focus-visible:ring-ring h-9 w-9 rounded-lg border transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2"
                   :style="{ backgroundColor: hItem.css }"
                   :title="hItem.hex"
                   @click="apply(hItem)"
                 />
               </div>
               <div>
-                <Button variant="outline" :disabled="history.length === 0" @click="clearHistory"
+                <Button
+                  variant="outline"
+                  :disabled="history.length === 0"
+                  @click="clearHistory"
+                  class="h-11 px-5"
                   >Clear History</Button
                 >
               </div>
@@ -166,6 +181,12 @@
         </div>
       </div>
     </div>
+    <tool-explanation
+      title="Online color picker"
+      intro="A color picker lets you select a color visually or enter a color value directly. This tool supports common web color formats and includes alpha transparency."
+      detail="Adjust hue and transparency, select a point in the color field, or enter a HEX value. Copy the selected color as HEX or RGBA for use in styles and design tokens."
+      use-case="Use the picker to explore a color, tune a translucent overlay or transfer a value into CSS."
+    />
   </tool-layout>
 </template>
 
@@ -175,6 +196,7 @@ import { ref, reactive, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Slider } from '@/components/ui/slider'
 
 type Swatch = {
   r: number
@@ -189,7 +211,7 @@ type Swatch = {
 
 const h = ref(220)
 const sv = reactive({ x: 0.21, y: 0.17 })
-const a = ref(0.9)
+const a = ref(1)
 const svRef = ref<HTMLElement | null>(null)
 
 const LS_KEY = 'snappo-color-history'
@@ -221,7 +243,7 @@ function clearHistory() {
   localStorage.removeItem(LS_KEY)
 }
 
-const { r, g, b } = toRGBfromHSLPlane(h, sv)
+const { r, g, b } = toRGBfromHSVPlane(h, sv)
 const rgbaString = computed(() => `rgba(${r.value}, ${g.value}, ${b.value}, ${round(a.value, 2)})`)
 const hexWithAlpha = computed(() => toHexWithAlpha(r.value, g.value, b.value, a.value))
 
@@ -237,7 +259,7 @@ function syncInputs() {
   hslInput.value = `${hh},${ss}%,${ll}%,${round(a.value, 2)}`
   const o = rgbToOklch(r.value, g.value, b.value)
   oklchInput.value = `${round(o.l, 3)} ${round(o.c, 3)} ${round(o.h, 1)} / ${round(a.value, 2)}`
-  pushHistory({ r: r.value, g: g.value, b: b.value, a: a.value })
+  if (!dragging) pushHistory({ r: r.value, g: g.value, b: b.value, a: a.value })
 }
 
 watch([r, g, b, a], () => {
@@ -251,35 +273,36 @@ onMounted(() => {
 onBeforeUnmount(unbindDrag)
 
 function bindDrag() {
-  window.addEventListener('mousemove', onMove)
-  window.addEventListener('mouseup', stopSV)
-  window.addEventListener('touchmove', onMove, { passive: false })
-  window.addEventListener('touchend', stopSV)
+  window.addEventListener('pointermove', onMove)
+  window.addEventListener('pointerup', stopSV)
+  window.addEventListener('pointercancel', stopSV)
 }
 function unbindDrag() {
-  window.removeEventListener('mousemove', onMove)
-  window.removeEventListener('mouseup', stopSV)
-  window.removeEventListener('touchmove', onMove as any)
-  window.removeEventListener('touchend', stopSV)
+  window.removeEventListener('pointermove', onMove)
+  window.removeEventListener('pointerup', stopSV)
+  window.removeEventListener('pointercancel', stopSV)
 }
 
 let dragging = false
-const onMove = (e: MouseEvent | TouchEvent) => {
+const onMove = (e: PointerEvent) => {
   if (!dragging || !svRef.value) return
   const rect = svRef.value.getBoundingClientRect()
-  const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX
-  const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY
+  const clientX = e.clientX
+  const clientY = e.clientY
   const x = (clientX - rect.left) / rect.width
   const y = (clientY - rect.top) / rect.height
   sv.x = clamp(x, 0, 1)
   sv.y = clamp(1 - y, 0, 1)
 }
-const startSV = (e: MouseEvent | TouchEvent) => {
+const startSV = (e: PointerEvent) => {
   dragging = true
+  svRef.value?.setPointerCapture(e.pointerId)
   onMove(e)
 }
 const stopSV = () => {
+  if (!dragging) return
   dragging = false
+  pushHistory({ r: r.value, g: g.value, b: b.value, a: a.value })
 }
 
 const hueGradient = computed(
@@ -326,6 +349,24 @@ const suggestions = computed<Swatch[]>(() => {
 const contrastDark = computed(() =>
   wcagContrast({ r: r.value, g: g.value, b: b.value }, { r: 10, g: 10, b: 10 })
 )
+const previewTextColor = computed(() => {
+  const againstBlack = wcagContrast(
+    { r: r.value, g: g.value, b: b.value },
+    { r: 0, g: 0, b: 0 }
+  ).ratio
+  const againstWhite = wcagContrast(
+    { r: r.value, g: g.value, b: b.value },
+    { r: 255, g: 255, b: 255 }
+  ).ratio
+  return againstBlack > againstWhite ? '#000' : '#fff'
+})
+const checkerboardStyle = {
+  backgroundColor: '#fff',
+  backgroundImage:
+    'linear-gradient(45deg, #d4d4d8 25%, transparent 25%), linear-gradient(-45deg, #d4d4d8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #d4d4d8 75%), linear-gradient(-45deg, transparent 75%, #d4d4d8 75%)',
+  backgroundPosition: '0 0, 0 6px, 6px -6px, -6px 0',
+  backgroundSize: '12px 12px',
+}
 
 function onHexChange() {
   const parsed = parseHexAny(hexInput.value.trim())
@@ -367,10 +408,10 @@ function setFromRGB(nr: number, ng: number, nb: number, na: number) {
   g.value = ng
   b.value = nb
   a.value = na
-  const [hh, ss, ll] = rgbToHsl(nr, ng, nb)
+  const [hh, ss, vv] = rgbToHsv(nr, ng, nb)
   h.value = hh
   sv.x = ss / 100
-  sv.y = ll / 100
+  sv.y = vv / 100
 }
 
 function apply(sw: Swatch) {
@@ -391,14 +432,14 @@ function randomize() {
   a.value = round(Math.random(), 2)
 }
 
-function toRGBfromHSLPlane(h: any, sv: any) {
+function toRGBfromHSVPlane(h: any, sv: any) {
   const rr = ref(0),
     gg = ref(0),
     bb = ref(0)
   const calc = () => {
     const s = clamp(sv.x * 100, 0, 100)
-    const l = clamp(sv.y * 100, 0, 100)
-    const rgb = hslToRgb(h.value, s, l)
+    const v = clamp(sv.y * 100, 0, 100)
+    const rgb = hsvToRgb(h.value, s, v)
     rr.value = rgb.r
     gg.value = rgb.g
     bb.value = rgb.b
@@ -411,10 +452,12 @@ function toHex(r: number, g: number, b: number) {
   return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('')
 }
 function toHexWithAlpha(r: number, g: number, b: number, alpha: number) {
+  const hex = toHex(r, g, b)
+  if (clamp(alpha, 0, 1) >= 1) return hex
   const a8 = Math.round(clamp(alpha, 0, 1) * 255)
     .toString(16)
     .padStart(2, '0')
-  return toHex(r, g, b) + a8
+  return hex + a8
 }
 function parseHexAny(v: string) {
   const s = v.startsWith('#') ? v : `#${v}`
@@ -501,6 +544,50 @@ function hslToRgb(h: number, s: number, l: number) {
     r: Math.round((r + m) * 255),
     g: Math.round((g + m) * 255),
     b: Math.round((b + m) * 255),
+  }
+}
+
+function rgbToHsv(r: number, g: number, b: number): [number, number, number] {
+  r /= 255
+  g /= 255
+  b /= 255
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const delta = max - min
+  let h = 0
+
+  if (delta !== 0) {
+    if (max === r) h = 60 * (((g - b) / delta) % 6)
+    else if (max === g) h = 60 * ((b - r) / delta + 2)
+    else h = 60 * ((r - g) / delta + 4)
+  }
+
+  const saturation = max === 0 ? 0 : delta / max
+  return [Math.round(mod360(h)), Math.round(saturation * 100), Math.round(max * 100)]
+}
+
+function hsvToRgb(h: number, s: number, v: number) {
+  s /= 100
+  v /= 100
+  const chroma = v * s
+  const hueSection = mod360(h) / 60
+  const x = chroma * (1 - Math.abs((hueSection % 2) - 1))
+  const match = v - chroma
+  let r = 0
+  let g = 0
+  let b = 0
+
+  if (hueSection < 1) [r, g, b] = [chroma, x, 0]
+  else if (hueSection < 2) [r, g, b] = [x, chroma, 0]
+  else if (hueSection < 3) [r, g, b] = [0, chroma, x]
+  else if (hueSection < 4) [r, g, b] = [0, x, chroma]
+  else if (hueSection < 5) [r, g, b] = [x, 0, chroma]
+  else [r, g, b] = [chroma, 0, x]
+
+  return {
+    r: Math.round((r + match) * 255),
+    g: Math.round((g + match) * 255),
+    b: Math.round((b + match) * 255),
   }
 }
 

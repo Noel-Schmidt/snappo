@@ -1,121 +1,122 @@
 <template>
   <tool-layout>
-    <div class="rounded-xl border border-neutral-800 bg-neutral-900/40 p-6">
+    <div class="space-y-6">
       <div class="grid gap-8 md:grid-cols-3">
         <div class="grid gap-6 md:col-span-1">
           <div class="grid gap-2">
             <Label for="preset">Style</Label>
-            <select
-              id="preset"
-              v-model="preset"
-              class="h-9 rounded-md border border-neutral-800 bg-neutral-950 px-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
-            >
-              <option value="classic">Classic</option>
-              <option value="tech">Tech</option>
-              <option value="hacker">Hacker</option>
-            </select>
+            <Select v-model="preset">
+              <SelectTrigger id="preset" class="h-11 w-full"
+                ><SelectValue placeholder="Classic"
+              /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="classic">Classic</SelectItem>
+                <SelectItem value="tech">Tech</SelectItem>
+                <SelectItem value="hacker">Hacker</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div class="grid gap-2">
             <Label for="mode">Mode</Label>
-            <select
-              id="mode"
-              v-model="mode"
-              class="h-9 rounded-md border border-neutral-800 bg-neutral-950 px-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
-            >
-              <option value="paragraphs">Paragraphs</option>
-              <option value="sentences">Sentences</option>
-              <option value="words">Words</option>
-            </select>
+            <Select v-model="mode">
+              <SelectTrigger id="mode" class="h-11 w-full"
+                ><SelectValue placeholder="Paragraphs"
+              /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="paragraphs">Paragraphs</SelectItem>
+                <SelectItem value="sentences">Sentences</SelectItem>
+                <SelectItem value="words">Words</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div class="grid gap-2">
             <div class="flex items-center justify-between">
               <Label for="count">Count</Label>
-              <span class="text-xs text-neutral-400">{{ count }}</span>
+              <span class="text-muted-foreground text-xs">{{ count }}</span>
             </div>
-            <input
-              id="count"
+            <Slider
               v-model.number="count"
-              type="range"
               :min="mode === 'words' ? 10 : 1"
               :max="mode === 'words' ? 300 : 12"
-              class="w-full accent-neutral-300"
+              aria-label="count"
             />
           </div>
 
           <div class="grid gap-2">
             <div class="flex items-center justify-between">
               <Label for="variance">Variance</Label>
-              <span class="text-xs text-neutral-400">{{ variance }}</span>
+              <span class="text-muted-foreground text-xs">{{ variance }}</span>
             </div>
-            <input
-              id="variance"
-              v-model.number="variance"
-              type="range"
-              min="0"
-              max="10"
-              class="w-full accent-neutral-300"
-            />
-            <p class="text-xs text-neutral-500">Controls randomness of sentence length.</p>
+            <Slider v-model.number="variance" min="0" max="10" aria-label="variance" />
+            <p class="text-muted-foreground text-xs">Controls randomness of sentence length.</p>
           </div>
 
           <div class="grid gap-2">
             <Label for="seed">Seed</Label>
-            <Input id="seed" v-model="seedInput" placeholder="optional" />
+            <Input id="seed" v-model="seedInput" placeholder="optional" class="h-11" />
             <div class="flex gap-2">
-              <Button variant="outline" @click="shuffleSeed">Randomize</Button>
-              <Button variant="outline" @click="resetOptions">Reset</Button>
+              <Button variant="outline" @click="shuffleSeed" class="h-11 px-5">Randomize</Button>
+              <Button variant="outline" @click="resetOptions" class="h-11 px-5">Reset</Button>
             </div>
           </div>
 
           <div class="grid gap-3">
             <Label>Format</Label>
             <div class="flex items-center gap-3">
-              <label class="flex items-center gap-2 text-sm text-neutral-300">
-                <input v-model="html" type="checkbox" class="h-4 w-4" /> HTML
-              </label>
-              <label class="flex items-center gap-2 text-sm text-neutral-300">
-                <input v-model="headings" type="checkbox" class="h-4 w-4" /> Headings
-              </label>
+              <div class="flex items-center gap-3"
+                ><Switch id="html-output" v-model:checked="html" /><Label for="html-output"
+                  >HTML</Label
+                ></div
+              >
+              <div class="flex items-center gap-3"
+                ><Switch id="headings-output" v-model:checked="headings" /><Label
+                  for="headings-output"
+                  >Headings</Label
+                ></div
+              >
             </div>
             <div v-if="headings" class="grid gap-2">
               <div class="flex items-center justify-between">
                 <Label for="everyN">Every N paragraphs</Label>
-                <span class="text-xs text-neutral-400">{{ everyN }}</span>
+                <span class="text-muted-foreground text-xs">{{ everyN }}</span>
               </div>
-              <input
-                id="everyN"
-                v-model.number="everyN"
-                type="range"
-                min="2"
-                max="6"
-                class="w-full accent-neutral-300"
-              />
+              <Slider v-model.number="everyN" min="2" max="6" aria-label="every N" />
             </div>
           </div>
 
           <div class="flex flex-wrap items-center gap-3">
-            <Button @click="generate">Generate</Button>
-            <Button variant="outline" :disabled="!output" @click="copy">Copy</Button>
-            <Button variant="outline" :disabled="!output" @click="clearAll">Clear</Button>
+            <Button @click="generate" class="h-11 px-5">Generate</Button>
+            <Button variant="outline" :disabled="!output" @click="copy" class="h-11 px-5"
+              >Copy</Button
+            >
+            <Button variant="outline" :disabled="!output" @click="clearAll" class="h-11 px-5"
+              >Clear</Button
+            >
           </div>
         </div>
 
         <div class="md:col-span-2">
           <div class="grid gap-2">
             <Label for="out">Output</Label>
-            <textarea
+            <Textarea
               id="out"
               v-model="output"
               rows="18"
-              class="w-full rounded-md border border-neutral-800 bg-neutral-950 p-3 text-sm text-neutral-200 outline-none focus:ring-2 focus:ring-neutral-700"
+              class="border-border bg-background text-foreground focus:ring-ring w-full rounded-md border p-3 text-sm outline-none focus:ring-2"
             />
           </div>
-          <div class="mt-3 text-xs text-neutral-500">Generated locally in your browser.</div>
+          <div class="text-muted-foreground mt-3 text-xs">Generated locally in your browser.</div>
         </div>
       </div>
     </div>
+    <tool-explanation
+      title="Lorem Ipsum text generator"
+      intro="Lorem Ipsum is placeholder text used to demonstrate a page layout before final copy is available. Generated text helps show how paragraphs, headings and line lengths fit a design."
+      detail="Choose a style and generate paragraphs, sentences or words. A seed can reproduce the same output, while HTML and heading options add markup to paragraph output."
+      use-case="Create sample content for mockups, prototypes, templates and layout testing."
+    />
   </tool-layout>
 </template>
 
@@ -125,6 +126,16 @@ import { ref } from 'vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
+import { Slider } from '@/components/ui/slider'
 
 type Mode = 'paragraphs' | 'sentences' | 'words'
 type Preset = 'classic' | 'tech' | 'hacker'
