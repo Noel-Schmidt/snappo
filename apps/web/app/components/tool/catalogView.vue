@@ -1,165 +1,205 @@
 <template>
-  <tool-layout>
-    <h2 class="mb-4 text-2xl font-bold">Explore all Tools</h2>
-
-    <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-end">
-      <div class="flex w-full items-center gap-3">
-        <div class="relative w-full">
-          <Input v-model="searchQuery" placeholder="Search tools…" class="h-10 pl-9" />
-          <svg
-            class="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
-            viewBox="0 0 24 24"
-            fill="none"
+  <section class="mx-auto max-w-7xl px-6 py-10 sm:py-12" aria-label="Browse developer tools">
+    <div class="border-border bg-muted/40 mb-8 rounded-xl border p-3 sm:p-4">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div class="relative min-w-0 flex-1">
+          <label for="tool-search" class="sr-only">Search tools</label>
+          <Search
+            class="text-muted-foreground pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2"
+            aria-hidden="true"
+          />
+          <Input
+            id="tool-search"
+            v-model="searchQuery"
+            placeholder="Search by tool or task"
+            class="border-input bg-background h-12 rounded-lg pl-10 pr-10 text-base shadow-none focus-visible:ring-2"
+          />
+          <button
+            v-if="searchQuery"
+            type="button"
+            class="text-muted-foreground hover:text-foreground focus-visible:outline-ring absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-md transition-colors focus-visible:outline-2 focus-visible:outline-offset-1"
+            aria-label="Clear search"
+            @click="searchQuery = ''"
           >
-            <path
-              d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-          </svg>
+            <X class="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
+      </div>
 
-        <Select v-model="selectedBadge">
-          <SelectTrigger class="h-10 w-36">
-            <SelectValue placeholder="All" />
-          </SelectTrigger>
-          <SelectContent class="bg-neutral-950">
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem v-for="b in badgeOptions" :key="b" :value="b">{{ b }}</SelectItem>
-          </SelectContent>
-        </Select>
+      <div
+        class="mt-3 flex flex-wrap items-center gap-2"
+        role="group"
+        aria-label="Filter tools by category"
+      >
+        <button
+          v-for="category in categories"
+          :key="category"
+          type="button"
+          class="focus-visible:outline-ring rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+          :class="
+            selectedBadge === category
+              ? 'bg-foreground text-background'
+              : 'text-muted-foreground hover:bg-background hover:text-foreground'
+          "
+          :aria-pressed="selectedBadge === category"
+          @click="selectedBadge = category"
+        >
+          {{ category === 'all' ? 'All tools' : category }}
+        </button>
+        <button
+          v-if="searchQuery || selectedBadge !== 'all'"
+          type="button"
+          class="text-muted-foreground hover:text-foreground ml-auto px-2 py-2 text-sm underline underline-offset-4"
+          @click="resetFilters"
+        >
+          Clear filters
+        </button>
       </div>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div v-if="filteredTools.length" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       <NuxtLink
         v-for="tool in filteredTools"
         :key="tool.slug"
         :to="tool.href"
-        class="group relative overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900/40 p-5 text-[14px] leading-tight hover:bg-neutral-900"
+        class="border-border bg-card hover:border-input hover:bg-accent focus-visible:outline-ring group flex min-h-48 flex-col rounded-xl border p-5 transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-4"
       >
-        <div
-          class="pointer-events-none absolute -inset-px opacity-0 blur-[14px] transition-opacity duration-300 group-hover:opacity-100"
-          :style="{
-            background: `radial-gradient(380px 120px at 12% 0%, ${tool.accent || 'rgba(99,102,241,0.35)'} 0%, transparent 70%)`,
-          }"
-        />
-        <div class="relative grid gap-3">
-          <div class="flex items-center gap-3">
-            <div
-              class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-950 text-neutral-300"
-            >
-              <component :is="tool.icon" v-if="tool.icon" class="h-5 w-5" />
-              <span v-else class="text-xs font-medium leading-none">
-                {{ tool.short || tool.name.slice(0, 2).toUpperCase() }}
-              </span>
-            </div>
-
-            <div class="min-w-0">
-              <div class="flex items-center gap-2">
-                <h3 class="truncate text-sm font-medium leading-none">{{ tool.name }}</h3>
-
-                <span
-                  v-if="tool.status"
-                  class="inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px] leading-none"
-                  :class="
-                    tool.status === 'stable'
-                      ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400'
-                      : 'border-yellow-500/20 bg-yellow-500/10 text-yellow-400'
-                  "
-                >
-                  <span
-                    class="h-1.5 w-1.5 rounded-full"
-                    :class="tool.status === 'stable' ? 'bg-emerald-400' : 'bg-yellow-400'"
-                  />
-                  {{ tool.status === 'stable' ? 'Stable' : 'Beta' }}
-                </span>
-              </div>
-
-              <p class="mt-1 line-clamp-2 text-sm leading-relaxed text-neutral-400">
-                {{ tool.description }}
-              </p>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-1.5">
-            <Badge
-              v-for="tag in tool.tags"
-              :key="tag"
-              variant="outline"
-              class="h-6 rounded-full border-neutral-700 bg-neutral-800/60 px-2 text-[11px] leading-none text-neutral-300"
-            >
-              {{ tag }}
-            </Badge>
-          </div>
-
-          <div class="mt-1 flex items-center justify-between text-xs leading-none text-neutral-400">
-            <span class="truncate">{{ tool.badge || 'General' }}</span>
-            <span class="opacity-70 transition-opacity group-hover:opacity-100">Open →</span>
+        <div class="flex items-start gap-4">
+          <span
+            class="tool-icon border-border bg-background text-primary grid h-11 w-11 shrink-0 place-items-center rounded-lg border transition duration-300 group-hover:rotate-[-8deg] group-hover:scale-110 group-hover:border-teal-300/60 group-hover:bg-teal-400 group-hover:text-neutral-950"
+            aria-hidden="true"
+          >
+            <component :is="tool.icon" class="h-5 w-5" />
+          </span>
+          <div class="min-w-0 pt-0.5">
+            <p class="mb-1.5 text-xs font-semibold text-teal-700 dark:text-teal-300">
+              {{ tool.badge || 'General' }}
+            </p>
+            <h2 class="text-card-foreground font-medium">{{ tool.name }}</h2>
+            <p class="text-muted-foreground mt-2 line-clamp-3 text-sm leading-6">
+              {{ tool.description }}
+            </p>
           </div>
         </div>
       </NuxtLink>
     </div>
 
     <div
-      v-if="filteredTools.length === 0"
-      class="mt-10 rounded-xl border border-neutral-800 bg-neutral-900/40 p-8 text-center"
+      v-else
+      class="border-border bg-card rounded-xl border px-6 py-14 text-center"
+      role="status"
     >
-      <p class="text-sm leading-normal text-neutral-400">No tools match your query.</p>
+      <h2 class="font-medium">No matching tools</h2>
+      <p class="text-muted-foreground mt-2 text-sm">
+        Try a different search term or choose another category.
+      </p>
+      <button
+        type="button"
+        class="text-foreground mt-4 text-sm font-medium underline underline-offset-4"
+        @click="resetFilters"
+      >
+        Clear filters
+      </button>
     </div>
-  </tool-layout>
+  </section>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, type Component } from 'vue'
+import {
+  Braces,
+  Clock,
+  CalendarClock,
+  FileCode,
+  FileText,
+  Hash,
+  Key,
+  Link,
+  Palette,
+  Regex,
+  Search,
+  X,
+} from 'lucide-vue-next'
 
 import { useAppConfig } from '#imports'
-import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select'
 import type { ToolMeta } from '~/types/tool'
 
-const appConfig = useAppConfig() as { tools?: ToolMeta[] }
-const registry = computed<ToolMeta[]>(() => appConfig.tools ?? [])
+const icons: Record<string, Component> = {
+  'bcrypt-generator': Hash,
+  'case-converter': FileText,
+  'color-picker': Palette,
+  'lorem-ipsum-generator': FileText,
+  'regex-tester': Regex,
+  'diff-checker': FileCode,
+  'palette-generator': Palette,
+  minifier: FileCode,
+  'password-generator': Key,
+  'cron-tool': Clock,
+  'uuid-tool': Hash,
+  'border-radius-generator': Palette,
+  'json-tool': Braces,
+  'color-contrast-checker': Palette,
+  'box-shadow-generator': Palette,
+  'url-encoder': Link,
+  'timestamp-converter': CalendarClock,
+  'base64-tool': FileCode,
+  'html-entities': FileCode,
+  'number-base-converter': Hash,
+  'csv-to-json': Braces,
+  'markdown-table-generator': FileText,
+  'hmac-generator': Key,
+}
 
-const tools = computed<ToolMeta[]>(() =>
-  registry.value.map((toolEntry: ToolMeta): any => ({
-    name: toolEntry.title,
-    slug: toolEntry.slug,
-    description: toolEntry.description,
-    href: `/tools/${toolEntry.slug}`,
-    tags: toolEntry.tags ?? [],
-    badge: toolEntry.badge,
-    status: toolEntry.status,
-    accent: toolEntry.accent,
+const appConfig = useAppConfig() as { tools?: ToolMeta[] }
+const searchQuery = ref('')
+const selectedBadge = ref('all')
+const tools = computed(() =>
+  (appConfig.tools ?? []).map((entry) => ({
+    name: entry.title,
+    slug: entry.slug,
+    description: entry.description,
+    href: `/tools/${entry.slug}`,
+    badge: entry.badge,
+    tags: entry.tags ?? [],
+    icon: icons[entry.slug] ?? FileCode,
   }))
 )
 
-const searchQuery = ref<string>('')
-const selectedBadge = ref<string>('all')
+const badgeOptions = computed(() =>
+  [
+    ...new Set(
+      tools.value.map((tool) => tool.badge).filter((badge): badge is string => Boolean(badge))
+    ),
+  ].sort()
+)
+const categories = computed(() => ['all', ...badgeOptions.value])
 
-const badgeOptions = computed<string[]>(() => {
-  const set = new Set<string>()
-  for (const tool of tools.value) if (tool.badge) set.add(tool.badge)
-  return Array.from(set).sort()
-})
-
-const filteredTools = computed<any[]>(() => {
+const filteredTools = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()
-  return tools.value
-    .filter((tool) => selectedBadge.value === 'all' || tool.badge === selectedBadge.value)
-    .filter((tool) => {
-      if (!query) return true
-      const haystack = [tool.title, tool.description, ...(tool.tags || []), tool.badge || '']
-        .join(' ')
+
+  return tools.value.filter((tool) => {
+    const matchesCategory = selectedBadge.value === 'all' || tool.badge === selectedBadge.value
+    const matchesSearch =
+      !query ||
+      `${tool.name} ${tool.description} ${tool.badge ?? ''} ${tool.tags.join(' ')}`
         .toLowerCase()
-      return haystack.includes(query)
-    })
+        .includes(query)
+
+    return matchesCategory && matchesSearch
+  })
 })
+
+function resetFilters() {
+  searchQuery.value = ''
+  selectedBadge.value = 'all'
+}
 </script>
+
+<style scoped>
+@media (prefers-reduced-motion: reduce) {
+  .tool-icon {
+    transition: none;
+  }
+}
+</style>

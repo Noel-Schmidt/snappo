@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
-
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
@@ -11,7 +10,7 @@ const props = defineProps<{
 <template>
   <div
     data-slot="dialog-header"
-    :class="cn('flex flex-col gap-2 text-center sm:text-left', props.class)"
+    :class="cn('gap-2 flex flex-col', props.class)"
   >
     <slot />
   </div>

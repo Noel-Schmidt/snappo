@@ -1,54 +1,43 @@
 <template>
-  <header class="relative bg-neutral-950 text-neutral-50">
-    <div class="mx-auto max-w-6xl px-6 pt-20">
-      <div aria-hidden="true" class="pointer-events-none absolute inset-0">
-        <div
-          class="absolute inset-0 bg-[radial-gradient(80%_50%_at_50%_-10%,rgba(99,102,241,0.10),transparent_60%)]"
-        ></div>
-        <div class="absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]">
-          <div class="mx-auto h-full max-w-6xl opacity-[0.06]">
-            <div class="grid h-full grid-cols-12 gap-x-6">
-              <div v-for="i in 12" :key="i" class="border-l border-neutral-500/40"></div>
-            </div>
-          </div>
+  <header
+    class="border-border bg-background text-foreground relative isolate overflow-hidden border-b"
+  >
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent_92%)]"
+    >
+      <div class="mx-auto grid h-full max-w-7xl grid-cols-12">
+        <div v-for="column in 12" :key="column" class="border-border/40 border-l last:border-r" />
+      </div>
+    </div>
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute -top-64 left-1/2 h-[34rem] w-[min(80rem,90vw)] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,rgba(45,212,191,0.09),transparent_68%)] blur-2xl"
+    />
+
+    <div
+      class="relative mx-auto grid max-w-7xl gap-10 px-6 py-16 sm:py-20 lg:py-24"
+      :class="{ 'md:grid-cols-[minmax(0,1fr)_minmax(18rem,0.7fr)] md:items-center': $slots.visual }"
+    >
+      <div>
+        <h1
+          class="max-w-4xl text-5xl font-semibold leading-[1.04] tracking-[-0.045em] sm:text-6xl lg:text-7xl"
+        >
+          <slot name="heading">{{ title }}</slot>
+        </h1>
+
+        <p v-if="subtitle" class="text-muted-foreground mt-5 max-w-2xl text-lg leading-8">
+          {{ subtitle }}
+        </p>
+
+        <div v-if="$slots.actions" class="mt-8 flex flex-wrap items-center gap-3">
+          <slot name="actions" />
         </div>
       </div>
 
-      <div class="grid items-center gap-16 md:grid-cols-2">
-        <div>
-          <div
-            v-if="badge"
-            class="inline-flex items-center gap-2 rounded-full bg-neutral-950 px-3 py-1 text-xs ring-1 ring-neutral-800"
-          >
-            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
-            <span>{{ badge }}</span>
-          </div>
-
-          <h1 class="mt-6 text-5xl font-extrabold tracking-tight sm:text-6xl">
-            <span
-              class="bg-gradient-to-r from-fuchsia-600 via-sky-600 to-emerald-600 bg-clip-text text-transparent opacity-70"
-            >
-              {{ title }}
-            </span>
-          </h1>
-
-          <p v-if="subtitle" class="mt-5 max-w-xl text-lg text-neutral-400">
-            {{ subtitle }}
-          </p>
-
-          <div v-if="$slots.actions" class="mt-10 flex items-center gap-4">
-            <slot name="actions" />
-          </div>
-        </div>
-
-        <div class="relative hidden justify-center md:flex">
-          <slot name="visual" />
-        </div>
+      <div v-if="$slots.visual" class="relative flex justify-center">
+        <slot name="visual" />
       </div>
-
-      <div
-        class="mt-20 h-px w-full bg-gradient-to-r from-transparent via-neutral-800 to-transparent"
-      ></div>
     </div>
   </header>
 </template>
@@ -57,6 +46,5 @@
 defineProps<{
   title: string
   subtitle?: string
-  badge?: string
 }>()
 </script>

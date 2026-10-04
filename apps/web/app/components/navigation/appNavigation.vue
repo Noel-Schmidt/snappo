@@ -1,58 +1,56 @@
 <template>
   <nav
-    class="sticky top-0 z-40 w-full border-b border-neutral-800 bg-neutral-950/95 text-neutral-100 backdrop-blur"
+    class="border-border/80 bg-background/90 text-foreground sticky top-0 z-40 w-full border-b backdrop-blur-xl"
   >
-    <div class="mx-auto flex h-14 max-w-7xl items-center gap-3 px-3 sm:px-4 md:px-6">
-      <NuxtLink to="/" class="flex items-center gap-2">
-        <img alt="snappo" class="w-10" src="/images/snappo.svg" />
-        <span class="font-semibold tracking-tight">Snappo</span>
+    <div class="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
+      <NuxtLink
+        to="/"
+        class="focus-visible:outline-ring flex shrink-0 items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4"
+        aria-label="Snappo home"
+      >
+        <img alt="" class="w-9" src="/images/snappo.svg" />
+        <span class="text-base font-semibold tracking-tight">Snappo</span>
       </NuxtLink>
 
-      <ul class="ml-4 hidden items-center gap-4 text-sm md:flex">
+      <ul class="ml-4 hidden h-full items-center gap-1 text-sm md:flex">
         <li v-for="item in items" :key="item.href">
           <NuxtLink
             :to="item.href"
-            class="text-neutral-300 transition-colors hover:text-white"
-            :class="{ 'text-white': route.path === item.href }"
+            class="text-muted-foreground hover:text-foreground focus-visible:outline-ring inline-flex h-10 items-center rounded-md px-3 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+            :class="{ 'text-foreground': isActive(item.href) }"
+            :aria-current="isActive(item.href) ? 'page' : undefined"
           >
             {{ item.label }}
           </NuxtLink>
         </li>
       </ul>
 
-      <div class="ml-auto flex items-center gap-2">
-        <div class="hidden md:block">
-          <app-navigation-search />
-        </div>
-        <a
-          href="https://github.com/Noel-Schmidt/snappo/issues"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Button
-            variant="outline"
-            class="hidden h-9 cursor-pointer border-neutral-700 text-neutral-100 hover:bg-neutral-800 md:inline-flex"
-            >Feedback</Button
-          >
-        </a>
-        <Button
-          variant="secondary"
-          class="h-9 bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
-          as-child
-        >
+      <div class="ml-auto hidden items-center gap-2 md:flex">
+        <app-navigation-search />
+        <Button variant="outline" size="lg" as-child>
           <a
-            :href="githubUrl"
+            href="https://github.com/Noel-Schmidt/snappo/issues"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-2"
           >
-            <Github class="h-4 w-4" />
-            <span class="hidden sm:inline">GitHub</span>
+            Feedback
           </a>
         </Button>
+        <Button class="h-9 bg-teal-400 px-3 text-neutral-950 hover:bg-teal-300" as-child>
+          <a :href="githubUrl" target="_blank" rel="noopener noreferrer" class="gap-2">
+            <Github class="h-4 w-4" aria-hidden="true" />
+            <span>GitHub</span>
+          </a>
+        </Button>
+      </div>
+
+      <div class="ml-auto flex items-center gap-2 md:hidden">
         <Button
           variant="ghost"
-          class="ml-1 inline-flex h-9 w-9 items-center justify-center md:hidden"
+          size="icon-lg"
+          class="h-9 w-9"
+          :aria-expanded="open"
+          aria-label="Toggle navigation menu"
           @click="open = !open"
         >
           <Menu v-if="!open" class="h-5 w-5" />
@@ -71,44 +69,44 @@
     >
       <div
         v-if="open"
-        class="border-t border-neutral-800 bg-neutral-900/95 px-3 pb-4 pt-2 md:hidden"
+        class="border-border bg-background border-t px-4 pb-5 pt-4 md:hidden sm:px-6"
       >
-        <div class="mb-3">
-          <Input
-            v-model="query"
-            placeholder="Search"
-            class="h-10 w-full bg-neutral-800/70 text-neutral-100 placeholder:text-neutral-400 focus-visible:ring-neutral-500"
-          />
+        <div class="mb-4">
+          <app-navigation-search />
         </div>
-        <ul class="grid gap-2">
+        <ul class="grid gap-1">
           <li v-for="item in items" :key="item.href + '-m'">
             <NuxtLink
               :to="item.href"
-              class="block rounded-md px-2 py-2 text-neutral-300 hover:bg-neutral-800 hover:text-white"
+              class="text-muted-foreground hover:text-foreground flex min-h-11 items-center rounded-md px-3 text-sm font-medium transition-colors"
+              :class="{ 'text-foreground': isActive(item.href) }"
+              :aria-current="isActive(item.href) ? 'page' : undefined"
               @click="open = false"
             >
               {{ item.label }}
             </NuxtLink>
           </li>
         </ul>
-        <div class="mt-3 flex items-center gap-2">
-          <Button
-            variant="outline"
-            class="h-9 flex-1 border-neutral-700 text-neutral-100 hover:bg-neutral-800"
-            >Feedback</Button
-          >
-          <Button
-            variant="secondary"
-            class="h-9 flex-1 bg-neutral-800 text-neutral-100 hover:bg-neutral-700"
-            as-child
-          >
+        <div class="mt-4 grid grid-cols-2 gap-2">
+          <Button variant="outline" size="lg" as-child>
+            <a
+              href="https://github.com/Noel-Schmidt/snappo/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              @click="open = false"
+            >
+              Feedback
+            </a>
+          </Button>
+          <Button size="lg" class="bg-teal-400 text-neutral-950 hover:bg-teal-300" as-child>
             <a
               :href="githubUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex items-center justify-center gap-2"
+              class="gap-2"
+              @click="open = false"
             >
-              <Github class="h-4 w-4" />
+              <Github class="h-4 w-4" aria-hidden="true" />
               GitHub
             </a>
           </Button>
@@ -124,19 +122,20 @@ import { ref } from 'vue'
 
 import { useRoute } from '#imports'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import AppNavigationSearch from '~/components/navigation/appNavigationSearch.vue'
 
 const route = useRoute()
 const open = ref(false)
-const query = ref('')
 
 const items = [
-  { label: 'Explore Tools', href: '/tools' },
+  { label: 'Explore tools', href: '/tools' },
   { label: 'About', href: '/about' },
   { label: 'Contact', href: '/contact' },
-  { label: 'License', href: '/license' },
 ]
 
 const githubUrl = 'https://github.com/noel-schmidt/snappo'
+
+function isActive(href: string) {
+  return route.path === href || (href !== '/' && route.path.startsWith(`${href}/`))
+}
 </script>
